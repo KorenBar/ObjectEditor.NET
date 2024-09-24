@@ -16,8 +16,6 @@ using TechnosoCommons.Extensions;
 
 namespace TechnosoCommons.Configuration.UI.Controls
 {
-    public enum FieldStatus { Synced = 0, ValueChanged = 1, InnerValueChanged = 1 << 1 }
-
     /// <summary>
     /// Base class for all types of fields in an object editor.
     /// </summary>

@@ -11,6 +11,25 @@ using TechnosoCommons.Extensions;
 namespace TechnosoUI.Configuration
 {
     /// <summary>
+    /// Status of a field.
+    /// </summary>
+    public enum FieldStatus
+    {
+        /// <summary>
+        /// The field value is synced with the source object.
+        /// </summary>
+        Synced = 0,
+        /// <summary>
+        /// The field value is different from the source object.
+        /// </summary>
+        ValueChanged = 1,
+        /// <summary>
+        /// A sub-field on the object value has changed.
+        /// </summary>
+        InnerValueChanged = 1 << 1
+    }
+
+    /// <summary>
     /// Abilities the collection has on its items.
     /// </summary>
     public enum ItemAbility
