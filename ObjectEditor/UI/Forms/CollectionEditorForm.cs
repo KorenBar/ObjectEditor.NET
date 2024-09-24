@@ -65,10 +65,7 @@ namespace TechnosoCommons.Configuration.UI.Forms
         /// <returns>The new item created or null if failed.</returns>
         protected object CreateNewItem()
         {
-            var collectionWrapper = SourceCollectionWrapper;
-            if (collectionWrapper == null) return null;
-
-            var item = collectionWrapper.AddDefaultValue();
+            var item = SourceCollectionWrapper.AddDefaultValue();
 
             this.SaveRequired = true; // there are no pending changes, but the collection was modified
             return item;
@@ -87,14 +84,17 @@ namespace TechnosoCommons.Configuration.UI.Forms
                 lock (SourceObject) // lock the source object to prevent concurrent modifications as possible
                 {
                     int index = SourceCollectionWrapper.Count;
-                    var item = CreateNewItem();
-                    if (item == null) return;
-
+                    var item = CreateNewItem(); // the item value can be null
                     AddItemField(item, index);
                 }
             });
         }
 
+        /// <summary>
+        /// Remove an item from the source collection.
+        /// </summary>
+        /// <param name="fieldInfo"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         protected virtual void RemoveItem(ItemFieldInfo fieldInfo)
         {
             if (fieldInfo == null) throw new ArgumentNullException(nameof(fieldInfo));
