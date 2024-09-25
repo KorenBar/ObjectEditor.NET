@@ -493,15 +493,13 @@ namespace TechnosoCommons.Configuration.UI.Forms
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            if (ParentEditorForm != null)
-            { // it's a child form, don't close it, just hide it.
-                e.Cancel = true;
+            e.Cancel = ParentEditorForm != null;
+            if (e.Cancel) // it's a child form, don't close it, just hide it.
+            {
                 this.Hide();
                 this.Owner?.Focus();
-                return; // don't invoke the FormClosing event
-            }
+            } // else, it's a main form. close it normally, the user will decide what to do.
 
-            // it's a main form. close it normally, the user will decide what to do.
             base.OnFormClosing(e);
         }
         #endregion
