@@ -33,6 +33,7 @@
             label1 = new Label();
             btnRemove = new Button();
             toolTip1 = new ToolTip(components);
+            valueControlPanel = new Panel();
             tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -45,6 +46,7 @@
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 0F));
             tableLayoutPanel1.Controls.Add(label1, 0, 0);
             tableLayoutPanel1.Controls.Add(btnRemove, 3, 0);
+            tableLayoutPanel1.Controls.Add(valueControlPanel, 1, 0);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Margin = new Padding(4, 3, 4, 3);
@@ -71,7 +73,7 @@
             btnRemove.Enabled = false;
             btnRemove.ForeColor = Color.Red;
             btnRemove.Location = new Point(296, 3);
-            btnRemove.Margin = new Padding(4, 3, 4, 3);
+            btnRemove.Margin = new Padding(4, 4, 4, 4);
             btnRemove.Name = "btnRemove";
             btnRemove.Size = new Size(1, 27);
             btnRemove.TabIndex = 5;
@@ -84,6 +86,14 @@
             toolTip1.AutoPopDelay = 10000;
             toolTip1.InitialDelay = 500;
             toolTip1.ReshowDelay = 100;
+            // 
+            // valueControlPanel
+            // 
+            valueControlPanel.Dock = DockStyle.Fill;
+            valueControlPanel.Location = new Point(143, 3);
+            valueControlPanel.Name = "valueControlPanel";
+            valueControlPanel.Size = new Size(146, 27);
+            valueControlPanel.TabIndex = 6;
             // 
             // BaseFieldControl
             // 
@@ -103,5 +113,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Button btnRemove;
+        private Panel valueControlPanel;
     }
 }

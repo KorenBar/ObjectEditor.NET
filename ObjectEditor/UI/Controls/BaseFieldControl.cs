@@ -35,8 +35,8 @@ namespace TechnosoCommons.Configuration.UI.Controls
                 if (value == IsNull) return; // no change
                 // TODO: Create a checkbox and set it to rise the OnValueChanged event.
                 //nullCheckbox.Checked = value; // will rise its CheckedChanged event
-                // TODO: ControlContainer.Enabled = !value; // DON'T set the visibility of the control itself, it may be enabled/disabled by the field info.
-                // En\Disable the control in the 2nd ([1]) column of tableLayoutPanel1
+                // DON'T set the visibility of the value control itself, it may be enabled/disabled by the field info.
+                valueControlPanel.Enabled = !value; // Set the container instead
             }
         }
 
@@ -162,8 +162,7 @@ namespace TechnosoCommons.Configuration.UI.Controls
                 throw new InvalidOperationException("The value control is not created.");
 
             ValueControl.Dock = DockStyle.Fill;
-            //ControlContainer.Controls.Add(ValueControl); // TODO
-            tableLayoutPanel1.Controls.Add(ValueControl, 1, 0);
+            valueControlPanel.Controls.Add(ValueControl);
 
             Value = value;
             UpdateName(); // set the name after the value is set
