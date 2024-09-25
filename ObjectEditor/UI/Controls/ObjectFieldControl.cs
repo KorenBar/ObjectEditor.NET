@@ -20,6 +20,8 @@ namespace TechnosoCommons.Configuration.UI.Controls
 {
     internal class ObjectFieldControl : BaseFieldControl
     {
+        private object _value;
+
         private Button SetButton => (Button)ValueControl;
 
         public ObjectEditorForm ObjectEditorForm { get; private set; }
@@ -66,7 +68,20 @@ namespace TechnosoCommons.Configuration.UI.Controls
             Show:
             try
             {
-                if (ObjectEditorForm == null) return;
+                object value = GetValue();
+                if (value == null)
+                    throw new InvalidOperationException("The value is null.");
+                
+                if (ObjectEditorForm == null)
+                { // create a new form
+                    ObjectEditorForm = ObjectEditorFactory.CreateForm(value, ParentEditorForm);
+                    ObjectEditorForm.Text = this.Text;
+                    ObjectEditorForm.ValueChanged += (s, e) => this.OnValueChanged(e);
+                    ObjectEditorForm.ChangesApplied += ObjectEditorForm_ChangesApplied;
+                    ObjectEditorForm.ChangesPendingChanged += ObjectEditorForm_ChangesPendingChanged;
+                    ObjectEditorForm.FormClosing += ObjectEditorForm_Closing;
+                }
+
                 if (!ObjectEditorForm.Visible) 
                 { // was hidden or not created yet - initialize size, position, and values.
                     if (ParentForm != null) ObjectEditorForm.Size = ParentForm.Size;
@@ -74,6 +89,7 @@ namespace TechnosoCommons.Configuration.UI.Controls
                     ObjectEditorForm.Reset(); // if was not loaded yet, the reset will do nothing (effective).
                     // TODO: focus to the containing control
                 }
+
                 ObjectEditorForm.Show(); // the controls will be loaded before showing for the first time.
                 ObjectEditorForm.Focus(); // if the form was already shown, it will be focused anyway.
             }
@@ -86,10 +102,7 @@ namespace TechnosoCommons.Configuration.UI.Controls
         #endregion
 
         #region Overrides
-        protected override object GetValue()
-        {
-            return ObjectEditorForm?.SourceObject;
-        }
+        protected override object GetValue() => _value;
 
         protected override void SetValue(object value)
         {
@@ -99,6 +112,8 @@ namespace TechnosoCommons.Configuration.UI.Controls
                 return;
             }
 
+            _value = value;
+
             // the value changed
             var form = ObjectEditorForm;
             if (form != null && !form.IsDisposed && !form.Disposing)
@@ -106,15 +121,9 @@ namespace TechnosoCommons.Configuration.UI.Controls
                 form.Close();
                 form.Dispose();
             }
+            ObjectEditorForm = null;
 
-            // create a new form
-            ObjectEditorForm = ObjectEditorFactory.CreateForm(value, ParentEditorForm);
-            UpdateName(); // set after the form is created, so the value will be updated, and the form title will be set as well.
-            ObjectEditorForm.ValueChanged += (s, e) => this.OnValueChanged(e);
-            ObjectEditorForm.ChangesApplied += ObjectEditorForm_ChangesApplied;
-            ObjectEditorForm.ChangesPendingChanged += ObjectEditorForm_ChangesPendingChanged;
-            ObjectEditorForm.FormClosing += ObjectEditorForm_Closing;
-
+            UpdateName();
             //btnSet.Text = ObjectEditorForm is CollectionEditorForm ? "Collection" : "Edit";
         }
 
