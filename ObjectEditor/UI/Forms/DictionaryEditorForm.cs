@@ -27,6 +27,8 @@ namespace TechnosoCommons.Configuration.UI.Forms
         protected DynamicDictionaryWrapper SourceDictionaryWrapper => (DynamicDictionaryWrapper)SourceCollectionWrapper;
 
         #region Constructors
+        public DictionaryEditorForm() : this(new Dictionary<string, int>()) { }
+
         /// <param name="sourceDictionary">The dictionary to view and edit.</param>
         public DictionaryEditorForm(IEnumerable sourceDictionary) : this(sourceDictionary, null) { }
 

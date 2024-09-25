@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TechnosoCommons.Configuration;
 
 namespace ObjectEditor.Demo.Data
 {
@@ -12,11 +13,15 @@ namespace ObjectEditor.Demo.Data
     /// </summary>
     public class MainDataClass
     {
+        [Info("An integer property with description.")]
         public int Int { get; set; }
+        [Info("A string property with description.")]
         public string String { get; set; }
         public DateTime DateTime { get; set; }
+        public TimeSpan TimeSpan { get; set; }
         public List<int> IntList { get; set; } = new List<int>() { 1, 2, 3 };
         public Dictionary<string, int> StringIntDictionary { get; set; } = new Dictionary<string, int>() { { "one", 1 }, { "two", 2 }, { "three", 3 } };
+        [Info("A null reference property with description.")]
         public MainDataClass NullReference { get; set; }
         //public MainDataClass CircularReference { get; set; } = new MainDataClass(); // StackOverflowException
         public MainDataClass GenerativeProperty => new MainDataClass();

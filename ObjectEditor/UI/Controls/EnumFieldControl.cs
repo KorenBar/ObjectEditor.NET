@@ -13,33 +13,36 @@ using TechnosoUI.Configuration;
 
 namespace TechnosoCommons.Configuration.UI.Controls
 {
-    internal partial class EnumFieldControl : BaseFieldControl
+    internal class EnumFieldControl : BaseFieldControl
     {
+        private ComboBox ComboBox => (ComboBox)ValueControl;
+
         public EnumFieldControl(object value, BaseFieldInfo fieldInfo) : base(value, fieldInfo) { }
 
-        protected override void Initialize()
+        protected override Control CreateValueControl(BaseFieldInfo fieldInfo)
         {
-            InitializeComponent();
-            comboBox.DataSource = FieldInfo.Type.GetEnumValues();
-            comboBox.Enabled = !FieldInfo.IsReadOnly;
-            SetControl(comboBox);
+            var comboBox = new ComboBox();
+            comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox.DataSource = fieldInfo.Type.GetEnumValues();
+            comboBox.Enabled = !fieldInfo.IsReadOnly;
+            return comboBox;
         }
 
         protected override object GetValue()
         {
-            return comboBox.SelectedItem;
+            return ComboBox.SelectedItem;
         }
 
         protected override void SetValue(object value)
         {
-            comboBox.SelectedItem = value;
+            ComboBox.SelectedItem = value;
         }
 
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
             // Add events here to prevent rising when showing the form.
-            comboBox.SelectedValueChanged += (s, args) => OnValueChanged(comboBox.SelectedItem);
+            ComboBox.SelectedValueChanged += (s, args) => OnValueChanged(ComboBox.SelectedItem);
         }
     }
 }

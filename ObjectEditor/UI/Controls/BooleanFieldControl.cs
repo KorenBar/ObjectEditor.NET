@@ -13,32 +13,36 @@ using TechnosoUI.Configuration;
 
 namespace TechnosoCommons.Configuration.UI.Controls
 {
-    internal partial class BooleanFieldControl : BaseFieldControl
+    internal class BooleanFieldControl : BaseFieldControl
     {
+        private CheckBox CheckBox => (CheckBox)ValueControl;
+
         public BooleanFieldControl(object value, BaseFieldInfo fieldInfo) : base(value, fieldInfo) { }
 
-        protected override void Initialize()
+        protected override Control CreateValueControl(BaseFieldInfo fieldInfo)
         {
-            InitializeComponent();
-            checkBox.Enabled = !FieldInfo.IsReadOnly;
-            SetControl(checkBox);
+            var checkBox = new CheckBox();
+            checkBox.Dock = DockStyle.Fill;
+            checkBox.Text = "";
+            checkBox.Enabled = !fieldInfo.IsReadOnly;
+            return checkBox;
         }
 
         protected override object GetValue()
         {
-            return checkBox.Checked;
+            return CheckBox.Checked;
         }
 
         protected override void SetValue(object value)
         {
-            checkBox.Checked = Convert.ToBoolean(value);
+            CheckBox.Checked = Convert.ToBoolean(value);
         }
 
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
             // Add events here to prevent rising when showing the form.
-            checkBox.CheckedChanged += (s, args) => OnValueChanged(checkBox.Checked);
+            CheckBox.CheckedChanged += (s, args) => OnValueChanged(CheckBox.Checked);
         }
     }
 }

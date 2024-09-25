@@ -22,6 +22,8 @@ namespace TechnosoCommons.Configuration.UI.Forms
         public static ObjectEditorForm CreateForm(object sourceObject) => CreateForm(sourceObject, null);
         internal static ObjectEditorForm CreateForm(object sourceObject, ObjectEditorForm parentForm)
         {
+            if (parentForm == null)
+                Console.WriteLine();
             switch (sourceObject)
             { // switch on type of sourceObject
                 case IEnumerable sourceEnumerable:

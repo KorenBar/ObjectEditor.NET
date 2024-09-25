@@ -11,7 +11,6 @@ using System.Configuration;
 using System.Reflection;
 using TechnosoUI.Configuration;
 using TechnosoUI.Configuration.UI;
-using System.Diagnostics;
 using TechnosoCommons.Extensions;
 
 namespace TechnosoCommons.Configuration.UI.Controls
@@ -76,12 +75,18 @@ namespace TechnosoCommons.Configuration.UI.Controls
         public BaseFieldInfo FieldInfo { get; }
 
         /// <summary>
+        /// Gets the control that displays the value.
+        /// Created by the inherited class.
+        /// </summary>
+        protected Control ValueControl { get; }
+
+        /// <summary>
         /// Gets or sets whether the remove button is visible.
         /// </summary>
         public bool ShowRemoveButton
         {
-            get => this.tableLayoutPanel1.ColumnStyles[2].Width > 0;
-            protected set => this.tableLayoutPanel1.ColumnStyles[2].Width = value ? 27 : 0;
+            get => tableLayoutPanel1.ColumnStyles[3].Width > 0;
+            protected set => tableLayoutPanel1.ColumnStyles[3].Width = value ? tableLayoutPanel1.Height : 0;
         }
 
         /// <summary>
@@ -89,8 +94,8 @@ namespace TechnosoCommons.Configuration.UI.Controls
         /// </summary>
         public bool ShowNullCheckbox
         {
-            get => this.tableLayoutPanel1.ColumnStyles[3].Width > 0;
-            protected set => this.tableLayoutPanel1.ColumnStyles[3].Width = value ? 27 : 0;
+            get => tableLayoutPanel1.ColumnStyles[2].Width > 0;
+            protected set => tableLayoutPanel1.ColumnStyles[2].Width = value ? tableLayoutPanel1.Height : 0;
         }
 
         private FieldStatus _status;
@@ -152,7 +157,14 @@ namespace TechnosoCommons.Configuration.UI.Controls
             if (fieldInfo.Description != null) // underline described fields
                 label1.Font = new Font(label1.Font, FontStyle.Underline);
 
-            Initialize();
+            ValueControl = CreateValueControl(fieldInfo);
+            if (ValueControl == null)
+                throw new InvalidOperationException("The value control is not created.");
+
+            ValueControl.Dock = DockStyle.Fill;
+            //ControlContainer.Controls.Add(ValueControl); // TODO
+            tableLayoutPanel1.Controls.Add(ValueControl, 1, 0);
+
             Value = value;
             UpdateName(); // set the name after the value is set
             UpdateTip();
@@ -160,21 +172,17 @@ namespace TechnosoCommons.Configuration.UI.Controls
         #endregion
 
         #region Abstract Methods
-        protected abstract void Initialize(); // Initialize the control, the value is not set yet.
+        /// <summary>
+        /// Initializes the field value control before the value is set.
+        /// </summary>
+        /// <param name="fieldInfo">Field information.</param>
+        /// <returns>The created control to display and edit the value.</returns>
+        protected abstract Control CreateValueControl(BaseFieldInfo fieldInfo);
         protected abstract object GetValue();
         protected abstract void SetValue(object value);
         #endregion
 
         #region Field Actions
-        /// <summary>
-        /// Sets the control to the field, which is used to view and edit the value.
-        /// </summary>
-        /// <param name="control"></param>
-        protected void SetControl(Control control)
-        {
-            this.tableLayoutPanel1.Controls.Add(control, 1, 0);
-        }
-
         /// <summary>
         /// Applies the changes made.
         /// </summary>

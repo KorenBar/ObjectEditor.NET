@@ -51,5 +51,7 @@ namespace TechnosoUI.Configuration
         /// The item can be removed from the collection.
         /// </summary>
         Remove = 1 << 2,
+
+        All = -1
     }
 }

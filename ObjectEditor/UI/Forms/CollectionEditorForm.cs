@@ -36,6 +36,8 @@ namespace TechnosoCommons.Configuration.UI.Forms
             => base.ItemAbilities | (IsReadOnlyCollection ? ItemAbility.ReadOnly : ItemAbility.Add | ItemAbility.Remove);
 
         #region Constructors
+        public CollectionEditorForm() : this(new object[0]) { }
+
         /// <param name="sourceCollection">The collection to view and edit.</param>
         public CollectionEditorForm(IEnumerable sourceCollection) : this(sourceCollection, null) { }
 

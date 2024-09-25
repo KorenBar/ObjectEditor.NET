@@ -13,8 +13,10 @@ using TechnosoUI.Configuration;
 
 namespace TechnosoCommons.Configuration.UI.Controls
 {
-    internal partial class TextFieldControl : BaseFieldControl
+    internal class TextFieldControl : BaseFieldControl
     {
+        private TextBox TextBox => (TextBox)ValueControl;
+
         /// <summary>
         /// Creates a new text field control.
         /// </summary>
@@ -22,34 +24,35 @@ namespace TechnosoCommons.Configuration.UI.Controls
         /// <param name="fieldInfo">Field information.</param>
         public TextFieldControl(object value, BaseFieldInfo fieldInfo) : base(value, fieldInfo) { }
 
-        protected override void Initialize()
+        protected override Control CreateValueControl(BaseFieldInfo fieldInfo)
         {
-            InitializeComponent();
-            textBox.ReadOnly = FieldInfo.IsReadOnly;
-            SetControl(textBox);
+            var textBox = new TextBox();
+            textBox.ReadOnly = fieldInfo.IsReadOnly;
 
-            if (FieldInfo is PropertyFieldInfo propertyFieldInfo)
+            if (fieldInfo is PropertyFieldInfo propertyFieldInfo)
             {
                 var infoAttr = propertyFieldInfo.PropertyInfo.GetCustomAttribute<InfoAttribute>();
                 textBox.UseSystemPasswordChar = infoAttr?.IsPassword ?? false;
             }
+
+            return textBox;
         }
 
         protected override object GetValue()
         {
-            return textBox.Text;
+            return TextBox.Text;
         }
 
         protected override void SetValue(object value)
         {
-            textBox.Text = value?.ToString();
+            TextBox.Text = value?.ToString();
         }
 
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
             // Registering the events here to prevent rising when showing the form.
-            textBox.TextChanged += (s, args) => OnValueChanged(textBox.Text);
+            TextBox.TextChanged += (s, args) => OnValueChanged(TextBox.Text);
         }
     }
 }

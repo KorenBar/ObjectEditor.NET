@@ -12,7 +12,6 @@ using System.Windows.Forms;
 using System.IO;
 using System.Reflection;
 using TechnosoCommons.Extensions;
-using TechnosoCommons.UI.Forms;
 using TechnosoCommons.Configuration.UI.Controls;
 using System.Xml;
 using System.Xml.Serialization;
@@ -25,7 +24,7 @@ namespace TechnosoCommons.Configuration.UI.Forms
     /// <summary>
     /// A form to view and edit the properties of an object and its sub-objects recursively, of any type.
     /// </summary>
-    public partial class ObjectEditorForm : ControllingForm<ObjectEditorForm>
+    public partial class ObjectEditorForm : Form//: ControllingForm<ObjectEditorForm>
     {
         #region Form Properties
         public new Form Owner
@@ -152,7 +151,7 @@ namespace TechnosoCommons.Configuration.UI.Forms
 
         #region Constructors
         /// <summary>
-        /// Create a new instance of the editor form for a new empty object, for testing purposes.
+        /// Default constructor for the designer.
         /// </summary>
         public ObjectEditorForm() : this(new object()) { }
 
@@ -174,6 +173,7 @@ namespace TechnosoCommons.Configuration.UI.Forms
 
             IsSaveable = false; // TODO: Determine if it's possible to save this specific source object.
 
+            this.Owner = parent;
             if (parent != null)
                 parent.SaveRequiredChanged += ParentEditorForm_SaveRequiredChanged;
         }
@@ -329,8 +329,10 @@ namespace TechnosoCommons.Configuration.UI.Forms
         {
             bool applied = ((Action)(() => ApplyChanges())).InvokeUserAction("Apply");
             if (!applied) return;
-            Close(); // when do we have to close here? (that will change the DialogResult)
-            DialogResult = DialogResult.OK; // Should be automatically since already was defined as AcceptButton
+            Close(); // The closing event will be canceled and the form will be hidden instead.
+            // When the closing event is canceled, the dialog result will reset to None,
+            // so we need to set it manually even though the button is set as AcceptButton.
+            DialogResult = DialogResult.OK;
         }
 
         private void btnApply_Click(object sender, EventArgs e)
@@ -489,20 +491,19 @@ namespace TechnosoCommons.Configuration.UI.Forms
             base.OnVisibleChanged(e);
         }
 
-        //protected override void OnClosing(CancelEventArgs e)
-        //{
-        //    base.OnClosing(e);
-        //    ChangesPending = false; // cancel any changes without resetting the values.
-        //    // when showing the form again, the changes will be reset anyway.
-        //}
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            if (ParentEditorForm != null)
+            { // it's a child form, don't close it, just hide it.
+                e.Cancel = true;
+                this.Hide();
+                this.Owner?.Focus();
+                return; // don't invoke the FormClosing event
+            }
 
-        //protected override void SetVisibleCore(bool value)
-        //{
-        //    base.SetVisibleCore(value);
-        //    // TODO: and out of sync.
-        //    if (value) // reset the changes when (re)showing the form.
-        //        ((Action)(() => Reset())).InvokeUserAction("Reset");
-        //}
+            // it's a main form. close it normally, the user will decide what to do.
+            base.OnFormClosing(e);
+        }
         #endregion
     }
 }

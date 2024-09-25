@@ -14,15 +14,17 @@ using TechnosoUI.Configuration;
 
 namespace TechnosoCommons.Configuration.UI.Controls
 {
-    internal partial class NumericFieldControl : BaseFieldControl
+    internal class NumericFieldControl : BaseFieldControl
     {
+        private NumericUpDown NumericBox => (NumericUpDown)ValueControl;
+
         public NumericFieldControl(object value, BaseFieldInfo fieldInfo) : base(value, fieldInfo) { }
 
-        protected override void Initialize()
+        protected override Control CreateValueControl(BaseFieldInfo fieldInfo)
         {
-            InitializeComponent();
+            var numericBox = new TechnosoCommons.UI.Controls.NumericBox();
 
-            if (FieldInfo.Type.IsInteger())
+            if (fieldInfo.Type.IsInteger())
             {
                 numericBox.Increment = 1M;
                 numericBox.DecimalPlaces = 0;
@@ -33,28 +35,28 @@ namespace TechnosoCommons.Configuration.UI.Controls
                 numericBox.DecimalPlaces = 2;
             }
 
-            numericBox.Maximum = FieldInfo.Type.MaxValue();
-            numericBox.Minimum = FieldInfo.Type.MinValue();
-            numericBox.Enabled = !FieldInfo.IsReadOnly;
+            numericBox.Maximum = fieldInfo.Type.MaxValue();
+            numericBox.Minimum = fieldInfo.Type.MinValue();
+            numericBox.Enabled = !fieldInfo.IsReadOnly;
             
-            SetControl(numericBox);
+            return numericBox;
         }
 
         protected override object GetValue()
         {
-            return Convert.ChangeType(numericBox.Value, FieldInfo.Type);
+            return Convert.ChangeType(NumericBox.Value, FieldInfo.Type);
         }
 
         protected override void SetValue(object value)
         {
-            numericBox.Value = Convert.ToDecimal(value ?? 0m);
+            NumericBox.Value = Convert.ToDecimal(value ?? 0m);
         }
 
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
             // Add events here after the form is ready, to prevent rising when showing the form.
-            numericBox.ValueChanged += (s, args) => OnValueChanged(this.Value);
+            NumericBox.ValueChanged += (s, args) => OnValueChanged(this.Value);
         }
     }
 }

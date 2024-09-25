@@ -39,6 +39,11 @@ namespace TechnosoCommons.Configuration.UI.Forms
         protected IEnumerable<BaseFieldControl> ItemFieldControls => FieldControls.Where(f => f.FieldInfo is ItemFieldInfo);
 
         #region Constructors
+        /// <summary>
+        /// Default constructor for the designer.
+        /// </summary>
+        public EnumerableEditorForm() : this(new object[0]) { }
+
         /// <param name="sourceEnumerable">The enumerable to view and edit.</param>
         public EnumerableEditorForm(IEnumerable sourceEnumerable) : this(sourceEnumerable, null) { }
 

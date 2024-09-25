@@ -18,8 +18,10 @@ using System.Runtime.InteropServices;
 
 namespace TechnosoCommons.Configuration.UI.Controls
 {
-    internal partial class ObjectFieldControl : BaseFieldControl
+    internal class ObjectFieldControl : BaseFieldControl
     {
+        private Button SetButton => (Button)ValueControl;
+
         public ObjectEditorForm ObjectEditorForm { get; private set; }
         public ObjectEditorForm ParentEditorForm { get; }
 
@@ -32,14 +34,18 @@ namespace TechnosoCommons.Configuration.UI.Controls
         public ObjectFieldControl(object value, BaseFieldInfo fieldInfo, ObjectEditorForm parentForm)
             : base(value, fieldInfo)
         {
+            // will be set after the initial SetValue call.
+            // TODO: fix it by creating the form only before showing it.
             ParentEditorForm = parentForm;
         }
 
-        protected override void Initialize()
+        protected override Control CreateValueControl(BaseFieldInfo fieldInfo)
         {
-            InitializeComponent();
-            SetControl(this.btnSet);
-            this.btnSet.Click += BtnSet_Click;
+            var btnSet = new Button();
+            btnSet.Text = "Set";
+            btnSet.UseVisualStyleBackColor = true;
+            btnSet.Click += BtnSet_Click;
+            return btnSet;
         }
 
         #region UI Events
