@@ -21,6 +21,9 @@ namespace TechnosoCommons.Configuration.UI.Forms
     /// </summary>
     public partial class EnumerableEditorForm : ObjectEditorForm
     {
+        // A demo source for the designer.
+        protected static readonly IEnumerable DEMO_SOURCE = new List<object> { 1, 2, new int[] { 3, 4 }, null };
+
         /// <summary>
         /// A wrapper for the enumerable to view and edit (must be set in the constructor).
         /// </summary>
@@ -42,7 +45,7 @@ namespace TechnosoCommons.Configuration.UI.Forms
         /// <summary>
         /// Default constructor for the designer.
         /// </summary>
-        public EnumerableEditorForm() : this(new object[0]) { }
+        public EnumerableEditorForm() : this(DEMO_SOURCE) { }
 
         /// <param name="sourceEnumerable">The enumerable to view and edit.</param>
         public EnumerableEditorForm(IEnumerable sourceEnumerable) : this(sourceEnumerable, null) { }
