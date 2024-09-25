@@ -46,6 +46,7 @@ namespace TechnosoCommons.Configuration.UI.Controls
             var btnSet = new Button();
             btnSet.Text = "Set";
             btnSet.UseVisualStyleBackColor = true;
+            btnSet.Enabled = false;
             btnSet.Click += BtnSet_Click;
             return btnSet;
         }
@@ -124,6 +125,7 @@ namespace TechnosoCommons.Configuration.UI.Controls
             ObjectEditorForm = null;
 
             UpdateName();
+            SetButton.Enabled = value != null;
             //btnSet.Text = ObjectEditorForm is CollectionEditorForm ? "Collection" : "Edit";
         }
 
