@@ -480,14 +480,14 @@ namespace TechnosoCommons.Configuration.UI.Forms
             try
             {
                 //ContentPanel.SuspendLayout();
-                pictureBox1.Visible = true;
+                loadingPictureBox.Visible = true;
                 ContentPanel.Visible = false;
                 await Task.Run(() => ((Action)ReloadControls).InvokeUserAction("Reload"));
             }
             finally
             {
                 ContentPanel.Visible = true;
-                pictureBox1.Visible = false;
+                loadingPictureBox.Visible = false;
                 //ContentPanel.ResumeLayout(true);
             }
         }
