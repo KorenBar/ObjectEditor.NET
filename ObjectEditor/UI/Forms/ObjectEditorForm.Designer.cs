@@ -31,6 +31,7 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ObjectEditorForm));
             tableLayoutPanel1 = new TableLayoutPanel();
             panel1 = new Panel();
             btnOK = new Button();
@@ -46,9 +47,11 @@
             toolTip1 = new ToolTip(components);
             openFileDialog1 = new OpenFileDialog();
             saveFileDialog1 = new SaveFileDialog();
+            pictureBox1 = new PictureBox();
             tableLayoutPanel1.SuspendLayout();
             panel1.SuspendLayout();
             contextMenuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -164,7 +167,7 @@
             flowLayoutPanel1.Location = new Point(0, 0);
             flowLayoutPanel1.Margin = new Padding(0);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Padding = new Padding(6, 6, 6, 6);
+            flowLayoutPanel1.Padding = new Padding(6);
             flowLayoutPanel1.Size = new Size(331, 388);
             flowLayoutPanel1.TabIndex = 0;
             // 
@@ -217,6 +220,17 @@
             saveFileDialog1.Filter = "XML Files|*.xml;*.config";
             saveFileDialog1.FileOk += saveFileDialog1_FileOk;
             // 
+            // pictureBox1
+            // 
+            pictureBox1.Dock = DockStyle.Fill;
+            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
+            pictureBox1.Location = new Point(0, 0);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(331, 417);
+            pictureBox1.SizeMode = PictureBoxSizeMode.CenterImage;
+            pictureBox1.TabIndex = 3;
+            pictureBox1.TabStop = false;
+            // 
             // ObjectEditorForm
             // 
             AcceptButton = btnOK;
@@ -224,6 +238,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             CancelButton = btnCancel;
             ClientSize = new Size(331, 417);
+            Controls.Add(pictureBox1);
             Controls.Add(tableLayoutPanel1);
             Margin = new Padding(4, 3, 4, 3);
             MinimumSize = new Size(347, 93);
@@ -234,6 +249,7 @@
             tableLayoutPanel1.ResumeLayout(false);
             panel1.ResumeLayout(false);
             contextMenuStrip1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
         }
 
@@ -254,5 +270,6 @@
         private System.Windows.Forms.ToolStripMenuItem importToolStripMenuItem;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private PictureBox pictureBox1;
     }
 }

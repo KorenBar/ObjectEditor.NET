@@ -477,11 +477,19 @@ namespace TechnosoCommons.Configuration.UI.Forms
         {
             base.OnLoad(e);
 
-            //ContentPanel.SuspendLayout();
-            ContentPanel.Visible = false;
-            await Task.Run(() => ((Action)ReloadControls).InvokeUserAction("Reload"));
-            ContentPanel.Visible = true;
-            //ContentPanel.ResumeLayout(true);
+            try
+            {
+                //ContentPanel.SuspendLayout();
+                pictureBox1.Visible = true;
+                ContentPanel.Visible = false;
+                await Task.Run(() => ((Action)ReloadControls).InvokeUserAction("Reload"));
+            }
+            finally
+            {
+                ContentPanel.Visible = true;
+                pictureBox1.Visible = false;
+                //ContentPanel.ResumeLayout(true);
+            }
         }
 
         protected override void OnVisibleChanged(EventArgs e)
