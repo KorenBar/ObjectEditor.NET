@@ -29,12 +29,12 @@ namespace TechnosoCommons.Configuration.UI.Controls
         /// </summary>
         protected bool IsNull
         {
-            get => false;//nullCheckbox.Checked;
+            get => nullCheckBox.Checked;
             private set
             {
                 if (value == IsNull) return; // no change
                 // TODO: Create a checkbox and set it to rise the OnValueChanged event.
-                //nullCheckbox.Checked = value; // will rise its CheckedChanged event
+                nullCheckBox.Checked = value; // will rise its CheckedChanged event
                 // DON'T set the visibility of the value control itself, it may be enabled/disabled by the field info.
                 valueControlPanel.Enabled = !value; // Set the container instead
             }
@@ -109,7 +109,7 @@ namespace TechnosoCommons.Configuration.UI.Controls
             {
                 if (_status == value) return;
                 _status = value;
-                OnStatusChanged(value);                
+                OnStatusChanged(value);
             }
         }
         #endregion
@@ -163,6 +163,9 @@ namespace TechnosoCommons.Configuration.UI.Controls
 
             ValueControl.Dock = DockStyle.Fill;
             valueControlPanel.Controls.Add(ValueControl);
+
+            ShowNullCheckbox = fieldInfo.IsNullable;
+            nullCheckBox.Enabled = !fieldInfo.IsReadOnly && fieldInfo.IsNullable;
 
             Value = value;
             UpdateName(); // set the name after the value is set
@@ -220,6 +223,14 @@ namespace TechnosoCommons.Configuration.UI.Controls
                 return;
 
             ((Action)(() => OnRemoving())).InvokeUserAction("Remove");
+        }
+
+        private void nullCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            var value = Value;
+            //var  // TODO: implement a good solution for the null value
+            if (value == null && !nullCheckBox.Checked) return; // no change, the value is already null
+            OnValueChanged(value);
         }
         #endregion
 
