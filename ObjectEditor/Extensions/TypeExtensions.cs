@@ -210,7 +210,50 @@ namespace TechnosoCommons.Extensions
         /// <param name="conversionType">The type of object to return.</param>
         /// <returns>An object whose type is conversionType (or conversionType's underlying type if conversionType is Nullable&lt;&gt;) and whose value is equivalent to value.</returns>
         public static object ChangeType(this object value, Type conversionType)
-            // this wrapper method allows to do "value?.ChangeType(toType)" and get null if value is null, even when the toType is a value type.
-            => Convert.ChangeType(value, conversionType);
+        { // this wrapper method allows to do "value?.ChangeType(toType)" and get null if value is null, even when the toType is a value type.
+            if (conversionType == null)
+                throw new ArgumentNullException(nameof(conversionType));
+
+            if (value == null)
+            {
+                if (conversionType.IsValueType)
+                    return Activator.CreateInstance(conversionType); // return default value
+                return null; // reference type
+            }
+
+            if (conversionType.IsNullable())
+                conversionType = Nullable.GetUnderlyingType(conversionType);
+
+            if (value.GetType().IsAssignableTo(conversionType))
+                return value; // no need to convert
+
+            // custom conversion from string
+            if (value is string strValue)
+            {
+                switch (Type.GetTypeCode(conversionType))
+                {
+                    case TypeCode.Boolean: return bool.Parse(strValue);
+                    case TypeCode.Byte: return byte.Parse(strValue);
+                    case TypeCode.SByte: return sbyte.Parse(strValue);
+                    case TypeCode.Int16: return short.Parse(strValue);
+                    case TypeCode.UInt16: return ushort.Parse(strValue);
+                    case TypeCode.Int32: return int.Parse(strValue);
+                    case TypeCode.UInt32: return uint.Parse(strValue);
+                    case TypeCode.Int64: return long.Parse(strValue);
+                    case TypeCode.UInt64: return ulong.Parse(strValue);
+                    case TypeCode.Single: return float.Parse(strValue);
+                    case TypeCode.Double: return double.Parse(strValue);
+                    case TypeCode.Decimal: return decimal.Parse(strValue);
+                    case TypeCode.DateTime: return DateTime.Parse(strValue);
+                    case TypeCode.String: return strValue;
+                }
+                if (conversionType.IsEnum)
+                    return Enum.Parse(conversionType, strValue);
+                if (conversionType.Equals(typeof(TimeSpan)))
+                    return TimeSpan.Parse(strValue);
+            }
+
+            return Convert.ChangeType(value, conversionType);
+        }
     }
 }
