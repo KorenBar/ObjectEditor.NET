@@ -15,6 +15,8 @@ namespace TechnosoCommons.Configuration.UI.Controls
 {
     internal class TextFieldControl : BaseFieldControl
     {
+        private bool _changingValue;
+
         private TextBox TextBox => (TextBox)ValueControl;
 
         /// <summary>
@@ -38,12 +40,7 @@ namespace TechnosoCommons.Configuration.UI.Controls
             return textBox;
         }
 
-        protected override object GetValue()
-        {
-            return TextBox.Text;
-        }
-
-        protected override void SetValue(object value)
+        protected override void UpdateControlValue(object value)
         {
             TextBox.Text = value?.ToString();
         }
@@ -52,7 +49,14 @@ namespace TechnosoCommons.Configuration.UI.Controls
         {
             base.OnLoad(e);
             // Registering the events here to prevent rising when showing the form.
-            TextBox.TextChanged += (s, args) => OnValueChanged(TextBox.Text);
+            TextBox.TextChanged += (s, args) => _changingValue = true;
+            TextBox.Leave += (s, args) =>
+            {
+                var changed = _changingValue;
+                _changingValue = false; // reset the flag first
+                if (changed)
+                    OnUserChangedValue(TextBox.Text);
+            };
         }
     }
 }

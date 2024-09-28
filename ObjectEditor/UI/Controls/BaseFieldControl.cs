@@ -21,52 +21,14 @@ namespace TechnosoCommons.Configuration.UI.Controls
     public abstract partial class BaseFieldControl : UserControl
     {
         #region Properties
-        private bool _settingValue;
-
-        /// <summary>
-        /// Gets whether the field value is set to null.
-        /// Can be true for nullable or reference types only.
-        /// </summary>
-        protected bool IsNull
-        {
-            get => nullCheckBox.Checked;
-            private set
-            {
-                if (value == IsNull) return; // no change
-                // TODO: Create a checkbox and set it to rise the OnValueChanged event.
-                nullCheckBox.Checked = value; // will rise its CheckedChanged event
-                // DON'T set the visibility of the value control itself, it may be enabled/disabled by the field info.
-                valueControlPanel.Enabled = !value; // Set the container instead
-            }
-        }
-
+        private object _value;
         /// <summary>
         /// Gets or sets the field value.
-        /// ValueChanged event will be ignored when setting the value.
         /// </summary>
         public object Value
         {
-            get => !IsNull ? GetValue() : null;
-            set
-            {
-                try
-                {
-                    _settingValue = true; // suspend the ValueChanged event
-
-                    if (value == null)
-                    {
-                        if (!FieldInfo.IsNullable) // it's not a reference or nullable type
-                            throw new InvalidOperationException($"Can't set value of type {FieldInfo.Type.Name} to null.");
-                        IsNull = true;
-                    }
-                    else
-                    {
-                        IsNull = false;
-                        SetValue(value);
-                    }
-                }
-                finally { _settingValue = false; }
-            }
+            get => _value;
+            set => SetValue(value, false);
         }
 
         /// <summary>
@@ -89,15 +51,6 @@ namespace TechnosoCommons.Configuration.UI.Controls
             protected set => tableLayoutPanel1.ColumnStyles[3].Width = value ? tableLayoutPanel1.Height : 0;
         }
 
-        /// <summary>
-        /// Gets or sets whether the null checkbox is visible.
-        /// </summary>
-        public bool ShowNullCheckbox
-        {
-            get => tableLayoutPanel1.ColumnStyles[2].Width > 0;
-            protected set => tableLayoutPanel1.ColumnStyles[2].Width = value ? tableLayoutPanel1.Height : 0;
-        }
-
         private FieldStatus _status;
         /// <summary>
         /// Gets the status of the field.
@@ -116,7 +69,7 @@ namespace TechnosoCommons.Configuration.UI.Controls
 
         #region Events
         /// <summary>
-        /// Occurs when the field value changes by the user on the UI.
+        /// Occurs after the field value changes.
         /// </summary>
         public event EventHandler<FieldValueChangedEventArgs> ValueChanged;
 
@@ -142,9 +95,6 @@ namespace TechnosoCommons.Configuration.UI.Controls
 
             InitializeComponent();
 
-            //nullCheckbox.Enabled = !fieldInfo.IsReadOnly;
-            //ShowNullCheckbox = fieldInfo.IsNullable;
-
             if (fieldInfo is ItemFieldInfo itemFieldInfo)
             {
                 ShowRemoveButton = true;
@@ -164,9 +114,6 @@ namespace TechnosoCommons.Configuration.UI.Controls
             ValueControl.Dock = DockStyle.Fill;
             valueControlPanel.Controls.Add(ValueControl);
 
-            ShowNullCheckbox = fieldInfo.IsNullable;
-            nullCheckBox.Enabled = !fieldInfo.IsReadOnly && fieldInfo.IsNullable;
-
             Value = value;
             UpdateName(); // set the name after the value is set
             UpdateTip();
@@ -180,11 +127,37 @@ namespace TechnosoCommons.Configuration.UI.Controls
         /// <param name="fieldInfo">Field information.</param>
         /// <returns>The created control to display and edit the value.</returns>
         protected abstract Control CreateValueControl(BaseFieldInfo fieldInfo);
-        protected abstract object GetValue();
-        protected abstract void SetValue(object value);
+        /// <summary>
+        /// Sets the value of the value control, depending on the field type.
+        /// </summary>
+        /// <param name="value">The value to set.</param>
+        protected abstract void UpdateControlValue(object value);
         #endregion
 
         #region Field Actions
+        /// <summary>
+        /// Sets the value of the field.
+        /// </summary>
+        /// <param name="byUser">Indicates whether the value is set by the user.</param>
+        protected void SetValue(object value, bool byUser)
+        {
+            if (_value == value) return;
+
+            value = value?.ChangeType(FieldInfo.Type); // convert first, may will throw an exception
+
+            if (_value != null && value != null && _value.Equals(value))
+                return; // in some cases the value is the same, but the reference is different, like with strings
+
+            if (byUser && FieldInfo.IsReadOnly) // the user can't change the value of a read-only field, but the program can update it.
+                throw new InvalidOperationException("The field is read-only.");
+
+            if (value == null && !FieldInfo.IsNullable) // it's not a reference or nullable type
+                throw new InvalidOperationException($"Can't set value of type {FieldInfo.Type.Name} to null.");
+
+            _value = value;
+            OnValueChanged(new FieldValueChangedEventArgs(this, value, byUser));
+        }
+
         /// <summary>
         /// Applies the changes made.
         /// </summary>
@@ -224,14 +197,6 @@ namespace TechnosoCommons.Configuration.UI.Controls
 
             ((Action)(() => OnRemoving())).InvokeUserAction("Remove");
         }
-
-        private void nullCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            var value = Value;
-            //var  // TODO: implement a good solution for the null value
-            if (value == null && !nullCheckBox.Checked) return; // no change, the value is already null
-            OnValueChanged(value);
-        }
         #endregion
 
         #region Event Handlers
@@ -255,26 +220,44 @@ namespace TechnosoCommons.Configuration.UI.Controls
         }
 
         /// <summary>
-        /// Occurs when the field value changes by the user on the UI.
+        /// Occurs when the user changes the value of the field.
+        /// The inherited class should call this method when the user changes the value.
+        /// </summary>
+        /// <param name="value">The new value set by the user.</param>
+        /// <exception cref="InvalidOperationException">The field is read-only.</exception>
+        protected virtual void OnUserChangedValue(object value)
+        {
+            Action action = () => SetValue(value, true);
+            if (!action.InvokeUserAction("Value Change")) // failed
+                UpdateControlValue(Value); // revert the value
+        }
+
+        /// <summary>
+        /// Occurs when the field value changes.
         /// </summary>
         /// <param name="value">The new value of the field.</param>
-        protected void OnValueChanged(object value) => OnValueChanged(new FieldValueChangedEventArgs(this, value, !_settingValue));
         protected virtual void OnValueChanged(FieldValueChangedEventArgs e)
         {
             if (e == null) throw new ArgumentNullException(nameof(e));
-            if (!e.ByUser) return; // ignore the event if it's not by the user
-            if (IsNull && e.Value != null) return; // when the base class desides the value is null, ignore changes
 
-            bool isThis = e.Sender == this;
+            if (e.ByUser) // the value changed by the user, mark the field as changed
+                Status |= FieldStatus.ValueChanged;
+            else
+            { // the value read from the source object
+                UpdateControlValue(e.Value);
+                Status = FieldStatus.Synced; // reset the status
+            }
 
-            if (!isThis) // add this field to the path before invoking the event.
-                e.AddParentField(this);
+            //nullLabel.Visible = e.Value == null; // TODO
 
-            //BackColor = isThis ? Color.Orange : Color.Yellow;
-            Status |= isThis ? FieldStatus.ValueChanged : FieldStatus.InnerValueChanged;
             ValueChanged?.Invoke(this, e);
         }
+        protected void OnValueChanged(object value) => OnValueChanged(new FieldValueChangedEventArgs(this, value));
 
+        /// <summary>
+        /// Occurs when the status of the field changes.
+        /// </summary>
+        /// <param name="status"></param>
         protected virtual void OnStatusChanged(FieldStatus status)
         {
             BackColor = _status.HasFlag(FieldStatus.ValueChanged) ? Color.Orange

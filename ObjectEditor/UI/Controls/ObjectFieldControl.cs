@@ -20,8 +20,6 @@ namespace TechnosoCommons.Configuration.UI.Controls
 {
     internal class ObjectFieldControl : BaseFieldControl
     {
-        private object _value;
-
         private Button SetButton => (Button)ValueControl;
 
         public ObjectEditorForm ObjectEditorForm { get; private set; }
@@ -69,7 +67,7 @@ namespace TechnosoCommons.Configuration.UI.Controls
             Show:
             try
             {
-                object value = GetValue();
+                object value = Value;
                 if (value == null)
                     throw new InvalidOperationException("The value is null.");
                 
@@ -77,7 +75,7 @@ namespace TechnosoCommons.Configuration.UI.Controls
                 { // create a new form
                     ObjectEditorForm = ObjectEditorFactory.CreateForm(value, ParentEditorForm);
                     ObjectEditorForm.Text = this.Text;
-                    ObjectEditorForm.ValueChanged += (s, e) => this.OnValueChanged(e);
+                    ObjectEditorForm.ValueChanged += (s, e) => this.OnInnerValueChanged(e);
                     ObjectEditorForm.ChangesApplied += ObjectEditorForm_ChangesApplied;
                     ObjectEditorForm.ChangesPendingChanged += ObjectEditorForm_ChangesPendingChanged;
                     ObjectEditorForm.FormClosing += ObjectEditorForm_Closing;
@@ -102,20 +100,18 @@ namespace TechnosoCommons.Configuration.UI.Controls
         }
         #endregion
 
-        #region Overrides
-        protected override object GetValue() => _value;
-
-        protected override void SetValue(object value)
+        #region Event Handlers
+        protected virtual void OnInnerValueChanged(FieldValueChangedEventArgs e)
         {
-            if (GetValue() == value)
-            { // the value didn't change - reset the existing form.
-                ObjectEditorForm?.Reset();
-                return;
-            }
+            e.AddParentField(this);
+            if (e.ByUser)
+                Status |= FieldStatus.InnerValueChanged;
+        }
+        #endregion
 
-            _value = value;
-
-            // the value changed
+        #region Overrides
+        protected override void UpdateControlValue(object value)
+        { // the value has changed, dispose the current form.
             var form = ObjectEditorForm;
             if (form != null && !form.IsDisposed && !form.Disposing)
             { // dispose the old form
@@ -125,7 +121,7 @@ namespace TechnosoCommons.Configuration.UI.Controls
             ObjectEditorForm = null;
 
             UpdateName();
-            SetButton.Enabled = value != null;
+            SetButton.Enabled = value != null; // when pressing the button, the form will be created.
             //btnSet.Text = ObjectEditorForm is CollectionEditorForm ? "Collection" : "Edit";
         }
 

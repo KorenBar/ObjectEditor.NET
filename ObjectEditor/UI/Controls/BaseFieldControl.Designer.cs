@@ -33,22 +33,19 @@
             label1 = new Label();
             btnRemove = new Button();
             valueControlPanel = new Panel();
-            nullCheckBox = new CheckBox();
             toolTip1 = new ToolTip(components);
             tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
             // tableLayoutPanel1
             // 
-            tableLayoutPanel1.ColumnCount = 4;
+            tableLayoutPanel1.ColumnCount = 3;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 140F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 0F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 0F));
             tableLayoutPanel1.Controls.Add(label1, 0, 0);
-            tableLayoutPanel1.Controls.Add(btnRemove, 3, 0);
+            tableLayoutPanel1.Controls.Add(btnRemove, 2, 0);
             tableLayoutPanel1.Controls.Add(valueControlPanel, 1, 0);
-            tableLayoutPanel1.Controls.Add(nullCheckBox, 2, 0);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Margin = new Padding(4, 3, 4, 3);
@@ -91,17 +88,6 @@
             valueControlPanel.Size = new Size(146, 29);
             valueControlPanel.TabIndex = 6;
             // 
-            // nullCheckBox
-            // 
-            nullCheckBox.AutoSize = true;
-            nullCheckBox.Dock = DockStyle.Fill;
-            nullCheckBox.Location = new Point(295, 3);
-            nullCheckBox.Name = "nullCheckBox";
-            nullCheckBox.Size = new Size(1, 29);
-            nullCheckBox.TabIndex = 7;
-            nullCheckBox.UseVisualStyleBackColor = true;
-            nullCheckBox.CheckedChanged += nullCheckBox_CheckedChanged;
-            // 
             // toolTip1
             // 
             toolTip1.AutoPopDelay = 10000;
@@ -117,7 +103,6 @@
             Name = "BaseFieldControl";
             Size = new Size(292, 32);
             tableLayoutPanel1.ResumeLayout(false);
-            tableLayoutPanel1.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -128,6 +113,5 @@
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Button btnRemove;
         private Panel valueControlPanel;
-        private CheckBox nullCheckBox;
     }
 }

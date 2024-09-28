@@ -21,6 +21,7 @@ namespace TechnosoCommons.Configuration
         internal BaseFieldControl Sender { get; }
         public object Value { get; }
         public bool ByUser { get; }
+
         internal FieldValueChangedEventArgs(BaseFieldControl sender, object value, bool byUser = false)
         {
             if (sender == null) throw new ArgumentNullException(nameof(sender));
@@ -28,7 +29,12 @@ namespace TechnosoCommons.Configuration
             Value = value;
             ByUser = byUser;
         }
+
         internal void AddParentField(BaseFieldControl field) => _fieldPath.Insert(0, field);
+        /// <summary>
+        /// Returns the path of the field that has changed.
+        /// </summary>
+        /// <returns>A string representing the path of the field that has changed.</returns>
         public string GetPath()
         {
             StringBuilder sb = new StringBuilder();

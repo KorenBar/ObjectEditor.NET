@@ -42,12 +42,7 @@ namespace TechnosoCommons.Configuration.UI.Controls
             return numericBox;
         }
 
-        protected override object GetValue()
-        {
-            return Convert.ChangeType(NumericBox.Value, FieldInfo.Type);
-        }
-
-        protected override void SetValue(object value)
+        protected override void UpdateControlValue(object value)
         {
             NumericBox.Value = Convert.ToDecimal(value ?? 0m);
         }
@@ -56,7 +51,7 @@ namespace TechnosoCommons.Configuration.UI.Controls
         {
             base.OnLoad(e);
             // Add events here after the form is ready, to prevent rising when showing the form.
-            NumericBox.ValueChanged += (s, args) => OnValueChanged(this.Value);
+            NumericBox.ValueChanged += (s, args) => OnUserChangedValue(NumericBox.Value);
         }
     }
 }

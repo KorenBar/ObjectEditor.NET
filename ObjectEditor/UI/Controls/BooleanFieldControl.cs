@@ -28,12 +28,7 @@ namespace TechnosoCommons.Configuration.UI.Controls
             return checkBox;
         }
 
-        protected override object GetValue()
-        {
-            return CheckBox.Checked;
-        }
-
-        protected override void SetValue(object value)
+        protected override void UpdateControlValue(object value)
         {
             CheckBox.Checked = Convert.ToBoolean(value);
         }
@@ -42,7 +37,7 @@ namespace TechnosoCommons.Configuration.UI.Controls
         {
             base.OnLoad(e);
             // Add events here to prevent rising when showing the form.
-            CheckBox.CheckedChanged += (s, args) => OnValueChanged(CheckBox.Checked);
+            CheckBox.CheckedChanged += (s, args) => OnUserChangedValue(CheckBox.Checked);
         }
     }
 }

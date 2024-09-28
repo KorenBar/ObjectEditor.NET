@@ -28,12 +28,7 @@ namespace TechnosoCommons.Configuration.UI.Controls
             return comboBox;
         }
 
-        protected override object GetValue()
-        {
-            return ComboBox.SelectedItem;
-        }
-
-        protected override void SetValue(object value)
+        protected override void UpdateControlValue(object value)
         {
             ComboBox.SelectedItem = value;
         }
@@ -42,7 +37,7 @@ namespace TechnosoCommons.Configuration.UI.Controls
         {
             base.OnLoad(e);
             // Add events here to prevent rising when showing the form.
-            ComboBox.SelectedValueChanged += (s, args) => OnValueChanged(ComboBox.SelectedItem);
+            ComboBox.SelectedValueChanged += (s, args) => OnUserChangedValue(ComboBox.SelectedItem);
         }
     }
 }

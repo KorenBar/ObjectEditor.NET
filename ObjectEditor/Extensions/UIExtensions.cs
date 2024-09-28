@@ -10,6 +10,7 @@ namespace TechnosoUI.Configuration.UI
     {
         /// <summary>
         /// Invoke the user action and handle exceptions, showing a message box with the error message(s) instead of throwing exceptions.
+        /// Should be used for actions triggered from the UI only, as it shows a message box as a result.
         /// </summary>
         /// <param name="action">The action to perform.</param>
         /// <param name="actionName">Display name of the action in the error message.</param>
