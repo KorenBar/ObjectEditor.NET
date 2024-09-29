@@ -1,5 +1,6 @@
 using TechnosoCommons.Configuration.UI.Forms;
 using ObjectEditor.Demo.Data;
+using System.Diagnostics;
 
 namespace ObjectEditor.Demo
 {
@@ -16,6 +17,7 @@ namespace ObjectEditor.Demo
             ApplicationConfiguration.Initialize();
             var data = new MainDataClass();
             var form = ObjectEditorFactory.CreateForm(data);
+            form.ValueChanged += (s, e) => Debug.WriteLine(e.ToString() + (e.ByUser ? " (User)" : ""));
             Application.Run(form);
         }
     }
