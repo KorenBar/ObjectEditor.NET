@@ -31,18 +31,21 @@ namespace TechnosoCommons.Configuration
         }
 
         internal void AddParentField(BaseFieldControl field) => _fieldPath.Insert(0, field);
+
         /// <summary>
         /// Returns the path of the field that has changed.
         /// </summary>
         /// <returns>A string representing the path of the field that has changed.</returns>
-        public string GetPath()
+        public string GetPath(string separator = ".")
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             foreach (var field in _fieldPath)
-                sb.Append($"{field?.Text}.");
-            sb.Append($"{Sender.Text} = {Value}");
+                sb.Append($"{field?.Text}{separator}");
+            sb.Append($"{Sender.Text}");
             return sb.ToString();
         }
+
+        public override string ToString() => $"{GetPath()} = {Value}";
     }
 
     public class SaveRequiredChangedEventArgs : EventArgs

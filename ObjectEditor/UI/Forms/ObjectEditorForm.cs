@@ -297,7 +297,7 @@ namespace TechnosoCommons.Configuration.UI.Forms
             FieldControls.ForEachAll(f =>
             { // TODO: PropertyFieldReset(BaseField, ) method?
                 if (f.FieldInfo is PropertyFieldInfo p)
-                    f.Reset(p.PropertyInfo.GetValue(SourceObject));
+                    f.Value = p.PropertyInfo.GetValue(SourceObject);
             });
             ChangesPending = false;
         }
@@ -429,7 +429,7 @@ namespace TechnosoCommons.Configuration.UI.Forms
         #region Event Handlers
         protected virtual void OnValueChanged(FieldValueChangedEventArgs e)
         {
-            ChangesPending = true;
+            if (e.ByUser) ChangesPending = true;
             if (!IsSaveable) ValueChanged?.Invoke(this, e);
         }
 

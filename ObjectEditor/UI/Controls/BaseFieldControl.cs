@@ -47,8 +47,8 @@ namespace TechnosoCommons.Configuration.UI.Controls
         /// </summary>
         public bool ShowRemoveButton
         {
-            get => tableLayoutPanel1.ColumnStyles[3].Width > 0;
-            protected set => tableLayoutPanel1.ColumnStyles[3].Width = value ? tableLayoutPanel1.Height : 0;
+            get => tableLayoutPanel1.ColumnStyles[2].Width > 0;
+            protected set => tableLayoutPanel1.ColumnStyles[2].Width = value ? tableLayoutPanel1.Height : 0;
         }
 
         private FieldStatus _status;
@@ -167,16 +167,6 @@ namespace TechnosoCommons.Configuration.UI.Controls
         }
 
         /// <summary>
-        /// Resets the field value to an initial value.
-        /// </summary>
-        /// <param name="value">Initial value</param>
-        public virtual void Reset(object value)
-        {
-            Value = value;
-            Status = FieldStatus.Synced;
-        }
-
-        /// <summary>
         /// Takes the name from the field info or from the display name properties values on the source object itself.
         /// </summary>
         protected virtual void UpdateName() => this.Text = FieldInfo.Name ?? this.Value.GetDisplayName()
@@ -252,7 +242,16 @@ namespace TechnosoCommons.Configuration.UI.Controls
 
             ValueChanged?.Invoke(this, e);
         }
-        protected void OnValueChanged(object value) => OnValueChanged(new FieldValueChangedEventArgs(this, value));
+
+        /// <summary>
+        /// Occurs when the a child field value changes.
+        /// </summary>
+        /// <param name="e"></param>
+        protected virtual void OnInnerValueChanged(FieldValueChangedEventArgs e)
+        {
+            e.AddParentField(this); // creates a path to the changed field
+            ValueChanged?.Invoke(this, e); // chain the event
+        }
 
         /// <summary>
         /// Occurs when the status of the field changes.

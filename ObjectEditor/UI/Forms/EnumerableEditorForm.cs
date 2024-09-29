@@ -135,7 +135,7 @@ namespace TechnosoCommons.Configuration.UI.Forms
             // the field control type is by the item type, what if the item at the same index was changed to another type?
             // TODO: detect the type change and reload the item field controls if needed.
             FieldControls.Where(f => f.FieldInfo is ItemFieldInfo).ForEachAll(f => {
-                f.Reset(SourceEnumerableWrapper.GetAt(((ItemFieldInfo)f.FieldInfo).Index));
+                f.Value = SourceEnumerableWrapper.GetAt(((ItemFieldInfo)f.FieldInfo).Index);
             });
         }
         public override void Reset()

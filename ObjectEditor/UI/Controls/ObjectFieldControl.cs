@@ -34,8 +34,6 @@ namespace TechnosoCommons.Configuration.UI.Controls
         public ObjectFieldControl(object value, BaseFieldInfo fieldInfo, ObjectEditorForm parentForm)
             : base(value, fieldInfo)
         {
-            // will be set after the initial SetValue call.
-            // TODO: fix it by creating the form only before showing it.
             ParentEditorForm = parentForm;
         }
 
@@ -75,7 +73,7 @@ namespace TechnosoCommons.Configuration.UI.Controls
                 { // create a new form
                     ObjectEditorForm = ObjectEditorFactory.CreateForm(value, ParentEditorForm);
                     ObjectEditorForm.Text = this.Text;
-                    ObjectEditorForm.ValueChanged += (s, e) => this.OnInnerValueChanged(e);
+                    ObjectEditorForm.ValueChanged += (s, e) => OnInnerValueChanged(e);
                     ObjectEditorForm.ChangesApplied += ObjectEditorForm_ChangesApplied;
                     ObjectEditorForm.ChangesPendingChanged += ObjectEditorForm_ChangesPendingChanged;
                     ObjectEditorForm.FormClosing += ObjectEditorForm_Closing;
@@ -97,15 +95,6 @@ namespace TechnosoCommons.Configuration.UI.Controls
                 if (MessageBox.Show(ex.Message, "Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error) == DialogResult.Retry)
                     goto Show;
             }
-        }
-        #endregion
-
-        #region Event Handlers
-        protected virtual void OnInnerValueChanged(FieldValueChangedEventArgs e)
-        {
-            e.AddParentField(this);
-            if (e.ByUser)
-                Status |= FieldStatus.InnerValueChanged;
         }
         #endregion
 
