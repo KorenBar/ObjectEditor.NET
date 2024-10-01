@@ -32,9 +32,12 @@
             tableLayoutPanel1 = new TableLayoutPanel();
             label1 = new Label();
             btnRemove = new Button();
+            panel1 = new Panel();
+            nullLabel = new Label();
             valueControlPanel = new Panel();
             toolTip1 = new ToolTip(components);
             tableLayoutPanel1.SuspendLayout();
+            panel1.SuspendLayout();
             SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -45,7 +48,7 @@
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 0F));
             tableLayoutPanel1.Controls.Add(label1, 0, 0);
             tableLayoutPanel1.Controls.Add(btnRemove, 2, 0);
-            tableLayoutPanel1.Controls.Add(valueControlPanel, 1, 0);
+            tableLayoutPanel1.Controls.Add(panel1, 1, 0);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Margin = new Padding(4, 3, 4, 3);
@@ -80,10 +83,31 @@
             btnRemove.UseVisualStyleBackColor = true;
             btnRemove.Click += BtnRemove_Click;
             // 
+            // panel1
+            // 
+            panel1.Controls.Add(nullLabel);
+            panel1.Controls.Add(valueControlPanel);
+            panel1.Dock = DockStyle.Fill;
+            panel1.Location = new Point(143, 3);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(146, 29);
+            panel1.TabIndex = 6;
+            // 
+            // nullLabel
+            // 
+            nullLabel.Dock = DockStyle.Fill;
+            nullLabel.ForeColor = SystemColors.GrayText;
+            nullLabel.Location = new Point(0, 0);
+            nullLabel.Name = "nullLabel";
+            nullLabel.Size = new Size(146, 29);
+            nullLabel.TabIndex = 0;
+            nullLabel.Text = "null";
+            nullLabel.TextAlign = ContentAlignment.MiddleLeft;
+            // 
             // valueControlPanel
             // 
             valueControlPanel.Dock = DockStyle.Fill;
-            valueControlPanel.Location = new Point(143, 3);
+            valueControlPanel.Location = new Point(0, 0);
             valueControlPanel.Name = "valueControlPanel";
             valueControlPanel.Size = new Size(146, 29);
             valueControlPanel.TabIndex = 6;
@@ -103,6 +127,7 @@
             Name = "BaseFieldControl";
             Size = new Size(292, 32);
             tableLayoutPanel1.ResumeLayout(false);
+            panel1.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -112,6 +137,8 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Button btnRemove;
+        private Panel panel1;
         private Panel valueControlPanel;
+        private Label nullLabel;
     }
 }

@@ -238,7 +238,7 @@ namespace TechnosoCommons.Configuration.UI.Controls
                 Status = FieldStatus.Synced; // reset the status
             }
 
-            //nullLabel.Visible = e.Value == null; // TODO
+            nullLabel.Visible = e.Value == null;
 
             ValueChanged?.Invoke(this, e);
         }
