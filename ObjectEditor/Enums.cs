@@ -51,6 +51,10 @@ namespace TechnosoUI.Configuration
         /// The item can be removed from the collection.
         /// </summary>
         Remove = 1 << 2,
+        /// <summary>
+        /// The collection can have items inserted into it at a specific index.
+        /// </summary>
+        Insert = 1 << 3,
 
         All = -1
     }
