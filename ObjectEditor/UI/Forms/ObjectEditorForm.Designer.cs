@@ -220,12 +220,12 @@
             saveFileDialog1.Filter = "XML Files|*.xml;*.config";
             saveFileDialog1.FileOk += saveFileDialog1_FileOk;
             // 
-            // pictureBox1
+            // loadingPictureBox
             // 
             loadingPictureBox.Dock = DockStyle.Fill;
-            loadingPictureBox.Image = (Image)resources.GetObject("pictureBox1.Image");
+            loadingPictureBox.Image = (Image)resources.GetObject("loadingPictureBox.Image");
             loadingPictureBox.Location = new Point(0, 0);
-            loadingPictureBox.Name = "pictureBox1";
+            loadingPictureBox.Name = "loadingPictureBox";
             loadingPictureBox.Size = new Size(331, 417);
             loadingPictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
             loadingPictureBox.TabIndex = 3;

@@ -37,7 +37,7 @@ namespace TechnosoCommons.Configuration.UI.Forms
                 this.ShowInTaskbar = value == null;
             }
         }
-        
+
         /// <summary>
         /// The parent form that this form was opened from.
         /// </summary>
@@ -239,7 +239,7 @@ namespace TechnosoCommons.Configuration.UI.Forms
             var value = fieldInfo.GetValue(SourceObject);
             var fieldControl = CreateFieldControl(fieldInfo, value);
             if (fieldControl == null) return false;
-            
+
             AddField(fieldControl);
             return true;
         }
@@ -403,7 +403,7 @@ namespace TechnosoCommons.Configuration.UI.Forms
         {
             var filename = saveFileDialog1.FileName;
 
-            export:
+        export:
             try
             { // TODO: reimplement
                 await Task.Run(() =>
