@@ -36,8 +36,16 @@
             nullLabel = new Label();
             valueControlPanel = new Panel();
             toolTip1 = new ToolTip(components);
+            fieldMenu = new ContextMenuStrip(components);
+            copyToolStripMenuItem = new ToolStripMenuItem();
+            linkToolStripMenuItem = new ToolStripMenuItem();
+            pasteToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator1 = new ToolStripSeparator();
+            setNullToolStripMenuItem = new ToolStripMenuItem();
+            createDefaultToolStripMenuItem = new ToolStripMenuItem();
             tableLayoutPanel1.SuspendLayout();
             panel1.SuspendLayout();
+            fieldMenu.SuspendLayout();
             SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -118,16 +126,65 @@
             toolTip1.InitialDelay = 500;
             toolTip1.ReshowDelay = 100;
             // 
+            // fieldMenu
+            // 
+            fieldMenu.Items.AddRange(new ToolStripItem[] { copyToolStripMenuItem, linkToolStripMenuItem, pasteToolStripMenuItem, toolStripSeparator1, setNullToolStripMenuItem, createDefaultToolStripMenuItem });
+            fieldMenu.Name = "fieldMenu";
+            fieldMenu.Size = new Size(181, 142);
+            fieldMenu.Opening += fieldMenu_Opening;
+            // 
+            // copyToolStripMenuItem
+            // 
+            copyToolStripMenuItem.Name = "copyToolStripMenuItem";
+            copyToolStripMenuItem.Size = new Size(180, 22);
+            copyToolStripMenuItem.Text = "Copy";
+            copyToolStripMenuItem.Click += copyToolStripMenuItem_Click;
+            // 
+            // linkToolStripMenuItem
+            // 
+            linkToolStripMenuItem.Name = "linkToolStripMenuItem";
+            linkToolStripMenuItem.Size = new Size(180, 22);
+            linkToolStripMenuItem.Text = "Link";
+            linkToolStripMenuItem.Click += linkToolStripMenuItem_Click;
+            // 
+            // pasteToolStripMenuItem
+            // 
+            pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
+            pasteToolStripMenuItem.Size = new Size(180, 22);
+            pasteToolStripMenuItem.Text = "Paste";
+            pasteToolStripMenuItem.Click += pasteToolStripMenuItem_Click;
+            // 
+            // toolStripSeparator1
+            // 
+            toolStripSeparator1.Name = "toolStripSeparator1";
+            toolStripSeparator1.Size = new Size(177, 6);
+            // 
+            // setNullToolStripMenuItem
+            // 
+            setNullToolStripMenuItem.Name = "setNullToolStripMenuItem";
+            setNullToolStripMenuItem.Size = new Size(180, 22);
+            setNullToolStripMenuItem.Text = "Set null";
+            setNullToolStripMenuItem.Click += setNullToolStripMenuItem_Click;
+            // 
+            // createDefaultToolStripMenuItem
+            // 
+            createDefaultToolStripMenuItem.Name = "createDefaultToolStripMenuItem";
+            createDefaultToolStripMenuItem.Size = new Size(180, 22);
+            createDefaultToolStripMenuItem.Text = "Create default";
+            createDefaultToolStripMenuItem.Click += createDefaultToolStripMenuItem_Click;
+            // 
             // BaseFieldControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            ContextMenuStrip = fieldMenu;
             Controls.Add(tableLayoutPanel1);
             Margin = new Padding(4, 3, 4, 3);
             Name = "BaseFieldControl";
             Size = new Size(292, 32);
             tableLayoutPanel1.ResumeLayout(false);
             panel1.ResumeLayout(false);
+            fieldMenu.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -140,5 +197,12 @@
         private Panel panel1;
         private Panel valueControlPanel;
         private Label nullLabel;
+        private ContextMenuStrip fieldMenu;
+        private ToolStripMenuItem copyToolStripMenuItem;
+        private ToolStripMenuItem linkToolStripMenuItem;
+        private ToolStripMenuItem pasteToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator1;
+        private ToolStripMenuItem setNullToolStripMenuItem;
+        private ToolStripMenuItem createDefaultToolStripMenuItem;
     }
 }

@@ -20,6 +20,11 @@ namespace TechnosoCommons.Configuration.UI.Controls
     /// </summary>
     public abstract partial class BaseFieldControl : UserControl
     {
+        /// <summary>
+        /// The value copied by the user to paste or link to another field.
+        /// </summary>
+        private static object _copyValue;
+
         #region Properties
         private object _value;
         /// <summary>
@@ -187,6 +192,70 @@ namespace TechnosoCommons.Configuration.UI.Controls
 
             ((Action)(() => OnRemoving())).InvokeUserAction("Remove");
         }
+
+        private void fieldMenu_Opening(object sender, CancelEventArgs e)
+        {
+            var fieldType = FieldInfo.Type;
+            copyToolStripMenuItem.Enabled = Value != null;
+            pasteToolStripMenuItem.Enabled = _copyValue != null && !FieldInfo.IsReadOnly && fieldType.IsAssignableFrom(_copyValue.GetType()) && fieldType.IsSimpleType();
+            linkToolStripMenuItem.Enabled = _copyValue != null && !fieldType.IsSimpleType() && _copyValue.GetType().IsAssignableTo(FieldInfo.Type) && !FieldInfo.IsReadOnly;
+            setNullToolStripMenuItem.Enabled = FieldInfo.IsNullable && !FieldInfo.IsReadOnly;
+            createDefaultToolStripMenuItem.Enabled = fieldType.IsValueType || fieldType.Equals(typeof(string)) || fieldType.GetConstructor(Type.EmptyTypes) != null && !FieldInfo.IsReadOnly;
+        }
+
+        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _copyValue = Value;
+        }
+
+        private void linkToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ((Action)(() =>
+            {
+                var value = _copyValue;
+                if (value == null)
+                    throw new InvalidOperationException("The value to link is null.");
+                if (!value.GetType().IsAssignableTo(FieldInfo.Type))
+                    throw new InvalidOperationException($"Can't link value of type {value.GetType().Name} to {FieldInfo.Type.Name}.");
+                SetValue(value, true);
+            }))
+            .InvokeUserAction("Link Value");
+        }
+
+        private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ((Action)(() =>
+            {
+                if (_copyValue == null)
+                    throw new InvalidOperationException("The value to paste is null.");
+                if (!FieldInfo.Type.IsAssignableFrom(_copyValue.GetType()))
+                    throw new InvalidOperationException($"Can't paste value of type {_copyValue.GetType().Name} to {FieldInfo.Type.Name}.");
+                if (!FieldInfo.Type.IsSimpleType())
+                    throw new InvalidOperationException("Can't paste a class type.");
+                SetValue(_copyValue, true);
+            }))
+            .InvokeUserAction("Paste Value");
+        }
+
+        private void setNullToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ((Action)(() =>
+            {
+                if (!FieldInfo.IsNullable)
+                    throw new InvalidOperationException("The field is not nullable.");
+                SetValue(null, true);
+            }))
+            .InvokeUserAction("Set Null");
+        }
+
+        private void createDefaultToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ((Action)(() =>
+            {
+                SetValue(FieldInfo.Type.GetDefaultValue(), true);
+            }))
+            .InvokeUserAction("Create Default");
+        }
         #endregion
 
         #region Event Handlers
@@ -232,12 +301,10 @@ namespace TechnosoCommons.Configuration.UI.Controls
 
             if (e.ByUser) // the value changed by the user, mark the field as changed
                 Status |= FieldStatus.ValueChanged;
-            else
-            { // the value read from the source object
-                UpdateControlValue(e.Value);
+            else // the value read from the source object
                 Status = FieldStatus.Synced; // reset the status
-            }
 
+            UpdateControlValue(e.Value);
             nullLabel.Visible = e.Value == null;
 
             ValueChanged?.Invoke(this, e);

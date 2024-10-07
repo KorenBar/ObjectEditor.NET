@@ -17,6 +17,12 @@ namespace TechnosoCommons.Extensions
         public static object GetDefaultValue(this Type type)
         {
             if (type == null) return null;
+
+            // custom default value for some types
+            if (type.Equals(typeof(string)))
+                return string.Empty;
+
+            // check if the type has a default constructor
             if (type.IsClass && type.GetConstructor(Type.EmptyTypes) == null)
                 return null; // class type without parameterless constructor
 
