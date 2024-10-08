@@ -31,7 +31,6 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ObjectEditorForm));
             tableLayoutPanel1 = new TableLayoutPanel();
             panel1 = new Panel();
             btnOK = new Button();
@@ -40,13 +39,14 @@
             btnReset = new Button();
             btnApply = new Button();
             flowLayoutPanel1 = new FlowLayoutPanel();
+            panel2 = new Panel();
+            menuButton = new Button();
             contextMenuStrip1 = new ContextMenuStrip(components);
             exportToolStripMenuItem = new ToolStripMenuItem();
             importToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             resetToolStripMenuItem = new ToolStripMenuItem();
             reloadToolStripMenuItem = new ToolStripMenuItem();
-            panel2 = new Panel();
             toolTip1 = new ToolTip(components);
             openFileDialog1 = new OpenFileDialog();
             saveFileDialog1 = new SaveFileDialog();
@@ -62,14 +62,16 @@
             tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             tableLayoutPanel1.ColumnCount = 1;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Controls.Add(panel1, 0, 2);
-            tableLayoutPanel1.Controls.Add(flowLayoutPanel1, 0, 0);
-            tableLayoutPanel1.Controls.Add(panel2, 0, 1);
+            tableLayoutPanel1.Controls.Add(panel1, 0, 3);
+            tableLayoutPanel1.Controls.Add(flowLayoutPanel1, 0, 1);
+            tableLayoutPanel1.Controls.Add(panel2, 0, 2);
+            tableLayoutPanel1.Controls.Add(menuButton, 0, 0);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Margin = new Padding(4, 3, 4, 3);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 3;
+            tableLayoutPanel1.RowCount = 4;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 24F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 0F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 29F));
@@ -80,7 +82,6 @@
             // 
             panel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             panel1.BackColor = SystemColors.ControlLight;
-            panel1.ContextMenuStrip = contextMenuStrip1;
             panel1.Controls.Add(btnOK);
             panel1.Controls.Add(btnCancel);
             panel1.Controls.Add(btnSave);
@@ -167,55 +168,12 @@
             flowLayoutPanel1.AutoScroll = true;
             flowLayoutPanel1.BorderStyle = BorderStyle.FixedSingle;
             flowLayoutPanel1.Dock = DockStyle.Fill;
-            flowLayoutPanel1.Location = new Point(0, 0);
+            flowLayoutPanel1.Location = new Point(0, 24);
             flowLayoutPanel1.Margin = new Padding(0);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
             flowLayoutPanel1.Padding = new Padding(6);
-            flowLayoutPanel1.Size = new Size(331, 388);
+            flowLayoutPanel1.Size = new Size(331, 364);
             flowLayoutPanel1.TabIndex = 0;
-            // 
-            // contextMenuStrip1
-            // 
-            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { exportToolStripMenuItem, importToolStripMenuItem, toolStripSeparator1, resetToolStripMenuItem, reloadToolStripMenuItem });
-            contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(111, 98);
-            // 
-            // exportToolStripMenuItem
-            // 
-            exportToolStripMenuItem.Image = ObjectEditor.Resources.icons8_export_26;
-            exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            exportToolStripMenuItem.Size = new Size(110, 22);
-            exportToolStripMenuItem.Text = "Export";
-            exportToolStripMenuItem.Click += exportToolStripMenuItem_Click;
-            // 
-            // importToolStripMenuItem
-            // 
-            importToolStripMenuItem.Image = ObjectEditor.Resources.icons8_import_26;
-            importToolStripMenuItem.Name = "importToolStripMenuItem";
-            importToolStripMenuItem.Size = new Size(110, 22);
-            importToolStripMenuItem.Text = "Import";
-            importToolStripMenuItem.Click += importToolStripMenuItem_Click;
-            // 
-            // toolStripSeparator1
-            // 
-            toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(107, 6);
-            // 
-            // resetToolStripMenuItem
-            // 
-            resetToolStripMenuItem.Image = ObjectEditor.Resources.icons8_clear_32;
-            resetToolStripMenuItem.Name = "resetToolStripMenuItem";
-            resetToolStripMenuItem.Size = new Size(110, 22);
-            resetToolStripMenuItem.Text = "Reset";
-            resetToolStripMenuItem.Click += resetToolStripMenuItem_Click;
-            // 
-            // reloadToolStripMenuItem
-            // 
-            reloadToolStripMenuItem.Image = ObjectEditor.Resources.icons8_refresh_32;
-            reloadToolStripMenuItem.Name = "reloadToolStripMenuItem";
-            reloadToolStripMenuItem.Size = new Size(110, 22);
-            reloadToolStripMenuItem.Text = "Reload";
-            reloadToolStripMenuItem.Click += reloadToolStripMenuItem_Click;
             // 
             // panel2
             // 
@@ -226,6 +184,64 @@
             panel2.Name = "panel2";
             panel2.Size = new Size(331, 1);
             panel2.TabIndex = 2;
+            // 
+            // menuButton
+            // 
+            menuButton.BackgroundImage = ObjectEditor.Resources.icons8_menu_dark_gray_32;
+            menuButton.BackgroundImageLayout = ImageLayout.Zoom;
+            menuButton.Dock = DockStyle.Left;
+            menuButton.FlatAppearance.BorderSize = 0;
+            menuButton.FlatStyle = FlatStyle.Flat;
+            menuButton.Location = new Point(4, 2);
+            menuButton.Margin = new Padding(4, 2, 2, 2);
+            menuButton.Name = "menuButton";
+            menuButton.Size = new Size(32, 20);
+            menuButton.TabIndex = 3;
+            menuButton.UseVisualStyleBackColor = true;
+            menuButton.Click += menuButton_Click;
+            // 
+            // contextMenuStrip1
+            // 
+            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { resetToolStripMenuItem, reloadToolStripMenuItem, toolStripSeparator1, exportToolStripMenuItem, importToolStripMenuItem });
+            contextMenuStrip1.Name = "contextMenuStrip1";
+            contextMenuStrip1.Size = new Size(181, 120);
+            // 
+            // exportToolStripMenuItem
+            // 
+            exportToolStripMenuItem.Image = ObjectEditor.Resources.icons8_export_26;
+            exportToolStripMenuItem.Name = "exportToolStripMenuItem";
+            exportToolStripMenuItem.Size = new Size(180, 22);
+            exportToolStripMenuItem.Text = "Export";
+            exportToolStripMenuItem.Click += exportToolStripMenuItem_Click;
+            // 
+            // importToolStripMenuItem
+            // 
+            importToolStripMenuItem.Image = ObjectEditor.Resources.icons8_import_26;
+            importToolStripMenuItem.Name = "importToolStripMenuItem";
+            importToolStripMenuItem.Size = new Size(180, 22);
+            importToolStripMenuItem.Text = "Import";
+            importToolStripMenuItem.Click += importToolStripMenuItem_Click;
+            // 
+            // toolStripSeparator1
+            // 
+            toolStripSeparator1.Name = "toolStripSeparator1";
+            toolStripSeparator1.Size = new Size(177, 6);
+            // 
+            // resetToolStripMenuItem
+            // 
+            resetToolStripMenuItem.Image = ObjectEditor.Resources.icons8_clear_32;
+            resetToolStripMenuItem.Name = "resetToolStripMenuItem";
+            resetToolStripMenuItem.Size = new Size(180, 22);
+            resetToolStripMenuItem.Text = "Reset";
+            resetToolStripMenuItem.Click += resetToolStripMenuItem_Click;
+            // 
+            // reloadToolStripMenuItem
+            // 
+            reloadToolStripMenuItem.Image = ObjectEditor.Resources.icons8_refresh_32;
+            reloadToolStripMenuItem.Name = "reloadToolStripMenuItem";
+            reloadToolStripMenuItem.Size = new Size(180, 22);
+            reloadToolStripMenuItem.Text = "Reload";
+            reloadToolStripMenuItem.Click += reloadToolStripMenuItem_Click;
             // 
             // toolTip1
             // 
@@ -247,7 +263,7 @@
             // loadingPictureBox
             // 
             loadingPictureBox.Dock = DockStyle.Fill;
-            loadingPictureBox.Image = (Image)resources.GetObject("loadingPictureBox.Image");
+            loadingPictureBox.Image = ObjectEditor.Resources.infinity_128;
             loadingPictureBox.Location = new Point(0, 0);
             loadingPictureBox.Name = "loadingPictureBox";
             loadingPictureBox.Size = new Size(331, 417);
@@ -298,5 +314,6 @@
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripMenuItem reloadToolStripMenuItem;
         private ToolStripMenuItem resetToolStripMenuItem;
+        private Button menuButton;
     }
 }

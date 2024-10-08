@@ -53,8 +53,8 @@ namespace TechnosoCommons.Configuration.UI.Forms
         /// </summary>
         protected bool ShowCustomPanel
         {
-            get => this.tableLayoutPanel1.RowStyles[1].Height > 0;
-            set => this.tableLayoutPanel1.RowStyles[1].Height = value ? 25 : 0;
+            get => this.tableLayoutPanel1.RowStyles[2].Height > 0;
+            set => this.tableLayoutPanel1.RowStyles[2].Height = value ? 25 : 0;
         }
 
         protected IEnumerable<BaseFieldControl> FieldControls => this.ContentPanel.Controls.OfType<BaseFieldControl>();
@@ -450,6 +450,11 @@ namespace TechnosoCommons.Configuration.UI.Forms
         {
             if (!e.SaveRequired) // not required to save on the parent form, probably was saved,
                 SaveRequired = false; // tell the children.
+        }
+
+        private void menuButton_Click(object sender, EventArgs e)
+        {
+            contextMenuStrip1.Show(menuButton, new Point(0, menuButton.Height));
         }
         #endregion
 
