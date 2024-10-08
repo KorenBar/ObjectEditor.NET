@@ -33,7 +33,11 @@ namespace TechnosoCommons.Configuration.UI.Controls
         public object Value
         {
             get => _value;
-            set => SetValue(value, false);
+            set
+            {
+                SetValue(value, false);
+                Status = FieldStatus.Synced;
+            }
         }
 
         /// <summary>
@@ -301,8 +305,6 @@ namespace TechnosoCommons.Configuration.UI.Controls
 
             if (e.ByUser) // the value changed by the user, mark the field as changed
                 Status |= FieldStatus.ValueChanged;
-            else // the value read from the source object
-                Status = FieldStatus.Synced; // reset the status
 
             UpdateControlValue(e.Value);
             nullLabel.Visible = e.Value == null;

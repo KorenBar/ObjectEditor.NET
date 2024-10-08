@@ -45,7 +45,7 @@ namespace TechnosoCommons.Configuration
             return sb.ToString();
         }
 
-        public override string ToString() => $"{GetPath()} = {Value}";
+        public override string ToString() => $"{GetPath()}" + (Value != null ? $" = {Value}" : " is null");
     }
 
     public class SaveRequiredChangedEventArgs : EventArgs
