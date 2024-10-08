@@ -45,6 +45,8 @@ namespace TechnosoUI.Configuration
         /// <param name="sourceObj">The object to get the value from.</param>
         /// <returns>The value of the field from the source object.</returns>
         public abstract object GetValue(object sourceObj);
+
+        public override string ToString() => Name;
     }
 
     /// <summary>
@@ -121,5 +123,7 @@ namespace TechnosoUI.Configuration
                     throw new IndexOutOfRangeException("The index is out of range.");
             return enumerator.Current;
         }
+
+        public override string ToString() => $"[{Index}]";
     }
 }
