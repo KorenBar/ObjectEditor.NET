@@ -4,10 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TechnosoCommons.Data;
-using TechnosoCommons.Extensions;
+using ObjectEditor.Extensions;
 
-namespace TechnosoCommons.Data
+namespace ObjectEditor.Data
 {
     public static class DynamicWrapperExtensions
     {

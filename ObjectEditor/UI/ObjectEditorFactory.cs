@@ -5,12 +5,11 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using TechnosoCommons.Configuration.UI.Controls;
-using TechnosoCommons.Extensions;
-using TechnosoUI.Configuration;
-using TechnosoCommons.Data;
+using ObjectEditor.UI.Controls;
+using ObjectEditor.Extensions;
+using ObjectEditor.Data;
 
-namespace TechnosoCommons.Configuration.UI.Forms
+namespace ObjectEditor.UI.Forms
 {
     public static class ObjectEditorFactory
     {

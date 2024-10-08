@@ -1,4 +1,4 @@
-﻿namespace TechnosoCommons.Configuration.UI.Forms
+﻿namespace ObjectEditor.UI.Forms
 {
     partial class ObjectEditorForm
     {

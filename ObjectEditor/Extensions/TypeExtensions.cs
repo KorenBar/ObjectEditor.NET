@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TechnosoCommons.Extensions
+namespace ObjectEditor.Extensions
 {
     public static class TypeExtensions
     {

@@ -5,9 +5,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using TechnosoCommons.Extensions;
+using ObjectEditor.Extensions;
 
-namespace TechnosoCommons.Data
+namespace ObjectEditor.Data
 {
     // TODO: write tests for this class, we didn't use it yet
     public class DynamicDictionaryWrapper : DynamicCollectionWrapper, IDictionary<object, object>

@@ -7,13 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Configuration;
 using System.Reflection;
-using TechnosoUI.Configuration;
-using TechnosoUI.Configuration.UI;
-using TechnosoCommons.Extensions;
+using ObjectEditor.Extensions;
 
-namespace TechnosoCommons.Configuration.UI.Controls
+namespace ObjectEditor.UI.Controls
 {
     /// <summary>
     /// Base class for all types of fields in an object editor.

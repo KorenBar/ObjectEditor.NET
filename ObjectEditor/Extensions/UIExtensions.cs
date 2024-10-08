@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TechnosoUI.Configuration.UI
+namespace ObjectEditor.Extensions
 {
     public static class UIExtensions
     {

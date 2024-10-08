@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Configuration;
 using System.Reflection;
-using TechnosoCommons.Configuration.UI.Controls;
+using ObjectEditor.UI.Controls;
 
-namespace TechnosoCommons.Configuration
+namespace ObjectEditor
 {
     public class FieldValueChangedEventArgs : EventArgs
     {

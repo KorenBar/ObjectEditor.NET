@@ -1,4 +1,4 @@
-﻿namespace TechnosoCommons.Configuration.UI.Controls
+﻿namespace ObjectEditor.UI.Controls
 {
     partial class BaseFieldControl
     {

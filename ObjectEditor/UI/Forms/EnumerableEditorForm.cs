@@ -6,15 +6,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
-using TechnosoCommons;
-using TechnosoCommons.Configuration.UI.Controls;
-using TechnosoCommons.Configuration.UI.Forms;
-using TechnosoCommons.Data;
-using TechnosoCommons.Extensions;
-using TechnosoUI.Configuration;
-using TechnosoUI.Configuration.UI;
+using ObjectEditor;
+using ObjectEditor.UI.Controls;
+using ObjectEditor.UI.Forms;
+using ObjectEditor.Data;
+using ObjectEditor.Extensions;
 
-namespace TechnosoCommons.Configuration.UI.Forms
+namespace ObjectEditor.UI.Forms
 {
     /// <summary>
     /// Extends the ObjectEditorForm to view and edit an enumerable of any type.

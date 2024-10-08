@@ -7,16 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Configuration;
 using System.Reflection;
-using TechnosoCommons.Configuration;
-using TechnosoCommons.Configuration.UI.Forms;
-using TechnosoCommons.Data;
-using TechnosoUI.Configuration;
-using TechnosoUI.Configuration.UI;
+using ObjectEditor;
+using ObjectEditor.UI.Forms;
+using ObjectEditor.Data;
 using System.Runtime.InteropServices;
 
-namespace TechnosoCommons.Configuration.UI.Controls
+namespace ObjectEditor.UI.Controls
 {
     internal class ObjectFieldControl : BaseFieldControl
     {

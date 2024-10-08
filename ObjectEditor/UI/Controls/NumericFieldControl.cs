@@ -7,12 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Configuration;
 using System.Reflection;
-using TechnosoCommons.Extensions;
-using TechnosoUI.Configuration;
+using ObjectEditor.Extensions;
 
-namespace TechnosoCommons.Configuration.UI.Controls
+namespace ObjectEditor.UI.Controls
 {
     internal class NumericFieldControl : BaseFieldControl
     {
@@ -22,7 +20,7 @@ namespace TechnosoCommons.Configuration.UI.Controls
 
         protected override Control CreateValueControl(BaseFieldInfo fieldInfo)
         {
-            var numericBox = new TechnosoCommons.UI.Controls.NumericBox();
+            var numericBox = new ObjectEditor.UI.Controls.NumericBox();
 
             if (fieldInfo.Type.IsInteger())
             {

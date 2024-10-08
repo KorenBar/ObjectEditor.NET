@@ -5,10 +5,10 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using TechnosoCommons.Configuration;
-using TechnosoCommons.Extensions;
+using ObjectEditor;
+using ObjectEditor.Extensions;
 
-namespace TechnosoUI.Configuration
+namespace ObjectEditor
 {
     public abstract class BaseFieldInfo
     {

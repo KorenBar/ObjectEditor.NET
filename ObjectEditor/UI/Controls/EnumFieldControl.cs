@@ -7,11 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Configuration;
 using System.Reflection;
-using TechnosoUI.Configuration;
 
-namespace TechnosoCommons.Configuration.UI.Controls
+namespace ObjectEditor.UI.Controls
 {
     internal class EnumFieldControl : BaseFieldControl
     {

@@ -5,9 +5,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using TechnosoCommons.Extensions;
+using ObjectEditor.Extensions;
 
-namespace TechnosoCommons.Data
+namespace ObjectEditor.Data
 {
     /// <summary>
     /// Reference any IEnumerable as IEnumerable<object> to access its elements as objects dynamically.

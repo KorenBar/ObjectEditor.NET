@@ -1,4 +1,4 @@
-using TechnosoCommons.Configuration.UI.Forms;
+using ObjectEditor.UI.Forms;
 using ObjectEditor.Demo.Data;
 using System.Diagnostics;
 

@@ -11,15 +11,12 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Reflection;
-using TechnosoCommons.Extensions;
-using TechnosoCommons.Configuration.UI.Controls;
+using ObjectEditor.Extensions;
+using ObjectEditor.UI.Controls;
 using System.Xml;
 using System.Xml.Serialization;
-using TechnosoUI;
-using TechnosoUI.Configuration;
-using TechnosoUI.Configuration.UI;
 
-namespace TechnosoCommons.Configuration.UI.Forms
+namespace ObjectEditor.UI.Forms
 {
     /// <summary>
     /// A form to view and edit the properties of an object and its sub-objects recursively, of any type.
