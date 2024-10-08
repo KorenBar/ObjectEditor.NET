@@ -43,6 +43,9 @@
             contextMenuStrip1 = new ContextMenuStrip(components);
             exportToolStripMenuItem = new ToolStripMenuItem();
             importToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator1 = new ToolStripSeparator();
+            resetToolStripMenuItem = new ToolStripMenuItem();
+            reloadToolStripMenuItem = new ToolStripMenuItem();
             panel2 = new Panel();
             toolTip1 = new ToolTip(components);
             openFileDialog1 = new OpenFileDialog();
@@ -77,6 +80,7 @@
             // 
             panel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             panel1.BackColor = SystemColors.ControlLight;
+            panel1.ContextMenuStrip = contextMenuStrip1;
             panel1.Controls.Add(btnOK);
             panel1.Controls.Add(btnCancel);
             panel1.Controls.Add(btnSave);
@@ -162,7 +166,6 @@
             // 
             flowLayoutPanel1.AutoScroll = true;
             flowLayoutPanel1.BorderStyle = BorderStyle.FixedSingle;
-            flowLayoutPanel1.ContextMenuStrip = contextMenuStrip1;
             flowLayoutPanel1.Dock = DockStyle.Fill;
             flowLayoutPanel1.Location = new Point(0, 0);
             flowLayoutPanel1.Margin = new Padding(0);
@@ -173,9 +176,9 @@
             // 
             // contextMenuStrip1
             // 
-            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { exportToolStripMenuItem, importToolStripMenuItem });
+            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { exportToolStripMenuItem, importToolStripMenuItem, toolStripSeparator1, resetToolStripMenuItem, reloadToolStripMenuItem });
             contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(111, 48);
+            contextMenuStrip1.Size = new Size(111, 98);
             // 
             // exportToolStripMenuItem
             // 
@@ -192,6 +195,27 @@
             importToolStripMenuItem.Size = new Size(110, 22);
             importToolStripMenuItem.Text = "Import";
             importToolStripMenuItem.Click += importToolStripMenuItem_Click;
+            // 
+            // toolStripSeparator1
+            // 
+            toolStripSeparator1.Name = "toolStripSeparator1";
+            toolStripSeparator1.Size = new Size(107, 6);
+            // 
+            // resetToolStripMenuItem
+            // 
+            resetToolStripMenuItem.Image = ObjectEditor.Resources.icons8_clear_32;
+            resetToolStripMenuItem.Name = "resetToolStripMenuItem";
+            resetToolStripMenuItem.Size = new Size(110, 22);
+            resetToolStripMenuItem.Text = "Reset";
+            resetToolStripMenuItem.Click += resetToolStripMenuItem_Click;
+            // 
+            // reloadToolStripMenuItem
+            // 
+            reloadToolStripMenuItem.Image = ObjectEditor.Resources.icons8_refresh_32;
+            reloadToolStripMenuItem.Name = "reloadToolStripMenuItem";
+            reloadToolStripMenuItem.Size = new Size(110, 22);
+            reloadToolStripMenuItem.Text = "Reload";
+            reloadToolStripMenuItem.Click += reloadToolStripMenuItem_Click;
             // 
             // panel2
             // 
@@ -271,5 +295,8 @@
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private PictureBox loadingPictureBox;
+        private ToolStripSeparator toolStripSeparator1;
+        private ToolStripMenuItem reloadToolStripMenuItem;
+        private ToolStripMenuItem resetToolStripMenuItem;
     }
 }

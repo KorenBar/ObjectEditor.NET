@@ -63,6 +63,16 @@ namespace ObjectEditor {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap icons8_clear_32 {
+            get {
+                object obj = ResourceManager.GetObject("icons8_clear_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap icons8_export_26 {
             get {
                 object obj = ResourceManager.GetObject("icons8-export-26", resourceCulture);
@@ -96,6 +106,16 @@ namespace ObjectEditor {
         internal static System.Drawing.Bitmap icons8_import_52 {
             get {
                 object obj = ResourceManager.GetObject("icons8-import-52", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icons8_refresh_32 {
+            get {
+                object obj = ResourceManager.GetObject("icons8_refresh_32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

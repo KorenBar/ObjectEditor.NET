@@ -181,6 +181,27 @@ namespace TechnosoCommons.Configuration.UI.Forms
 
         #region Form Actions
         /// <summary>
+        /// Reload the controls of the form from the source object asynchronously while showing a loading animation.
+        /// In case of error, a message box will be shown to the user and no exception will be thrown.
+        /// </summary>
+        protected async void ReloadControlsAsync()
+        {
+            try
+            {
+                //ContentPanel.SuspendLayout();
+                loadingPictureBox.Visible = true;
+                ContentPanel.Visible = false;
+                await Task.Run(() => ((Action)ReloadControls).InvokeUserAction("Reload"));
+            }
+            finally
+            {
+                ContentPanel.Visible = true;
+                loadingPictureBox.Visible = false;
+                //ContentPanel.ResumeLayout(true);
+            }
+        }
+
+        /// <summary>
         /// Reload the controls of the form from the source object.
         /// </summary>
         public virtual void ReloadControls()
@@ -357,6 +378,12 @@ namespace TechnosoCommons.Configuration.UI.Forms
             this.DialogResult = DialogResult.Cancel; // Should be automatically since already was defined as CancelButton
         }
 
+        private void resetToolStripMenuItem_Click(object sender, EventArgs e)
+            => btnReset_Click(sender, e);
+
+        private void reloadToolStripMenuItem_Click(object sender, EventArgs e)
+            => ReloadControlsAsync();
+
         private void exportToolStripMenuItem_Click(object sender, EventArgs e)
         {
             saveFileDialog1.FileName = this.Text;
@@ -452,7 +479,8 @@ namespace TechnosoCommons.Configuration.UI.Forms
         protected void OnSaveRequiredChanged(bool saveRequired) => OnSaveRequiredChanged(new SaveRequiredChangedEventArgs(saveRequired));
         protected virtual void OnSaveRequiredChanged(SaveRequiredChangedEventArgs e)
         {
-            this.InvokeUI(() => {
+            this.InvokeUI(() =>
+            {
                 btnSave.FlatStyle = _saveRequired ? FlatStyle.Flat : FlatStyle.Standard;
 
                 if (e.SaveRequired) // required to save,
@@ -473,23 +501,10 @@ namespace TechnosoCommons.Configuration.UI.Forms
         #endregion
 
         #region Overrides
-        protected override async void OnLoad(EventArgs e)
+        protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-
-            try
-            {
-                //ContentPanel.SuspendLayout();
-                loadingPictureBox.Visible = true;
-                ContentPanel.Visible = false;
-                await Task.Run(() => ((Action)ReloadControls).InvokeUserAction("Reload"));
-            }
-            finally
-            {
-                ContentPanel.Visible = true;
-                loadingPictureBox.Visible = false;
-                //ContentPanel.ResumeLayout(true);
-            }
+            ReloadControlsAsync();
         }
 
         protected override void OnVisibleChanged(EventArgs e)
