@@ -7,22 +7,31 @@ using System.Reflection;
 
 namespace ObjectEditor
 {
+    [AttributeUsage(AttributeTargets.Property)]
     public class InfoAttribute : Attribute
     {
+        /// <summary>
+        /// The name of the property field.
+        /// </summary>
         public string Name { get; set; }
+        /// <summary>
+        /// The description of the property field.
+        /// </summary>
         public string Description { get; set; }
-        /// <summary>
-        /// Hide the text from the user
-        /// </summary>
-        public bool IsPassword { get; set; }
-        /// <summary>
-        /// Use the property's value as a display name of an item in collection.
-        /// </summary>
-        public bool UseAsDisplayName { get; set; }
 
         public InfoAttribute() { }
         public InfoAttribute(string description) => Description = description;
     }
+
+    /// <summary>
+    /// Attribute to use the property value as a display name of an item in a collection.
+    /// </summary>
+    public class EditorDisplayNameAttribute : Attribute { }
+
+    /// <summary>
+    /// Attribute to mask the property value in the object editor.
+    /// </summary>
+    public class EditorPasswordAttribute : Attribute { }
 
     /// <summary>
     /// Attribute to ignore the inherited properties in the object editor.

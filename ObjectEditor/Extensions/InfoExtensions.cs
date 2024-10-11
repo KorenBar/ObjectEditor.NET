@@ -19,7 +19,7 @@ namespace ObjectEditor
         public static string GetDisplayName(this object item)
         {
             if (item == null) return null;
-            var displayProperties = item.GetType().GetProperties().Where(p => p.CanRead && (p.GetInfo()?.UseAsDisplayName ?? false));
+            var displayProperties = item.GetType().GetProperties().Where(p => p.CanRead && (p.GetCustomAttribute<EditorDisplayNameAttribute>() != null));
             if (displayProperties.Count() > 0)
                 return string.Join("_", displayProperties.Select(p => p.GetValue(item)));
             return null;

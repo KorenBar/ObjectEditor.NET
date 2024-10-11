@@ -21,6 +21,8 @@ namespace ObjectEditor.Demo.Data
         public int Int { get; set; }
         [Info("A string property with description.")]
         public string String { get; set; }
+        [EditorPassword]
+        public string Password { get; set; } = "secret_password";
         public DateTime DateTime { get; set; }
         public TimeSpan TimeSpan { get; set; }
         public bool Bool { get; set; }
@@ -43,6 +45,7 @@ namespace ObjectEditor.Demo.Data
         //public MainDataClass CircularReference { get; set; } = new MainDataClass(); // StackOverflowException
         public MainDataClass[] NullArrayReference { get; set; }
         public MainDataClass[] EmptyArrayReference { get; set; } = new MainDataClass[0];
+        public List<ItemClass> ListOfObjects { get; set; } = new List<ItemClass>() { new ItemClass(), new ItemClass(), new ItemClass() };
         public object ValueAsObject { get; set; } = 1;
         public CustomList CustomList { get; set; } = new CustomList() { new object(), System.DateTime.Now, "string", 1, 2, 3, null, null, 7 };
         public CustomList CustomEmptyList { get; set; } = new CustomList();

@@ -30,10 +30,7 @@ namespace ObjectEditor.UI.Controls
             textBox.ReadOnly = fieldInfo.IsReadOnly;
 
             if (fieldInfo is PropertyFieldInfo propertyFieldInfo)
-            {
-                var infoAttr = propertyFieldInfo.PropertyInfo.GetCustomAttribute<InfoAttribute>();
-                textBox.UseSystemPasswordChar = infoAttr?.IsPassword ?? false;
-            }
+                textBox.UseSystemPasswordChar = propertyFieldInfo.PropertyInfo.GetCustomAttribute<EditorPasswordAttribute>() != null;
 
             return textBox;
         }
