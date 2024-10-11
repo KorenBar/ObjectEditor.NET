@@ -11,6 +11,8 @@ namespace ObjectEditor.Demo.Data
         [EditorDisplayName]
         public string Name { get; set; } = "ItemName";
         [EditorDisplayName]
+        public TestEnum EnumProperty { get; set; } = (TestEnum)(Random.Shared.Next() % Enum.GetValues(typeof(TestEnum)).Length);
+        [EditorDisplayName]
         public int Value { get; set; } = Random.Shared.Next();
         public DateTime Date { get; set; }
         public TimeSpan Time { get; set; }
@@ -25,7 +27,5 @@ namespace ObjectEditor.Demo.Data
         public ushort UShort { get; set; }
         public uint UInt { get; set; }
         public long Long { get; set; }
-        [EditorDisplayName]
-        public TestEnum Enum { get; set; }
     }
 }
