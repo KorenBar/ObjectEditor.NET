@@ -21,7 +21,7 @@ namespace ObjectEditor.UI.Forms
     /// <summary>
     /// A form to view and edit the properties of an object and its sub-objects recursively, of any type.
     /// </summary>
-    public partial class ObjectEditorForm : Form//: ControllingForm<ObjectEditorForm>
+    public partial class ObjectEditorForm : Form
     {
         #region Form Properties
         public new Form Owner
@@ -207,20 +207,7 @@ namespace ObjectEditor.UI.Forms
 
             if (SourceObject == null) return;
 
-            Type type = SourceObject.GetType();
-            IEnumerable<PropertyInfo> properties = type.GetProperties();
-
-            IEnumerable<Type> typeInheritance = type.GetInheritanceChain();
-            Type stopAtType = typeInheritance.FirstOrDefault(t => t.GetCustomAttribute<EditorIgnoreInheritedAttribute>(false) != null);
-            if (stopAtType != null) // only include properties from the target type up to the first class with IgnoreInheritedPropertiesAttribute defined.
-                properties = properties.Where(p => p.DeclaringType == stopAtType || p.DeclaringType != null && p.DeclaringType.IsSubclassOf(stopAtType));
-
-            properties = properties.Where(p => p.GetCustomAttribute<EditorIgnoreAttribute>() == null); // exclude ignored properties
-            properties = properties.Where(p => p.GetCustomAttribute<ObsoleteAttribute>() == null); // exclude obsolete properties
-            properties = properties.Where(p => p.GetIndexParameters().Length == 0); // exclude indexers
-            //properties = properties.OrderBy(p => p.Name); // TODO: let the user choose how to sort
-
-            properties.ForEachAll(p => AddField(p));
+            SourceObject.GetType().GetPropertiesFiltered().ForEachAll(p => AddField(p));
         }
 
         /// <summary>

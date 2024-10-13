@@ -47,6 +47,7 @@ namespace ObjectEditor.Demo.Data
         public MainDataClass[] EmptyArrayReference { get; set; } = new MainDataClass[0];
         public List<ItemClass> ListOfObjects { get; set; } = new List<ItemClass>() { new ItemClass(), new ItemClass(), new ItemClass() };
         public object ValueAsObject { get; set; } = 1;
+        public InheritingClass InheritingClass { get; set; } = new InheritingClass();
         public CustomList CustomList { get; set; } = new CustomList() { new object(), System.DateTime.Now, "string", 1, 2, 3, null, null, 7 };
         public CustomList CustomEmptyList { get; set; } = new CustomList();
         public CustomCollection CustomCollection { get; set; } = new CustomCollection() { new object(), System.DateTime.Now, "string", 1, 2, 3, null, null, 7 };

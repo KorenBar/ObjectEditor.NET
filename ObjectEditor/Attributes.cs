@@ -26,11 +26,13 @@ namespace ObjectEditor
     /// <summary>
     /// Attribute to use the property value as a display name of an item in a collection.
     /// </summary>
+    [AttributeUsage(AttributeTargets.Property)]
     public class EditorDisplayNameAttribute : Attribute { }
 
     /// <summary>
     /// Attribute to mask the property value in the object editor.
     /// </summary>
+    [AttributeUsage(AttributeTargets.Property)]
     public class EditorPasswordAttribute : Attribute { }
 
     /// <summary>
