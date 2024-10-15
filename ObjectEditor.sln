@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35122.118
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectEditor.Demo", "ObjectEditor.Demo\ObjectEditor.Demo.csproj", "{A7939EA6-B19B-4779-B620-F7D5D625BEEB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObjectEditor.Demo", "ObjectEditor.Demo\ObjectEditor.Demo.csproj", "{A7939EA6-B19B-4779-B620-F7D5D625BEEB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectEditor", "ObjectEditor\ObjectEditor.csproj", "{EEF3836A-F680-44D1-BC13-2397CDE90326}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObjectEditor", "ObjectEditor\ObjectEditor.csproj", "{EEF3836A-F680-44D1-BC13-2397CDE90326}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectEditor.Tests", "ObjectEditor.Tests\ObjectEditor.Tests.csproj", "{9147F81D-AA08-4367-AC9E-23FA10985CBF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{EEF3836A-F680-44D1-BC13-2397CDE90326}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EEF3836A-F680-44D1-BC13-2397CDE90326}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EEF3836A-F680-44D1-BC13-2397CDE90326}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9147F81D-AA08-4367-AC9E-23FA10985CBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9147F81D-AA08-4367-AC9E-23FA10985CBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9147F81D-AA08-4367-AC9E-23FA10985CBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9147F81D-AA08-4367-AC9E-23FA10985CBF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
