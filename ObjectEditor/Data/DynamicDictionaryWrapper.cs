@@ -5,7 +5,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using ObjectEditor.Extensions;
+using static ObjectEditor.HelperMethods;
 
 namespace ObjectEditor.Data
 {
@@ -63,9 +65,7 @@ namespace ObjectEditor.Data
         /// <returns>The new default added entry.</returns>
         public override object AddDefaultValue()
         {
-            var key = KeyType?.GetDefaultValue();
-            var value = ValueType?.GetDefaultValue();
-            var entry = new KeyValuePair<object, object>(key, value);
+            var entry = CreateKeyValuePair(KeyType, KeyType.GetDefaultValue(), ValueType, ValueType.GetDefaultValue());
             Add(entry);
             return entry;
         }
@@ -96,8 +96,8 @@ namespace ObjectEditor.Data
         }
 
         public void Add(object key, object value) => AddMethod.Invoke(Source, new object[] { key, value });
-        public void Add(KeyValuePair<object, object> entry) => base.Add(entry);
-        public bool Contains(KeyValuePair<object, object> entry) => base.Contains(entry);
+        public void Add(KeyValuePair<object, object> entry) => base.Add(entry); // TODO
+        public bool Contains(KeyValuePair<object, object> entry) => base.Contains(entry); // TODO
         public bool ContainsKey(object key) => ContainsKeyMethod.Invoke(Source, new object[] { key }) as bool? ?? false;
         public void CopyTo(KeyValuePair<object, object>[] array, int arrayIndex)
         {
@@ -107,10 +107,11 @@ namespace ObjectEditor.Data
         public new IEnumerator<KeyValuePair<object, object>> GetEnumerator()
         {
             foreach (var obj in Source)
-                yield return (KeyValuePair<object, object>)obj;
+                // TODO: create a new KeyValuePair<object, object> from KeyValuePair<KeyType, ValueType> dynamically
+                yield return (KeyValuePair<object, object>)obj; // obj is not necessarily a KeyValuePair<object, object>!
         }
         public new bool Remove(object key) => RemoveMethod.Invoke(Source, new object[] { key }) as bool? ?? false;
-        public bool Remove(KeyValuePair<object, object> item) => base.Remove(item);
+        public bool Remove(KeyValuePair<object, object> item) => base.Remove(item); // TODO
         public bool TryGetValue(object key, out object value) => TryGetValueMethod.Invoke(Source, new object[] { key, value = null }) as bool? ?? false;
         #endregion
     }
