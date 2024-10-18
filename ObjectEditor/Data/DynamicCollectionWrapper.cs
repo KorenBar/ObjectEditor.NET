@@ -27,12 +27,6 @@ namespace ObjectEditor.Data
         MethodInfo RemoveMethod => _genericCollectionType?.GetMethod("Remove");
         #endregion
 
-        // TODO: remove that after enforcing the source to be a generic collection
-        /// <summary>
-        /// True if the source collection is a generic collection.
-        /// </summary>
-        public bool IsCollection => _genericCollectionType != null;
-
         /// <summary>
         /// Wraps a generic collection as a collection of objects.
         /// </summary>
@@ -64,7 +58,7 @@ namespace ObjectEditor.Data
         /// Falls back to LINQ Count if it's an IEnumerable but not a generic ICollection<>.
         /// </summary>
         public int Count => (CountProperty?.GetValue(Source) as int?) ?? Source.Cast<object>().Count();
-        public bool IsReadOnly => !IsCollection || IsReadOnlyProperty?.GetValue(Source) as bool? == true;
+        public bool IsReadOnly => IsReadOnlyProperty?.GetValue(Source) as bool? == true;
 
         public void Add(object item) => AddMethod?.Invoke(Source, new object[] { item });
         public bool Remove(object item) => (RemoveMethod?.Invoke(Source, new object[] { item }) as bool?) ?? false;

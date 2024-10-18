@@ -97,28 +97,51 @@ namespace ObjectEditor.Tests
                 { "Country", "USA" }
             });
 
-            Assert.IsTrue(wrapper1.Contains("Name"));
-            Assert.IsTrue(wrapper1.Contains("Age"));
-            Assert.IsTrue(wrapper1.Contains("IsMarried"));
-            Assert.IsFalse(wrapper1.Contains("Height"));
-            Assert.IsFalse(wrapper1.Contains("Weight"));
-            Assert.IsFalse(wrapper1.Contains("ShoeSize"));
+            Assert.IsTrue(wrapper1.ContainsKey("Name"));
+            Assert.IsTrue(wrapper1.ContainsKey("Age"));
+            Assert.IsTrue(wrapper1.ContainsKey("IsMarried"));
+            Assert.IsFalse(wrapper1.ContainsKey("Height"));
+            Assert.IsFalse(wrapper1.ContainsKey("Weight"));
+            Assert.IsFalse(wrapper1.ContainsKey("ShoeSize"));
 
-            Assert.IsTrue(wrapper2.Contains("Age"));
-            Assert.IsTrue(wrapper2.Contains("Height"));
-            Assert.IsTrue(wrapper2.Contains("Weight"));
-            Assert.IsTrue(wrapper2.Contains("ShoeSize"));
-            Assert.IsFalse(wrapper2.Contains("Name"));
-            Assert.IsFalse(wrapper2.Contains("IsMarried"));
+            Assert.IsTrue(wrapper2.ContainsKey("Age"));
+            Assert.IsTrue(wrapper2.ContainsKey("Height"));
+            Assert.IsTrue(wrapper2.ContainsKey("Weight"));
+            Assert.IsTrue(wrapper2.ContainsKey("ShoeSize"));
+            Assert.IsFalse(wrapper2.ContainsKey("Name"));
+            Assert.IsFalse(wrapper2.ContainsKey("IsMarried"));
 
-            Assert.IsTrue(wrapper3.Contains("Name"));
-            Assert.IsTrue(wrapper3.Contains("Address"));
-            Assert.IsTrue(wrapper3.Contains("City"));
-            Assert.IsTrue(wrapper3.Contains("Country"));
-            Assert.IsFalse(wrapper3.Contains("Age"));
-            Assert.IsFalse(wrapper3.Contains("Height"));
-            Assert.IsFalse(wrapper3.Contains("Weight"));
-            Assert.IsFalse(wrapper3.Contains("ShoeSize"));
+            Assert.IsTrue(wrapper3.ContainsKey("Name"));
+            Assert.IsTrue(wrapper3.ContainsKey("Address"));
+            Assert.IsTrue(wrapper3.ContainsKey("City"));
+            Assert.IsTrue(wrapper3.ContainsKey("Country"));
+            Assert.IsFalse(wrapper3.ContainsKey("Age"));
+            Assert.IsFalse(wrapper3.ContainsKey("Height"));
+            Assert.IsFalse(wrapper3.ContainsKey("Weight"));
+            Assert.IsFalse(wrapper3.ContainsKey("ShoeSize"));
+
+            Assert.IsTrue(wrapper1.Contains(new KeyValuePair<object, object>("Name", "John")));
+            Assert.IsTrue(wrapper1.Contains(new KeyValuePair<object, object>("Age", 25)));
+            Assert.IsTrue(wrapper1.Contains(new KeyValuePair<object, object>("IsMarried", false)));
+            Assert.IsFalse(wrapper1.Contains(new KeyValuePair<object, object>("Height", 180)));
+            Assert.IsFalse(wrapper1.Contains(new KeyValuePair<object, object>("Weight", 75)));
+            Assert.IsFalse(wrapper1.Contains(new KeyValuePair<object, object>("ShoeSize", 42)));
+
+            Assert.IsTrue(wrapper2.Contains(new KeyValuePair<object, object>("Age", 25)));
+            Assert.IsTrue(wrapper2.Contains(new KeyValuePair<object, object>("Height", 180)));
+            Assert.IsTrue(wrapper2.Contains(new KeyValuePair<object, object>("Weight", 75)));
+            Assert.IsTrue(wrapper2.Contains(new KeyValuePair<object, object>("ShoeSize", 42)));
+            Assert.IsFalse(wrapper2.Contains(new KeyValuePair<object, object>("Name", 0)));
+            Assert.IsFalse(wrapper2.Contains(new KeyValuePair<object, object>("IsMarried", 0)));
+
+            Assert.IsTrue(wrapper3.Contains(new KeyValuePair<object, object>("Name", "John")));
+            Assert.IsTrue(wrapper3.Contains(new KeyValuePair<object, object>("Address", "123 Main St.")));
+            Assert.IsTrue(wrapper3.Contains(new KeyValuePair<object, object>("City", "Springfield")));
+            Assert.IsTrue(wrapper3.Contains(new KeyValuePair<object, object>("Country", "USA")));
+            Assert.IsFalse(wrapper3.Contains(new KeyValuePair<object, object>("Age", "25")));
+            Assert.IsFalse(wrapper3.Contains(new KeyValuePair<object, object>("Height", "180")));
+            Assert.IsFalse(wrapper3.Contains(new KeyValuePair<object, object>("Weight", "75")));
+            Assert.IsFalse(wrapper3.Contains(new KeyValuePair<object, object>("ShoeSize", "42")));
         }
 
         [TestMethod]
@@ -223,19 +246,23 @@ namespace ObjectEditor.Tests
             wrapper3.Remove("City");
             wrapper3.Remove("Country");
 
-            Assert.IsFalse(wrapper1.Contains("Name"));
-            Assert.IsFalse(wrapper1.Contains("Age"));
-            Assert.IsFalse(wrapper1.Contains("IsMarried"));
+            var keys1 = wrapper1.Keys;
+            var keys2 = wrapper2.Keys;
+            var keys3 = wrapper3.Keys;
 
-            Assert.IsFalse(wrapper2.Contains("Age"));
-            Assert.IsFalse(wrapper2.Contains("Height"));
-            Assert.IsFalse(wrapper2.Contains("Weight"));
-            Assert.IsFalse(wrapper2.Contains("ShoeSize"));
+            Assert.IsFalse(keys1.Contains("Name"));
+            Assert.IsFalse(keys1.Contains("Age"));
+            Assert.IsFalse(keys1.Contains("IsMarried"));
 
-            Assert.IsFalse(wrapper3.Contains("Name"));
-            Assert.IsFalse(wrapper3.Contains("Address"));
-            Assert.IsFalse(wrapper3.Contains("City"));
-            Assert.IsFalse(wrapper3.Contains("Country"));
+            Assert.IsFalse(keys2.Contains("Age"));
+            Assert.IsFalse(keys2.Contains("Height"));
+            Assert.IsFalse(keys2.Contains("Weight"));
+            Assert.IsFalse(keys2.Contains("ShoeSize"));
+
+            Assert.IsFalse(keys3.Contains("Name"));
+            Assert.IsFalse(keys3.Contains("Address"));
+            Assert.IsFalse(keys3.Contains("City"));
+            Assert.IsFalse(keys3.Contains("Country"));
         }
 
         [TestMethod]
@@ -518,14 +545,16 @@ namespace ObjectEditor.Tests
             wrapper1.Add(new KeyValuePair<object, object>("Height", 180));
             wrapper1.Add(new KeyValuePair<object, object>("Weight", 75));
             wrapper1.Add(new KeyValuePair<object, object>("ShoeSize", 42));
+            wrapper1.Add(new KeyValuePair<object, object>("Address", "123 Main St."));
+            wrapper1.Add(new KeyValuePair<object, object>("City", "Springfield"));
+            wrapper1.Add(new KeyValuePair<object, object>("Country", "USA"));
 
-            wrapper2.Add(new KeyValuePair<object, object>("Name", "John"));
-            wrapper2.Add(new KeyValuePair<object, object>("Address", "123 Main St."));
-            wrapper2.Add(new KeyValuePair<object, object>("City", "Springfield"));
-            wrapper2.Add(new KeyValuePair<object, object>("Country", "USA"));
+            wrapper2.Add(new KeyValuePair<object, object>("int1", 1));
+            //wrapper2.Add(new KeyValuePair<object, object>("float", 1.0f)); // will not be converted to int
+            wrapper2.Add(new KeyValuePair<object, object>("int2", 2));
 
-            wrapper3.Add(new KeyValuePair<object, object>("Age", 25));
-            wrapper3.Add(new KeyValuePair<object, object>("IsMarried", false));
+            // ArgumentException: An item with the same key has already been added. Key: {key}
+            //wrapper3.Add(new KeyValuePair<object, object>("Name", "John"));
 
             Assert.AreEqual("John", wrapper1["Name"]);
             Assert.AreEqual(25, wrapper1["Age"]);
@@ -533,17 +562,15 @@ namespace ObjectEditor.Tests
             Assert.AreEqual(180, wrapper1["Height"]);
             Assert.AreEqual(75, wrapper1["Weight"]);
             Assert.AreEqual(42, wrapper1["ShoeSize"]);
+            Assert.AreEqual("123 Main St.", wrapper1["Address"]);
+            Assert.AreEqual("Springfield", wrapper1["City"]);
+            Assert.AreEqual("USA", wrapper1["Country"]);
 
-            Assert.AreEqual("John", wrapper2["Name"]);
             Assert.AreEqual(25, wrapper2["Age"]);
-            Assert.AreEqual(false, wrapper2["IsMarried"]);
-            Assert.AreEqual(180, wrapper2["Height"]);
-            Assert.AreEqual(75, wrapper2["Weight"]);
-            Assert.AreEqual(42, wrapper2["ShoeSize"]);
+            Assert.AreEqual(1, wrapper2["int1"]);
+            Assert.AreEqual(2, wrapper2["int2"]);
 
             Assert.AreEqual("John", wrapper3["Name"]);
-            Assert.AreEqual(25, wrapper3["Age"]);
-            Assert.AreEqual(false, wrapper3["IsMarried"]);
             Assert.AreEqual("123 Main St.", wrapper3["Address"]);
             Assert.AreEqual("Springfield", wrapper3["City"]);
             Assert.AreEqual("USA", wrapper3["Country"]);

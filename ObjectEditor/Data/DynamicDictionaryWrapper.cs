@@ -7,11 +7,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ObjectEditor.Extensions;
-using static ObjectEditor.HelperMethods;
 
 namespace ObjectEditor.Data
 {
-    // TODO: write tests for this class, we didn't use it yet
+    /// <summary>
+    /// Reference any IDictionary<K, V> as IDictionary<object, object> to access its elements as objects dynamically.
+    /// </summary>
     public class DynamicDictionaryWrapper : DynamicCollectionWrapper, IDictionary<object, object>
     {
         /// <summary>
@@ -65,7 +66,7 @@ namespace ObjectEditor.Data
         /// <returns>The new default added entry.</returns>
         public override object AddDefaultValue()
         {
-            var entry = CreateKeyValuePair(KeyType, KeyType.GetDefaultValue(), ValueType, ValueType.GetDefaultValue());
+            var entry = KeyValuePair.Create(KeyType.GetDefaultValue(), ValueType.GetDefaultValue()).CastTo(KeyType, ValueType);
             Add(entry);
             return entry;
         }
@@ -96,22 +97,21 @@ namespace ObjectEditor.Data
         }
 
         public void Add(object key, object value) => AddMethod.Invoke(Source, new object[] { key, value });
-        public void Add(KeyValuePair<object, object> entry) => base.Add(entry); // TODO
-        public bool Contains(KeyValuePair<object, object> entry) => base.Contains(entry); // TODO
+        public void Add(KeyValuePair<object, object> entry) => base.Add(entry.CastTo(KeyType, ValueType));
+        public bool Contains(KeyValuePair<object, object> entry) => base.Contains(entry.CastTo(KeyType, ValueType));
         public bool ContainsKey(object key) => ContainsKeyMethod.Invoke(Source, new object[] { key }) as bool? ?? false;
         public void CopyTo(KeyValuePair<object, object>[] array, int arrayIndex)
         {
             foreach (var obj in Source)
-                array[arrayIndex++] = (KeyValuePair<object, object>)obj;
+                array[arrayIndex++] = obj.CastKeyValuePair<object, object>();
         }
         public new IEnumerator<KeyValuePair<object, object>> GetEnumerator()
         {
             foreach (var obj in Source)
-                // TODO: create a new KeyValuePair<object, object> from KeyValuePair<KeyType, ValueType> dynamically
-                yield return (KeyValuePair<object, object>)obj; // obj is not necessarily a KeyValuePair<object, object>!
+                yield return obj.CastKeyValuePair<object, object>(); // obj is not necessarily a KeyValuePair<object, object>, cast it
         }
         public new bool Remove(object key) => RemoveMethod.Invoke(Source, new object[] { key }) as bool? ?? false;
-        public bool Remove(KeyValuePair<object, object> item) => base.Remove(item); // TODO
+        public bool Remove(KeyValuePair<object, object> item) => base.Remove(item.CastTo(KeyType, ValueType));
         public bool TryGetValue(object key, out object value) => TryGetValueMethod.Invoke(Source, new object[] { key, value = null }) as bool? ?? false;
         #endregion
     }
