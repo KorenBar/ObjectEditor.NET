@@ -74,7 +74,7 @@ namespace ObjectEditor.Data
 
         #region IDictionary<object, object> implementation
         public object this[object key]
-        {
+        { // should we check the key type here and throw "not exists" exception instead of "can't convert"?
             get => IndexerGet.Invoke(Source, new object[] { key });
             set => IndexerSet.Invoke(Source, new object[] { key, value });
         }
@@ -98,8 +98,8 @@ namespace ObjectEditor.Data
 
         public void Add(object key, object value) => AddMethod.Invoke(Source, new object[] { key, value });
         public void Add(KeyValuePair<object, object> entry) => base.Add(entry.CastTo(KeyType, ValueType));
-        public bool Contains(KeyValuePair<object, object> entry) => base.Contains(entry.CastTo(KeyType, ValueType));
-        public bool ContainsKey(object key) => ContainsKeyMethod.Invoke(Source, new object[] { key }) as bool? ?? false;
+        public bool Contains(KeyValuePair<object, object> entry) => entry.TryCastTo(KeyType, ValueType, out object res) && base.Contains(res);
+        public bool ContainsKey(object key) => key == null || key.GetType().IsAssignableTo(KeyType) && (bool)ContainsKeyMethod.Invoke(Source, new object[] { key });
         public void CopyTo(KeyValuePair<object, object>[] array, int arrayIndex)
         {
             foreach (var obj in Source)
@@ -110,9 +110,23 @@ namespace ObjectEditor.Data
             foreach (var obj in Source)
                 yield return obj.CastKeyValuePair<object, object>(); // obj is not necessarily a KeyValuePair<object, object>, cast it
         }
-        public new bool Remove(object key) => RemoveMethod.Invoke(Source, new object[] { key }) as bool? ?? false;
-        public bool Remove(KeyValuePair<object, object> item) => base.Remove(item.CastTo(KeyType, ValueType));
-        public bool TryGetValue(object key, out object value) => TryGetValueMethod.Invoke(Source, new object[] { key, value = null }) as bool? ?? false;
+        public new bool Remove(object key) => key == null || key.GetType().IsAssignableTo(KeyType) && (bool)RemoveMethod.Invoke(Source, new object[] { key });
+        public bool Remove(KeyValuePair<object, object> entry) => entry.TryCastTo(KeyType, ValueType, out object res) && base.Remove(res);
+        public bool TryGetValue(object key, out object value)
+        {
+            if (key != null && !key.GetType().IsAssignableTo(KeyType))
+            {
+                value = null;
+                return false;
+            }
+
+            // the key is null or of the correct type
+            var parameters = new object[] { key, null };
+            var res = (bool)TryGetValueMethod.Invoke(Source, parameters);
+            // the value is changed in the parameters array
+            value = res ? parameters[1] : null; // if the key is not found, the value is null even if the source value type is a value type (int, bool, etc.)
+            return res;
+        }
         #endregion
     }
 }

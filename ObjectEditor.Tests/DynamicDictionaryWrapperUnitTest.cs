@@ -120,6 +120,18 @@ namespace ObjectEditor.Tests
             Assert.IsFalse(wrapper3.ContainsKey("Weight"));
             Assert.IsFalse(wrapper3.ContainsKey("ShoeSize"));
 
+            // Invalid key type
+            Assert.IsFalse(wrapper1.ContainsKey(0));
+            Assert.IsFalse(wrapper1.ContainsKey(0.0f));
+            Assert.IsFalse(wrapper1.ContainsKey(true));
+            Assert.IsFalse(wrapper1.ContainsKey(new object()));
+            Assert.IsFalse(wrapper1.ContainsKey(new KeyValuePair<object, object>("key", "value")));
+            Assert.IsFalse(wrapper2.ContainsKey(0));
+            Assert.IsFalse(wrapper2.ContainsKey(0.0f));
+            Assert.IsFalse(wrapper2.ContainsKey(true));
+            Assert.IsFalse(wrapper2.ContainsKey(new object()));
+            Assert.IsFalse(wrapper2.ContainsKey(new KeyValuePair<object, object>("key", "value")));
+
             Assert.IsTrue(wrapper1.Contains(new KeyValuePair<object, object>("Name", "John")));
             Assert.IsTrue(wrapper1.Contains(new KeyValuePair<object, object>("Age", 25)));
             Assert.IsTrue(wrapper1.Contains(new KeyValuePair<object, object>("IsMarried", false)));
@@ -142,6 +154,14 @@ namespace ObjectEditor.Tests
             Assert.IsFalse(wrapper3.Contains(new KeyValuePair<object, object>("Height", "180")));
             Assert.IsFalse(wrapper3.Contains(new KeyValuePair<object, object>("Weight", "75")));
             Assert.IsFalse(wrapper3.Contains(new KeyValuePair<object, object>("ShoeSize", "42")));
+
+            // Invalid types
+            Assert.IsFalse(wrapper1.Contains(new KeyValuePair<object, object>(0, 0)));
+            Assert.IsFalse(wrapper1.Contains(new KeyValuePair<object, object>(0.0f, 0.0f)));
+            Assert.IsFalse(wrapper2.Contains(new KeyValuePair<object, object>("Age", true)));
+            Assert.IsFalse(wrapper2.Contains(new KeyValuePair<object, object>("Height", "180")));
+            Assert.IsFalse(wrapper3.Contains(new KeyValuePair<object, object>("Weight", 75)));
+            Assert.IsFalse(wrapper3.Contains(new KeyValuePair<object, object>("Name", false)));
         }
 
         [TestMethod]
@@ -222,29 +242,44 @@ namespace ObjectEditor.Tests
                 { "Age", 25 },
                 { "Height", 180 },
                 { "Weight", 75 },
-                { "ShoeSize", 42 }
+                { "ShoeSize", 42 },
+                { "f", 185 }
             });
             var wrapper3 = new DynamicDictionaryWrapper(new Dictionary<string, string>
             {
                 { "Name", "John" },
                 { "Address", "123 Main St." },
                 { "City", "Springfield" },
-                { "Country", "USA" }
+                { "Country", "USA" },
+                { "Address2", "222 St." }
             });
 
-            wrapper1.Remove("Name");
-            wrapper1.Remove("Age");
-            wrapper1.Remove("IsMarried");
+            Assert.IsTrue(wrapper1.Remove("Name"));
+            Assert.IsTrue(wrapper1.Remove("Age"));
+            Assert.IsTrue(wrapper1.Remove("IsMarried"));
 
-            wrapper2.Remove("Age");
-            wrapper2.Remove("Height");
-            wrapper2.Remove("Weight");
-            wrapper2.Remove("ShoeSize");
+            Assert.IsTrue(wrapper2.Remove("Age"));
+            Assert.IsTrue(wrapper2.Remove("Weight"));
+            Assert.IsTrue(wrapper2.Remove("ShoeSize"));
 
-            wrapper3.Remove("Name");
-            wrapper3.Remove("Address");
-            wrapper3.Remove("City");
-            wrapper3.Remove("Country");
+            Assert.IsTrue(wrapper3.Remove("Name"));
+            Assert.IsTrue(wrapper3.Remove("Address"));
+            Assert.IsTrue(wrapper3.Remove("Country"));
+
+            Assert.IsFalse(wrapper1.Remove("Name"));
+            Assert.IsFalse(wrapper1.Remove("Age"));
+            Assert.IsFalse(wrapper1.Remove("NotExists"));
+            Assert.IsFalse(wrapper1.Remove("NotExists"));
+            Assert.IsFalse(wrapper2.Remove("NotExists"));
+            Assert.IsFalse(wrapper2.Remove("NotExists"));
+            Assert.IsFalse(wrapper3.Remove("NotExists"));
+            Assert.IsFalse(wrapper3.Remove("NotExists"));
+
+            // Invalid types
+            Assert.IsFalse(wrapper1.Remove(false));
+            Assert.IsFalse(wrapper2.Remove('f')); // it's a char, not a string
+            Assert.IsFalse(wrapper3.Remove(false));
+            Assert.IsFalse(wrapper3.Remove(0));
 
             var keys1 = wrapper1.Keys;
             var keys2 = wrapper2.Keys;
@@ -255,14 +290,30 @@ namespace ObjectEditor.Tests
             Assert.IsFalse(keys1.Contains("IsMarried"));
 
             Assert.IsFalse(keys2.Contains("Age"));
-            Assert.IsFalse(keys2.Contains("Height"));
+            Assert.IsTrue(keys2.Contains("Height"));
             Assert.IsFalse(keys2.Contains("Weight"));
             Assert.IsFalse(keys2.Contains("ShoeSize"));
+            Assert.IsTrue(keys2.Contains("f"));
 
             Assert.IsFalse(keys3.Contains("Name"));
             Assert.IsFalse(keys3.Contains("Address"));
-            Assert.IsFalse(keys3.Contains("City"));
+            Assert.IsTrue(keys3.Contains("City"));
             Assert.IsFalse(keys3.Contains("Country"));
+            Assert.IsTrue(keys3.Contains("Address2"));
+
+            Assert.IsFalse(wrapper1.Remove(new KeyValuePair<object, object>("Name", "John")));
+            Assert.IsFalse(wrapper1.Remove(new KeyValuePair<object, object>("Age", 25)));
+            Assert.IsFalse(wrapper1.Remove(new KeyValuePair<object, object>("IsMarried", false)));
+
+            Assert.IsFalse(wrapper2.Remove(new KeyValuePair<object, object>("Age", 25)));
+            Assert.IsTrue(wrapper2.Remove(new KeyValuePair<object, object>("Height", 180)));
+            Assert.IsFalse(wrapper2.Remove(new KeyValuePair<object, object>("Weight", 75)));
+            Assert.IsFalse(wrapper2.Remove(new KeyValuePair<object, object>("ShoeSize", 42)));
+            Assert.IsFalse(wrapper2.Remove(new KeyValuePair<object, object>("f", 10))); // not the same value
+            Assert.IsFalse(wrapper2.Remove(new KeyValuePair<object, object>(false, 185))); // invalid key type
+            Assert.IsFalse(wrapper2.Remove(new KeyValuePair<object, object>('f', 185))); // char instead of string
+            Assert.IsTrue(wrapper2.Remove(new KeyValuePair<object, object>("f", 185)));
+
         }
 
         [TestMethod]
@@ -574,6 +625,74 @@ namespace ObjectEditor.Tests
             Assert.AreEqual("123 Main St.", wrapper3["Address"]);
             Assert.AreEqual("Springfield", wrapper3["City"]);
             Assert.AreEqual("USA", wrapper3["Country"]);
+        }
+
+        [TestMethod]
+        public void TestDynamicDictionaryWrapperTryGetValue()
+        {
+            var wrapper1 = new DynamicDictionaryWrapper(new Dictionary<string, object>
+            {
+                { "Name", "John" },
+                { "Age", 25 },
+                { "IsMarried", false }
+            });
+            var wrapper2 = new DynamicDictionaryWrapper(new Dictionary<string, int>
+            {
+                { "Age", 25 },
+                { "Height", 180 },
+                { "Weight", 75 },
+                { "ShoeSize", 42 }
+            });
+            var wrapper3 = new DynamicDictionaryWrapper(new Dictionary<string, string>
+            {
+                { "Name", "John" },
+                { "Address", "123 Main St." },
+                { "City", "Springfield" },
+                { "Country", "USA" }
+            });
+
+            object val1;
+            object val2;
+            object val3;
+
+            Assert.IsTrue(wrapper1.TryGetValue("Name", out val1));
+            Assert.IsTrue(wrapper1.TryGetValue("Age", out val2));
+            Assert.IsTrue(wrapper1.TryGetValue("IsMarried", out val3));
+            Assert.AreEqual("John", val1);
+            Assert.AreEqual(25, val2);
+            Assert.AreEqual(false, val3);
+
+            Assert.IsTrue(wrapper2.TryGetValue("Age", out val1));
+            Assert.IsTrue(wrapper2.TryGetValue("Height", out val2));
+            Assert.IsTrue(wrapper2.TryGetValue("Weight", out val3));
+            Assert.AreEqual(25, val1);
+            Assert.AreEqual(180, val2);
+            Assert.AreEqual(75, val3);
+
+            Assert.IsTrue(wrapper3.TryGetValue("Name", out val1));
+            Assert.IsTrue(wrapper3.TryGetValue("Address", out val2));
+            Assert.IsTrue(wrapper3.TryGetValue("City", out val3));
+            Assert.AreEqual("John", val1);
+            Assert.AreEqual("123 Main St.", val2);
+            Assert.AreEqual("Springfield", val3);
+
+            Assert.IsFalse(wrapper1.TryGetValue("Height", out val1));
+            Assert.IsFalse(wrapper1.TryGetValue("Weight", out val2));
+            Assert.IsFalse(wrapper1.TryGetValue("ShoeSize", out val3));
+            Assert.IsFalse(wrapper1.TryGetValue("Address", out val1));
+            Assert.IsFalse(wrapper1.TryGetValue("City", out val2));
+            Assert.IsFalse(wrapper1.TryGetValue("Country", out val3));
+            Assert.AreEqual(null, val1);
+            Assert.AreEqual(null, val2);
+            Assert.AreEqual(null, val3);
+
+            Assert.IsFalse(wrapper2.TryGetValue("Name", out val1));
+            Assert.IsFalse(wrapper2.TryGetValue("IsMarried", out val2));
+            Assert.IsFalse(wrapper2.TryGetValue("Address", out val3));
+            // the values should be null even when the source dictionary value type is not nullable, the wrapper should return null
+            Assert.AreEqual(null, val1);
+            Assert.AreEqual(null, val2);
+            Assert.AreEqual(null, val3);
         }
     }
 }

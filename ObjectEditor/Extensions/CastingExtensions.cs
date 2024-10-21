@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -23,6 +24,31 @@ namespace ObjectEditor.Extensions
             var kvpType = typeof(KeyValuePair<,>).MakeGenericType(targetKeyType, targetValueType);
             var kvpCtor = kvpType.GetConstructor(new Type[] { targetKeyType, targetValueType });
             return kvpCtor.Invoke(new object[] { sourcePair.Key, sourcePair.Value });
+        }
+
+        /// <summary>
+        /// Tries to cast a KeyValuePair&lt;TKey, TValue&gt; object to a KeyValuePair&lt;targetKeyType, targetValueType&gt; as an object.
+        /// </summary>
+        /// <typeparam name="TKey">The type of the key in the source KeyValuePair&lt;TKey, TValue&gt; object.</typeparam>
+        /// <typeparam name="TValue">The type of the value in the source KeyValuePair&lt;TKey, TValue&gt; object.</typeparam>
+        /// <param name="sourcePair">The source KeyValuePair&lt;TKey, TValue&gt; object to cast from.</param>
+        /// <param name="targetKeyType">The type of the key in the target KeyValuePair&lt;targetKeyType, targetValueType&gt; object.</param>
+        /// <param name="targetValueType">The type of the value in the target KeyValuePair&lt;targetKeyType, targetValueType&gt; object.</param>
+        /// <param name="result">The resulting KeyValuePair&lt;targetKeyType, targetValueType&gt; object.</param>
+        /// <returns>true if the cast was successful; otherwise, false.</returns>
+        public static bool TryCastTo<TKey, TValue>(this KeyValuePair<TKey, TValue> sourcePair, Type targetKeyType, Type targetValueType, out object result)
+        {
+            try
+            {
+                result = sourcePair.CastTo(targetKeyType, targetValueType);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+                result = null;
+                return false;
+            }
         }
 
         /// <summary>
