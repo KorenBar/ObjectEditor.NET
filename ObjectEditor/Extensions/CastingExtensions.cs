@@ -65,7 +65,7 @@ namespace ObjectEditor.Extensions
             if (sourcePair == null)
                 throw new ArgumentNullException(nameof(sourcePair));
             if (sourcePair.GetType().GetGenericTypeDefinition() != typeof(KeyValuePair<,>))
-                throw new ArgumentException("The source object is not a KeyValuePair<,> object.", nameof(sourcePair));
+                throw new ArgumentException("The object is not a KeyValuePair<,>.", nameof(sourcePair));
 
             var key = (TKey)sourcePair.GetType().GetProperty(nameof(KeyValuePair<TKey, TValue>.Key)).GetValue(sourcePair);
             var value = (TValue)sourcePair.GetType().GetProperty(nameof(KeyValuePair<TKey, TValue>.Value)).GetValue(sourcePair);

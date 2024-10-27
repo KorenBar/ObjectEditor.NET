@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Reflection;
 using ObjectEditor.Extensions;
+using ObjectEditor.UI.Forms;
 
 namespace ObjectEditor.UI.Controls
 {
