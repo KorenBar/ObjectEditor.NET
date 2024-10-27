@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Reflection;
+using ObjectEditor.UI.Forms;
 
 namespace ObjectEditor.UI.Controls
 {
@@ -15,7 +16,7 @@ namespace ObjectEditor.UI.Controls
     {
         private CheckBox CheckBox => (CheckBox)ValueControl;
 
-        public BooleanFieldControl(object value, BaseFieldInfo fieldInfo) : base(value, fieldInfo) { }
+        public BooleanFieldControl(object value, BaseFieldInfo fieldInfo, ObjectEditorForm parentForm) : base(value, fieldInfo, parentForm) { }
 
         protected override Control CreateValueControl(BaseFieldInfo fieldInfo)
         {

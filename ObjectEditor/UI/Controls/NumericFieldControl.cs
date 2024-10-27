@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Reflection;
 using ObjectEditor.Extensions;
+using ObjectEditor.UI.Forms;
 
 namespace ObjectEditor.UI.Controls
 {
@@ -16,7 +17,7 @@ namespace ObjectEditor.UI.Controls
     {
         private NumericUpDown NumericBox => (NumericUpDown)ValueControl;
 
-        public NumericFieldControl(object value, BaseFieldInfo fieldInfo) : base(value, fieldInfo) { }
+        public NumericFieldControl(object value, BaseFieldInfo fieldInfo, ObjectEditorForm parentForm) : base(value, fieldInfo, parentForm) { }
 
         protected override Control CreateValueControl(BaseFieldInfo fieldInfo)
         {

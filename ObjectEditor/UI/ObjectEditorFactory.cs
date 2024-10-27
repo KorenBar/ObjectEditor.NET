@@ -6,10 +6,11 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using ObjectEditor.UI.Controls;
+using ObjectEditor.UI.Forms;
 using ObjectEditor.Extensions;
 using ObjectEditor.Data;
 
-namespace ObjectEditor.UI.Forms
+namespace ObjectEditor.UI
 {
     public static class ObjectEditorFactory
     {
@@ -51,13 +52,13 @@ namespace ObjectEditor.UI.Forms
             if (fieldInfo == null) return null;
 
             if (fieldInfo.Type.IsEnum) // enum field
-                return new EnumFieldControl(value, fieldInfo);
+                return new EnumFieldControl(value, fieldInfo, parentForm);
             else if (fieldInfo.Type.IsNumeric()) // numeric field
-                return new NumericFieldControl(value, fieldInfo);
+                return new NumericFieldControl(value, fieldInfo, parentForm);
             else if (fieldInfo.Type == typeof(bool)) // boolean field
-                return new BooleanFieldControl(value, fieldInfo);
+                return new BooleanFieldControl(value, fieldInfo, parentForm);
             else if (fieldInfo.Type.IsSimpleType()) // default field for any other simple type
-                return new TextFieldControl(value, fieldInfo);
+                return new TextFieldControl(value, fieldInfo, parentForm);
             else // it's a class type (reference)
                 return new ObjectFieldControl(value, fieldInfo, parentForm);
         }

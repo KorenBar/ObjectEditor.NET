@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Reflection;
+using ObjectEditor.UI.Forms;
 
 namespace ObjectEditor.UI.Controls
 {
@@ -22,7 +23,7 @@ namespace ObjectEditor.UI.Controls
         /// </summary>
         /// <param name="value">Initial value.</param>
         /// <param name="fieldInfo">Field information.</param>
-        public TextFieldControl(object value, BaseFieldInfo fieldInfo) : base(value, fieldInfo) { }
+        public TextFieldControl(object value, BaseFieldInfo fieldInfo, ObjectEditorForm parentForm) : base(value, fieldInfo, parentForm) { }
 
         protected override Control CreateValueControl(BaseFieldInfo fieldInfo)
         {

@@ -1,4 +1,4 @@
-using ObjectEditor.UI.Forms;
+using ObjectEditor.UI;
 using ObjectEditor.Demo.Data;
 using System.Diagnostics;
 

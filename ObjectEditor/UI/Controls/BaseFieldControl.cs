@@ -46,7 +46,12 @@ namespace ObjectEditor.UI.Controls
         /// Gets the control that displays the value.
         /// Created by the inherited class.
         /// </summary>
-        protected Control ValueControl { get; }
+        protected internal Control ValueControl { get; }
+
+        /// <summary>
+        /// Gets the parent form that contains this field.
+        /// </summary>
+        public ObjectEditorForm ParentEditorForm { get; }
 
         /// <summary>
         /// Gets or sets whether the remove button is visible.
@@ -92,12 +97,13 @@ namespace ObjectEditor.UI.Controls
         /// <param name="value">Initial field value</param>
         /// <param name="fieldInfo">Field information</param>
         /// <exception cref="ArgumentNullException"></exception>
-        public BaseFieldControl(object value, BaseFieldInfo fieldInfo)
+        public BaseFieldControl(object value, BaseFieldInfo fieldInfo, ObjectEditorForm parentForm)
         {
             if (fieldInfo == null)
                 throw new ArgumentNullException(nameof(fieldInfo));
 
             FieldInfo = fieldInfo;
+            ParentEditorForm = parentForm;
 
             InitializeComponent();
 

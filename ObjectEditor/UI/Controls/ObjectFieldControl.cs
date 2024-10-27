@@ -20,7 +20,6 @@ namespace ObjectEditor.UI.Controls
         private Button SetButton => (Button)ValueControl;
 
         public ObjectEditorForm ObjectEditorForm { get; private set; }
-        public ObjectEditorForm ParentEditorForm { get; }
 
         /// <summary>
         /// Creates a field control for an object.
@@ -29,10 +28,7 @@ namespace ObjectEditor.UI.Controls
         /// <param name="fieldInfo">Field information.</param>
         /// <param name="parentForm">The parent form which contains this field.</param>
         public ObjectFieldControl(object value, BaseFieldInfo fieldInfo, ObjectEditorForm parentForm)
-            : base(value, fieldInfo)
-        {
-            ParentEditorForm = parentForm;
-        }
+            : base(value, fieldInfo, parentForm) { }
 
         protected override Control CreateValueControl(BaseFieldInfo fieldInfo)
         {
