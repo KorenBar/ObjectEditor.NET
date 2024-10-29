@@ -19,13 +19,18 @@ namespace ObjectEditor.UI.Forms
     /// </summary>
     public partial class DictionaryEditorForm : CollectionEditorForm
     {
+        protected static readonly IEnumerable DEMO_DICT_SOURCE = new Dictionary<string, int>() { { "1", 1 }, { "2", 2 } };
+
         /// <summary>
         /// A wrapper for the dictionary to view and edit (must be set in the constructor).
         /// </summary>
         protected DynamicDictionaryWrapper SourceDictionaryWrapper => (DynamicDictionaryWrapper)SourceCollectionWrapper;
 
+        public override ItemAbility ItemAbilities
+            => base.ItemAbilities | (IsReadOnly ? ItemAbility.ReadOnly : ItemAbility.Edit);
+
         #region Constructors
-        public DictionaryEditorForm() : this(new Dictionary<string, int>() { {"1", 1}, {"2", 2} }) { }
+        public DictionaryEditorForm() : this(DEMO_DICT_SOURCE) { }
 
         /// <param name="sourceDictionary">The dictionary to view and edit.</param>
         public DictionaryEditorForm(IEnumerable sourceDictionary) : this(sourceDictionary, null) { }
@@ -46,6 +51,6 @@ namespace ObjectEditor.UI.Forms
         }
         #endregion
 
-        // TODO: Implement the rest of the class.
+        // TODO: Override the remove item method to remove by key.
     }
 }

@@ -28,10 +28,10 @@ namespace ObjectEditor.UI.Forms
         /// Gets a value indicating whether the collection is read-only.
         /// When false, items can be added or removed from the collection.
         /// </summary>
-        public bool IsReadOnlyCollection => SourceCollectionWrapper.IsReadOnly;
+        public bool IsReadOnly => SourceCollectionWrapper.IsReadOnly;
 
         public override ItemAbility ItemAbilities
-            => base.ItemAbilities | (IsReadOnlyCollection ? ItemAbility.ReadOnly : ItemAbility.Add | ItemAbility.Remove);
+            => base.ItemAbilities | (IsReadOnly ? ItemAbility.ReadOnly : ItemAbility.Add | ItemAbility.Remove);
 
         #region Constructors
         public CollectionEditorForm() : this(DEMO_SOURCE) { }
@@ -53,7 +53,7 @@ namespace ObjectEditor.UI.Forms
         {
             InitializeComponent();
             ShowCustomPanel = true;
-            btnAdd.Enabled = !IsReadOnlyCollection; // Enable the Add button if the collection is editable
+            btnAdd.Enabled = !IsReadOnly; // Enable the Add button if the collection is editable
         }
         #endregion
 
@@ -84,8 +84,9 @@ namespace ObjectEditor.UI.Forms
                 lock (SourceObject) // lock the source object to prevent concurrent modifications as possible
                 {
                     int index = SourceCollectionWrapper.Count;
-                    var item = CreateNewItem(); // the item value can be null
-                    AddItemField(item, index);
+                    var itemValue = CreateNewItem(); // the item value can be null
+                    ItemFieldInfo fieldInfo = CreateItemFieldInfo(itemValue, index);
+                    AddItemField(fieldInfo, itemValue);
                 }
             });
         }
@@ -104,15 +105,13 @@ namespace ObjectEditor.UI.Forms
             SourceCollectionWrapper.Remove(itemToRemove); // in case of duplicates, the first one will be removed!
 
             ReloadItemControls(); // Reload anyway to update the indexes
-
-            this.SaveRequired = true;
         }
         #endregion
 
         #region UI Events
         private async void Add_Click(object sender, EventArgs e)
         {
-            if (IsReadOnlyCollection)
+            if (IsReadOnly)
             {   // Can't edit
                 MessageBox.Show($"It's a read only collection.", "Can't add an item", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -130,10 +129,15 @@ namespace ObjectEditor.UI.Forms
         /// </summary>
         /// <param name="itemValue">The item to create a field for.</param>
         /// <param name="index">The index of the item in the collection.</param>
-        protected override BaseFieldControl AddItemField(object itemValue, int index)
+        protected override BaseFieldControl AddItemField(ItemFieldInfo fieldInfo, object itemValue)
         {
-            var fieldControl = base.AddItemField(itemValue, index);
-            fieldControl.Removing += (s, e) => RemoveItem(((BaseFieldControl)s)?.FieldInfo as ItemFieldInfo);
+            var fieldControl = base.AddItemField(fieldInfo, itemValue);
+            if (fieldControl == null) return null;
+            fieldControl.Removing += (s, e) =>
+            {
+                RemoveItem(((BaseFieldControl)s)?.FieldInfo as ItemFieldInfo);
+                this.SaveRequired = true;
+            };
             return fieldControl;
         }
         #endregion

@@ -49,7 +49,12 @@ namespace ObjectEditor.Extensions
         public static Type GetGenericType(this Type type, Type genericTypeDefinition)
         {
             if (type == null) return null;
-            return type.GetInterfaces().FirstOrDefault(t => t.IsGenericType && t.GetGenericTypeDefinition() == genericTypeDefinition);
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == genericTypeDefinition)
+                return type;
+            
+            var interfaces = type.GetInterfaces();
+            var result = interfaces.FirstOrDefault(t => t.IsGenericType && t.GetGenericTypeDefinition() == genericTypeDefinition);
+            return result;
         }
 
         /// <summary>
@@ -258,6 +263,9 @@ namespace ObjectEditor.Extensions
                 if (conversionType.Equals(typeof(TimeSpan)))
                     return TimeSpan.Parse(strValue);
             }
+
+            if (conversionType.GetGenericType(typeof(KeyValuePair<,>)) != null)
+                return value.CastKeyValuePair<object, object>().CastTo(conversionType.GetGenericArguments()[0], conversionType.GetGenericArguments()[1]);
 
             return Convert.ChangeType(value, conversionType);
         }

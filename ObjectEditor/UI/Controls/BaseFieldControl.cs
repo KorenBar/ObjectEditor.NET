@@ -63,6 +63,15 @@ namespace ObjectEditor.UI.Controls
             protected set => tableLayoutPanel1.ColumnStyles[2].Width = value ? tableLayoutPanel1.Height : 0;
         }
 
+        /// <summary>
+        /// Gets or sets whether the name label is visible.
+        /// </summary>
+        public bool ShowNameLabel
+        {
+            get => tableLayoutPanel1.ColumnStyles[0].Width > 0;
+            protected set => tableLayoutPanel1.ColumnStyles[0].Width = value ? 140F : 0;
+        }
+
         private FieldStatus _status;
         /// <summary>
         /// Gets the status of the field.
@@ -108,7 +117,9 @@ namespace ObjectEditor.UI.Controls
 
             InitializeComponent();
 
-            if (fieldInfo is ItemFieldInfo itemFieldInfo)
+            if (fieldInfo is SubFieldInfo)
+                ShowNameLabel = false; // hide the name label for sub fields
+            else if (fieldInfo is ItemFieldInfo itemFieldInfo)
             {
                 ShowRemoveButton = true;
                 btnRemove.Enabled = itemFieldInfo.IsRemovable;

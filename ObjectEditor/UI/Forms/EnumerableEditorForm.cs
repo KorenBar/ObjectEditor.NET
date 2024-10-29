@@ -75,15 +75,27 @@ namespace ObjectEditor.UI.Forms
         /// <summary>
         /// Add a field for an item of an enumerable.
         /// </summary>
-        /// <param name="itemValue">The item to create a field for.</param>
-        /// <param name="index">The index of the item in the enumerable.</param>
-        protected virtual BaseFieldControl AddItemField(object itemValue, int index)
+        /// <param name="fieldInfo">The field info for the item.</param>
+        /// <param name="itemValue">The value of the item.</param>
+        /// <returns>The new created field control.</returns>
+        protected virtual BaseFieldControl AddItemField(ItemFieldInfo fieldInfo, object itemValue)
         {
-            var fieldType = itemValue?.GetType() ?? SourceEnumerableWrapper.ItemType;
-            var fieldInfo = new ItemFieldInfo(fieldType, null, null, index, ItemAbilities);
             var field = CreateFieldControl(fieldInfo, itemValue);
             AddField(field);
             return field;
+        }
+
+        /// <summary>
+        /// Create a field info for an item of an enumerable.
+        /// </summary>
+        /// <param name="itemValue">The value of the item.</param>
+        /// <param name="index">The index of the item in the enumerable.</param>
+        /// <returns>The new created field info.</returns>
+        protected virtual ItemFieldInfo CreateItemFieldInfo(object itemValue, int index)
+        {
+            // get the type of the item or the default type of the enumerable if null
+            var fieldType = itemValue?.GetType() ?? SourceEnumerableWrapper.ItemType;
+            return new ItemFieldInfo(fieldType, null, null, index, ItemAbilities);
         }
 
         /// <summary>
@@ -100,7 +112,7 @@ namespace ObjectEditor.UI.Forms
         protected virtual void ReloadItemControls()
         {
             ClearItemFields();
-            SourceEnumerableWrapper.ForEachAll((p, i) => AddItemField(p, i));
+            SourceEnumerableWrapper.ForEachAll((p, i) => AddItemField(CreateItemFieldInfo(p, i), p));
         }
         #endregion
 

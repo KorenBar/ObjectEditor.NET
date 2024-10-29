@@ -57,6 +57,8 @@ namespace ObjectEditor.UI
                 return new NumericFieldControl(value, fieldInfo, parentForm);
             else if (fieldInfo.Type == typeof(bool)) // boolean field
                 return new BooleanFieldControl(value, fieldInfo, parentForm);
+            else if (fieldInfo.Type.GetGenericType(typeof(KeyValuePair<,>)) != null)
+                return new KeyValuePairFieldControl(value, fieldInfo, parentForm);
             else if (fieldInfo.Type.IsSimpleType()) // default field for any other simple type
                 return new TextFieldControl(value, fieldInfo, parentForm);
             else // it's a class type (reference)

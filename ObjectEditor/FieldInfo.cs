@@ -50,6 +50,34 @@ namespace ObjectEditor
     }
 
     /// <summary>
+    /// Field information for a nested field.
+    /// </summary>
+    public sealed class SubFieldInfo : BaseFieldInfo
+    {
+        /// <summary>
+        /// The parent field information.
+        /// </summary>
+        public BaseFieldInfo ParentFieldInfo { get; }
+
+        /// <summary>
+        /// Creates a field information for a nested field.
+        /// </summary>
+        /// <param name="type">The type of the subfield.</param>
+        /// <param name="name">The name of the subfield.</param>
+        /// <param name="parentFieldInfo">The parent field information.</param>
+        public SubFieldInfo(Type type, string name, BaseFieldInfo parentFieldInfo)
+            : base(type, name, null, parentFieldInfo.IsReadOnly)
+        {
+            ParentFieldInfo = parentFieldInfo;
+        }
+
+        public override object GetValue(object sourceObj)
+        {
+            throw new NotSupportedException("SubFieldInfo does not support GetValue.");
+        }
+    }
+
+    /// <summary>
     /// Field information for a property.
     /// </summary>
     public class PropertyFieldInfo : BaseFieldInfo
