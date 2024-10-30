@@ -10,6 +10,9 @@ using ObjectEditor.Extensions;
 
 namespace ObjectEditor
 {
+    /// <summary>
+    /// Information about a field in an object.
+    /// </summary>
     public abstract class BaseFieldInfo
     {
         public string Name { get; }
