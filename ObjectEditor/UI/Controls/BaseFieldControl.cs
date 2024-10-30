@@ -154,7 +154,7 @@ namespace ObjectEditor.UI.Controls
         /// <summary>
         /// Sets the value of the value control, depending on the field type.
         /// </summary>
-        /// <param name="value">The value to set.</param>
+        /// <param name="value">The value to set, will never be null.</param>
         protected abstract void UpdateControlValue(object value);
         #endregion
 
@@ -307,7 +307,11 @@ namespace ObjectEditor.UI.Controls
         {
             Action action = () => SetValue(value, true);
             if (!action.InvokeUserAction("Value Change")) // failed
-                UpdateControlValue(Value); // revert the value
+            {
+                var v = Value; // get the current value
+                if (v != null) // revert the value
+                    UpdateControlValue(v);
+            }
         }
 
         /// <summary>
@@ -321,7 +325,8 @@ namespace ObjectEditor.UI.Controls
             if (e.ByUser) // the value changed by the user, mark the field as changed
                 Status |= FieldStatus.ValueChanged;
 
-            UpdateControlValue(e.Value);
+            if (e.Value != null)
+                UpdateControlValue(e.Value);
             nullLabel.Visible = e.Value == null;
 
             ValueChanged?.Invoke(this, e);

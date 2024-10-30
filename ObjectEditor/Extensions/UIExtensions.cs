@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,23 +15,44 @@ namespace ObjectEditor.Extensions
         /// </summary>
         /// <param name="action">The action to perform.</param>
         /// <param name="actionName">Display name of the action in the error message.</param>
-
         public static bool InvokeUserAction(this Action action, string actionName)
         {
+            string msg = null;
+            string caption = $"{actionName} Error";
+
             try
             {
                 action?.Invoke();
                 return true;
             }
+            catch (TargetInvocationException ex) when (ex.InnerException != null)
+            {
+                msg = ex.InnerException.Message;
+            }
             catch (AggregateException ex)
             {
-                MessageBox.Show(string.Join("\n", ex.InnerExceptions.Select(ex => ex.Message)), $"{actionName} Multiple Errors", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                msg = string.Join("\n", ex.InnerExceptions.Select(ex => ex.Message));
+                caption = $"{actionName} Multiple Errors";
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, $"{actionName} Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                msg = ex.Message;
             }
+
+            MessageBox.Show(msg, caption, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return false;
+        }
+
+        /// <summary>
+        /// Invoke the user action asynchronously and handle exceptions, showing a message box with the error message(s) instead of throwing exceptions.
+        /// Should be used for actions triggered from the UI only, as it shows a message box as a result.
+        /// </summary>
+        /// <param name="action">The action to perform.</param>
+        /// <param name="actionName">Display name of the action in the error message.</param>
+        /// <returns></returns>
+        public static Task<bool> InvokeUserActionAsync(this Action action, string actionName)
+        {
+            return Task.Run(() => InvokeUserAction(action, actionName));
         }
 
         /// <summary>

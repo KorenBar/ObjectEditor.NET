@@ -276,35 +276,49 @@ namespace ObjectEditor.UI.Forms
         }
 
         /// <summary>
-        /// Set the properties of the source object from the values of the controls.
+        /// Update the source object from the values of the controls.
         /// </summary>
-        public virtual void ApplyChanges()
+        public void ApplyChanges()
         {
-            FieldControls.ForEachAll(f =>
+            FieldControls.ForEachAll(f => 
             {
-                if (f.FieldInfo is PropertyFieldInfo p
-                    && f.Status.HasFlag(FieldStatus.ValueChanged) // otherwise, nullable fields will be set to a value
-                    && !p.IsReadOnly)
-                    p.PropertyInfo.SetValue(SourceObject, f.Value?.ChangeType(p.Type)); // TODO: make it an Field.Appling event? (PropertyFieldAppling)
+                ApplyField(f); // may throw an exception
                 if (f.Status != FieldStatus.Synced) // otherwise, canceled changes of closed forms will be saved!
-                    f.Apply(); // TODO: separate for properties and items
+                    f.Apply();
             });
-
             OnChangesApplied();
+        }
+
+        /// <summary>
+        /// Apply a field value to the source object.
+        /// </summary>
+        /// <param name="fieldControl"></param>
+        protected virtual void ApplyField(BaseFieldControl fieldControl)
+        {
+            if (fieldControl.FieldInfo is PropertyFieldInfo p
+                && fieldControl.Status.HasFlag(FieldStatus.ValueChanged) // otherwise, nullable fields will be set to a value
+                && !p.IsReadOnly)
+                p.PropertyInfo.SetValue(SourceObject, fieldControl.Value?.ChangeType(p.Type));
         }
 
         /// <summary>
         /// Reload values from source,
         /// will not affect if fields have not yet loaded (before calling the ReloadControls method or first showing, when the form is cleared)
         /// </summary>
-        public virtual void Reset()
+        public void Reset()
         {
-            FieldControls.ForEachAll(f =>
-            { // TODO: PropertyFieldReset(BaseField, ) method?
-                if (f.FieldInfo is PropertyFieldInfo p)
-                    f.Value = p.PropertyInfo.GetValue(SourceObject);
-            });
+            FieldControls.ForEachAll(f => ResetField(f));
             ChangesPending = false;
+        }
+
+        /// <summary>
+        /// Reset a field to its original value from the source object.
+        /// </summary>
+        /// <param name="fieldControl"></param>
+        protected virtual void ResetField(BaseFieldControl fieldControl)
+        {
+            if (fieldControl.FieldInfo is PropertyFieldInfo p)
+                fieldControl.Value = p.PropertyInfo.GetValue(SourceObject);
         }
 
         protected virtual void Save()

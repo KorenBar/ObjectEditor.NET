@@ -53,7 +53,7 @@ namespace ObjectEditor.Data
 
             if (_genericTypeDefinition == null)
                 throw new ArgumentException("The source enumerable must be a generic dictionary.", nameof(objects));
-
+            
             var genericArguments = _genericTypeDefinition.GetGenericArguments();
             KeyType = genericArguments[0];
             ValueType = genericArguments[1];

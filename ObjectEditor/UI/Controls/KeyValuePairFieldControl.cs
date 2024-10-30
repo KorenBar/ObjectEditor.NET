@@ -21,12 +21,29 @@ namespace ObjectEditor.UI.Controls
         private Type _keyType;
         private Type _valueType;
 
-        private KeyValuePair<object, object>? KeyValuePair => Value?.CastKeyValuePair<object, object>();
+        /// <summary>
+        /// Get the pair currently represented by the control.
+        /// </summary>
+        public KeyValuePair<object, object>? KeyValuePair => Value?.CastKeyValuePair<object, object>();
 
+        /// <summary>
+        /// Get the initial pair of the source object.
+        /// </summary>
+        public KeyValuePair<object, object>? SourceKeyValuePair { get; private set; }
+
+
+        /// <summary>
+        /// Creates a new KeyValuePairFieldControl.
+        /// </summary>
+        /// <param name="value">The initial value of the field.</param>
+        /// <param name="fieldInfo">The information of the field.</param>
+        /// <param name="parentForm">The containing form of the field.</param>
         public KeyValuePairFieldControl(object value, BaseFieldInfo fieldInfo, ObjectEditorForm parentForm) : base(value, fieldInfo, parentForm)
         {
             ShowNameLabel = false;
+            SourceKeyValuePair = value?.CastKeyValuePair<object, object>();
         }
+
 
         protected override Control CreateValueControl(BaseFieldInfo fieldInfo)
         { // Assume this method is called only once, so we can create the controls here.
@@ -56,6 +73,31 @@ namespace ObjectEditor.UI.Controls
             _keyFieldControl = new SubFieldInfo(_keyType, "Key", fieldInfo).CreateFieldControl(Value, ParentEditorForm);
             _valueFieldControl = new SubFieldInfo(_valueType, "Value", fieldInfo).CreateFieldControl(Value, ParentEditorForm);
 
+            panel.Controls.Add(_keyFieldControl, 0, 0);
+            panel.Controls.Add(_valueFieldControl, 1, 0);
+
+            return panel;
+        }
+
+        protected override void UpdateControlValue(object value)
+        {
+            var kvp = value.CastKeyValuePair<object, object>(); // will throw if not a KeyValuePair
+            _keyFieldControl.Value = kvp.Key;
+            _valueFieldControl.Value = kvp.Value;
+        }
+
+        public override void Apply()
+        {
+            // The KeyValuePair was applied to the source object.
+            SourceKeyValuePair = KeyValuePair;
+            base.Apply();
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            // Add events here to prevent rising when showing the form.
             _keyFieldControl.ValueChanged += (s, e) =>
             {
                 if (KeyValuePair.HasValue)
@@ -74,27 +116,6 @@ namespace ObjectEditor.UI.Controls
                     SetValue(kvp, e.ByUser);
                 }
             };
-
-            panel.Controls.Add(_keyFieldControl, 0, 0);
-            panel.Controls.Add(_valueFieldControl, 1, 0);
-
-            return panel;
         }
-
-        protected override void UpdateControlValue(object value)
-        {
-            var kvp = value.CastKeyValuePair<object, object>(); // will throw if not a KeyValuePair
-            _keyFieldControl.Value = kvp.Key;
-            _valueFieldControl.Value = kvp.Value;
-        }
-
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-            // Add events here to prevent rising when showing the form.
-            //CheckBox.CheckedChanged += (s, args) => OnUserChangedValue(CheckBox.Checked);
-        }
-
-        // TODO: Implement Apply, Reset, ... methods
     }
 }

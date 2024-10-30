@@ -51,6 +51,54 @@ namespace ObjectEditor.UI.Forms
         }
         #endregion
 
-        // TODO: Override the remove item method to remove by key.
+        protected override void ResetField(BaseFieldControl fieldControl)
+        {
+            if (fieldControl is not KeyValuePairFieldControl kvpFieldControl)
+            { // fallback to default behavior
+                base.ResetField(fieldControl);
+                return;
+            }
+
+            var sourceKey = kvpFieldControl.SourceKeyValuePair?.Key;
+            if (sourceKey == null)
+                return; // it's a new item, no need to reset
+
+            if (SourceDictionaryWrapper.TryGetValue(sourceKey, out var sourceValue))
+                kvpFieldControl.Value = new KeyValuePair<object, object>(sourceKey, sourceValue);
+            // else: the key was removed, no need to reset (will be re-added if applied)
+        }
+
+        protected override void ApplyField(BaseFieldControl fieldControl)
+        {
+            if (fieldControl is not KeyValuePairFieldControl kvpFieldControl)
+            { // fallback to default behavior
+                base.ApplyField(fieldControl);
+                return;
+            }
+            
+            var kvpToRemove = kvpFieldControl.SourceKeyValuePair;
+            var kvpToAdd = kvpFieldControl.KeyValuePair;
+
+            // remove the old key-value pair
+            if (kvpToRemove.HasValue)
+                SourceDictionaryWrapper.Remove(kvpToRemove.Value.Key); // shouldn't throw if the key is not found
+
+            // add the new key-value pair using the indexer, if the key is new it will be added
+            if (kvpToAdd.HasValue)
+                SourceDictionaryWrapper[kvpToAdd.Value.Key] = kvpToAdd.Value.Value;
+        }
+
+        protected override void RemoveItem(BaseFieldControl fieldControl)
+        {
+            if (fieldControl is not KeyValuePairFieldControl kvpFieldControl)
+            { // fallback to default behavior
+                base.RemoveItem(fieldControl);
+                return;
+            }
+
+            var kvp = kvpFieldControl.SourceKeyValuePair;
+            if (kvp.HasValue)
+                SourceDictionaryWrapper.Remove(kvp.Value.Key);
+        }
     }
 }

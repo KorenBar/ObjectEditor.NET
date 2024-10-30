@@ -75,30 +75,28 @@ namespace ObjectEditor.UI.Forms
         /// Add a new item to the collection and create a field control for it.
         /// </summary>
         /// <returns></returns>
-        protected Task AddNewItemAsync()
+        protected void AddNewItem()
         {
             // source object can't be changed after initialization, no need to copy it
             if (SourceCollectionWrapper == null || SourceObject == null)
-                return Task.CompletedTask;
-            return Task.Run(() => {
-                lock (SourceObject) // lock the source object to prevent concurrent modifications as possible
-                {
-                    int index = SourceCollectionWrapper.Count;
-                    var itemValue = CreateNewItem(); // the item value can be null
-                    ItemFieldInfo fieldInfo = CreateItemFieldInfo(itemValue, index);
-                    AddItemField(fieldInfo, itemValue);
-                }
-            });
+                return;
+
+            lock (SourceObject) // lock the source object to prevent concurrent modifications as possible
+            {
+                int index = SourceCollectionWrapper.Count;
+                var itemValue = CreateNewItem(); // the item value can be null
+                ItemFieldInfo fieldInfo = CreateItemFieldInfo(itemValue, index);
+                AddItemField(fieldInfo, itemValue);
+            }
         }
 
         /// <summary>
         /// Remove an item from the source collection.
         /// </summary>
-        /// <param name="fieldInfo"></param>
-        /// <exception cref="ArgumentNullException"></exception>
-        protected virtual void RemoveItem(ItemFieldInfo fieldInfo)
+        /// <param name="fieldControl">The field control of the item to remove, must be an item field and not null.</param>
+        protected virtual void RemoveItem(BaseFieldControl fieldControl)
         {
-            if (fieldInfo == null) throw new ArgumentNullException(nameof(fieldInfo));
+            var fieldInfo = fieldControl.FieldInfo as ItemFieldInfo;
 
             //SourceCollectionWrapper.RemoveAt(fieldInfo.Index); // remove the item from the collection
             var itemToRemove = SourceCollectionWrapper.GetAt(fieldInfo.Index);
@@ -117,8 +115,7 @@ namespace ObjectEditor.UI.Forms
                 return;
             }
 
-            try { await AddNewItemAsync(); }
-            catch (Exception ex) { MessageBox.Show(ex.Message, "Failed to add a new item", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+            await ((Action)AddNewItem).InvokeUserActionAsync("New Item");
             ScrollDown();
         }
         #endregion
@@ -135,7 +132,9 @@ namespace ObjectEditor.UI.Forms
             if (fieldControl == null) return null;
             fieldControl.Removing += (s, e) =>
             {
-                RemoveItem(((BaseFieldControl)s)?.FieldInfo as ItemFieldInfo);
+                if (((BaseFieldControl)s).FieldInfo is not ItemFieldInfo) // check before
+                    throw new InvalidOperationException("The field is not an item field.");
+                RemoveItem((BaseFieldControl)s);
                 this.SaveRequired = true;
             };
             return fieldControl;

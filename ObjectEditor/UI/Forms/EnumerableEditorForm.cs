@@ -123,35 +123,11 @@ namespace ObjectEditor.UI.Forms
             ReloadItemControls();
         }
 
-        //public override void ApplyChanges()
-        //{
-        //    // TODO: parse the items as well
-        //    // if there is a mismatch between the items and the fields, show a message box to reload the form and lose the changes
-
-        //    FieldControls.Where(f => f.FieldInfo is ItemFieldInfo).ForEachAll(f => {
-        //        // Actually, it's not possible to set the items directly to the source here.
-        //        // TODO: create a ListEditorForm class to edit a list items directly (support dictionary too, with a new KeyValuePairFieldControl class).
-        //        //SourceEnumerableWrapper[((ItemFieldInfo)f.FieldInfo).Index] = f.Value;
-        //        f.Apply();
-        //    });
-        //    base.ApplyChanges(); // end with the base method, so the event will be raised at the end
-        //}
-
-        /// <summary>
-        /// Reload values from the source object to the existing item fields.
-        /// </summary>
-        protected virtual void ResetItems()
+        protected override void ResetField(BaseFieldControl fieldControl)
         {
-            // the field control type is by the item type, what if the item at the same index was changed to another type?
-            // TODO: detect the type change and reload the item field controls if needed.
-            FieldControls.Where(f => f.FieldInfo is ItemFieldInfo).ForEachAll(f => {
-                f.Value = SourceEnumerableWrapper.GetAt(((ItemFieldInfo)f.FieldInfo).Index);
-            });
-        }
-        public override void Reset()
-        {
-            ResetItems(); // reset the items as well
-            base.Reset(); // end with the base method, so the event will be raised at the end
+            if (fieldControl.FieldInfo is ItemFieldInfo)
+                fieldControl.Value = SourceEnumerableWrapper.GetAt(((ItemFieldInfo)fieldControl.FieldInfo).Index);
+            else base.ResetField(fieldControl); // fallback to the base method
         }
         #endregion
     }

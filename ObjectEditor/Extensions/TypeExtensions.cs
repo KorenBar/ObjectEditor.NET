@@ -29,6 +29,13 @@ namespace ObjectEditor.Extensions
             if (!type.IsValueType && !type.IsClass)
                 return null; // not a value type or class - cannot create an instance
 
+            if (type.GetGenericType(typeof(KeyValuePair<,>)) != null)
+            { // Don't use the default constructor for KeyValuePair<TKey, TValue>
+                var keyType = type.GetGenericArguments()[0];
+                var valueType = type.GetGenericArguments()[1];
+                return new KeyValuePair<object, object>(GetDefaultValue(keyType), GetDefaultValue(valueType)).CastTo(keyType, valueType);
+            }
+
             return Activator.CreateInstance(type);
         }
 
