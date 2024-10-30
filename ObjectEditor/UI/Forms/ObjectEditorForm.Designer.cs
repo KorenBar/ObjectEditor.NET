@@ -42,11 +42,11 @@
             panel2 = new Panel();
             menuButton = new Button();
             contextMenuStrip1 = new ContextMenuStrip(components);
-            exportToolStripMenuItem = new ToolStripMenuItem();
-            importToolStripMenuItem = new ToolStripMenuItem();
-            toolStripSeparator1 = new ToolStripSeparator();
             resetToolStripMenuItem = new ToolStripMenuItem();
             reloadToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator1 = new ToolStripSeparator();
+            exportToolStripMenuItem = new ToolStripMenuItem();
+            importToolStripMenuItem = new ToolStripMenuItem();
             toolTip1 = new ToolTip(components);
             openFileDialog1 = new OpenFileDialog();
             saveFileDialog1 = new SaveFileDialog();
@@ -187,7 +187,7 @@
             // 
             // menuButton
             // 
-            menuButton.BackgroundImage = ObjectEditor.Resources.icons8_menu_dark_gray_32;
+            menuButton.BackgroundImage = Resources.icons8_menu_dark_gray_32;
             menuButton.BackgroundImageLayout = ImageLayout.Zoom;
             menuButton.Dock = DockStyle.Left;
             menuButton.FlatAppearance.BorderSize = 0;
@@ -204,44 +204,44 @@
             // 
             contextMenuStrip1.Items.AddRange(new ToolStripItem[] { resetToolStripMenuItem, reloadToolStripMenuItem, toolStripSeparator1, exportToolStripMenuItem, importToolStripMenuItem });
             contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(181, 120);
-            // 
-            // exportToolStripMenuItem
-            // 
-            exportToolStripMenuItem.Image = ObjectEditor.Resources.icons8_export_26;
-            exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            exportToolStripMenuItem.Size = new Size(180, 22);
-            exportToolStripMenuItem.Text = "Export";
-            exportToolStripMenuItem.Click += exportToolStripMenuItem_Click;
-            // 
-            // importToolStripMenuItem
-            // 
-            importToolStripMenuItem.Image = ObjectEditor.Resources.icons8_import_26;
-            importToolStripMenuItem.Name = "importToolStripMenuItem";
-            importToolStripMenuItem.Size = new Size(180, 22);
-            importToolStripMenuItem.Text = "Import";
-            importToolStripMenuItem.Click += importToolStripMenuItem_Click;
-            // 
-            // toolStripSeparator1
-            // 
-            toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(177, 6);
+            contextMenuStrip1.Size = new Size(111, 98);
             // 
             // resetToolStripMenuItem
             // 
-            resetToolStripMenuItem.Image = ObjectEditor.Resources.icons8_clear_32;
+            resetToolStripMenuItem.Image = Resources.icons8_clear_32;
             resetToolStripMenuItem.Name = "resetToolStripMenuItem";
-            resetToolStripMenuItem.Size = new Size(180, 22);
+            resetToolStripMenuItem.Size = new Size(110, 22);
             resetToolStripMenuItem.Text = "Reset";
             resetToolStripMenuItem.Click += resetToolStripMenuItem_Click;
             // 
             // reloadToolStripMenuItem
             // 
-            reloadToolStripMenuItem.Image = ObjectEditor.Resources.icons8_refresh_32;
+            reloadToolStripMenuItem.Image = Resources.icons8_refresh_32;
             reloadToolStripMenuItem.Name = "reloadToolStripMenuItem";
-            reloadToolStripMenuItem.Size = new Size(180, 22);
+            reloadToolStripMenuItem.Size = new Size(110, 22);
             reloadToolStripMenuItem.Text = "Reload";
             reloadToolStripMenuItem.Click += reloadToolStripMenuItem_Click;
+            // 
+            // toolStripSeparator1
+            // 
+            toolStripSeparator1.Name = "toolStripSeparator1";
+            toolStripSeparator1.Size = new Size(107, 6);
+            // 
+            // exportToolStripMenuItem
+            // 
+            exportToolStripMenuItem.Image = Resources.icons8_export_26;
+            exportToolStripMenuItem.Name = "exportToolStripMenuItem";
+            exportToolStripMenuItem.Size = new Size(110, 22);
+            exportToolStripMenuItem.Text = "Export";
+            exportToolStripMenuItem.Click += exportToolStripMenuItem_Click;
+            // 
+            // importToolStripMenuItem
+            // 
+            importToolStripMenuItem.Image = Resources.icons8_import_26;
+            importToolStripMenuItem.Name = "importToolStripMenuItem";
+            importToolStripMenuItem.Size = new Size(110, 22);
+            importToolStripMenuItem.Text = "Import";
+            importToolStripMenuItem.Click += importToolStripMenuItem_Click;
             // 
             // toolTip1
             // 
@@ -251,8 +251,7 @@
             // 
             // openFileDialog1
             // 
-            openFileDialog1.FileName = "openFileDialog1";
-            openFileDialog1.Filter = "XML Files|*.xml;*.config";
+            openFileDialog1.Filter = "XML Files|*.xml;*.config|JSON Files|*.json|All Files|*.*";
             openFileDialog1.FileOk += openFileDialog1_FileOk;
             // 
             // saveFileDialog1
@@ -263,7 +262,7 @@
             // loadingPictureBox
             // 
             loadingPictureBox.Dock = DockStyle.Fill;
-            loadingPictureBox.Image = ObjectEditor.Resources.infinity_128;
+            loadingPictureBox.Image = Resources.infinity_128;
             loadingPictureBox.Location = new Point(0, 0);
             loadingPictureBox.Name = "loadingPictureBox";
             loadingPictureBox.Size = new Size(331, 417);

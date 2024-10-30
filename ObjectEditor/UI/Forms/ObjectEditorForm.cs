@@ -395,53 +395,20 @@ namespace ObjectEditor.UI.Forms
 
         private async void openFileDialog1_FileOk(object sender, CancelEventArgs e)
         {
-            //var filename = openFileDialog1.FileName;
+            var filename = openFileDialog1.FileName;
 
-            //import:
-            //try
-            //{ // TODO: reimplement
-            //    object deserialized = null;
-
-            //    await Task.Run(() =>
-            //    {
-            //        using (var sReader = new StreamReader(filename))
-            //        using (var xmlReader = XmlReader.Create(sReader))
-            //            deserialized = new XmlSerializer(SourceObject.GetType()).Deserialize(xmlReader);
-
-            //        var mergableElement = SourceObject as IMergable;
-            //        if (mergableElement == null) throw new InvalidCastException("Unmergable");
-            //        mergableElement.Merge(deserialized, true);
-            //    });
-
-            //    Reset(); // refresh controls values
-            //    SaveRequired = true;
-            //}
-            //catch (Exception ex)
-            //{
-            //    Logging.WriteError(ex);
-            //    if (MessageBox.Show(ex.Message, "Import Failed", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2) == DialogResult.Retry)
-            //        goto import;
-            //}
+            await ((Action)(() => { // TODO
+                throw new NotImplementedException("The import feature is not implemented yet.");
+            })).InvokeUserActionAsync("Import");
         }
 
         private async void saveFileDialog1_FileOk(object sender, CancelEventArgs e)
         {
             var filename = saveFileDialog1.FileName;
 
-        export:
-            try
-            { // TODO: reimplement
-                await Task.Run(() =>
-                {
-                    using (var writer = XmlWriter.Create(filename, new XmlWriterSettings { Indent = true }))
-                        new XmlSerializer(SourceObject.GetType()).Serialize(writer, SourceObject);
-                });
-            }
-            catch (Exception ex)
-            {
-                if (MessageBox.Show(ex.Message, "Export Failed", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2) == DialogResult.Retry)
-                    goto export;
-            }
+            await ((Action)(() => { // TODO
+                throw new NotImplementedException("The export feature is not implemented yet.");
+            })).InvokeUserActionAsync("Export");
         }
 
         private void ParentEditorForm_SaveRequiredChanged(object sender, SaveRequiredChangedEventArgs e)
