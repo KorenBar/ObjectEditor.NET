@@ -24,6 +24,21 @@ namespace ObjectEditor
     }
 
     /// <summary>
+    /// Associates a property or class with a permission group.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Property, AllowMultiple = false)]
+    public class PermissionGroupAttribute : Attribute
+    {
+        /// <summary>
+        /// The name of the permission group.
+        /// </summary>
+        public string GroupName { get; }
+
+        /// <param name="groupName">The name of the permission group. Set to null to remove the permission group.</param>
+        public PermissionGroupAttribute(string groupName) => GroupName = groupName;
+    }
+
+    /// <summary>
     /// Attribute to use the property value as a display name of an item in a collection.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]

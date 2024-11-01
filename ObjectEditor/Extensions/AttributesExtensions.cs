@@ -52,5 +52,34 @@ namespace ObjectEditor
             //properties = properties.OrderBy(p => p.Name); // TODO: let the user choose how to sort
             return properties.Where(p => !p.IsIgnored() && !p.IsObsolete() && !p.IsIndexer()); // exclude ignored, obsolete and indexer properties
         }
+
+        /// <summary>
+        /// Get the last defined permission group attribute of the property or its declaring type.
+        /// </summary>
+        /// <param name="property">The property to get the permission group attribute of.</param>
+        /// <returns>The permission group attribute of the property or its declaring type.</returns>
+        public static PermissionGroupAttribute GetPermissionGroupAttribute(this PropertyInfo property)
+        {
+            var attribute = property.GetCustomAttribute<PermissionGroupAttribute>();
+            if (attribute != null)
+                return attribute;
+
+            var typeChain = property.DeclaringType.GetInheritanceChain();
+            foreach (var type in typeChain)
+            {
+                attribute = type.GetCustomAttribute<PermissionGroupAttribute>();
+                if (attribute != null)
+                    return attribute;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Get the permission group name of the property or its declaring type.
+        /// </summary>
+        /// <param name="property">The property to get the permission group name of.</param>
+        /// <returns>The permission group name of the property or its declaring type.</returns>
+        public static string GetPermissionGroupName(this PropertyInfo property)
+            => property.GetPermissionGroupAttribute()?.GroupName;
     }
 }
