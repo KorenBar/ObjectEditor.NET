@@ -13,7 +13,7 @@ namespace ObjectEditor
     /// <summary>
     /// Information about a field in an object.
     /// </summary>
-    public abstract class BaseFieldInfo
+    public abstract class FieldMetadata
     {
         public string Name { get; }
         public string Description { get; }
@@ -23,7 +23,7 @@ namespace ObjectEditor
 
         public string Tip => !string.IsNullOrEmpty(Description) ? $"{Name} - {Description}" : Name;
 
-        public BaseFieldInfo(Type type, string name, string description, bool isReadOnly)
+        public FieldMetadata(Type type, string name, string description, bool isReadOnly)
         {
             if (type == null)
                 throw new ArgumentNullException(nameof(type));
@@ -55,12 +55,12 @@ namespace ObjectEditor
     /// <summary>
     /// Field information for a nested field.
     /// </summary>
-    public sealed class SubFieldInfo : BaseFieldInfo
+    public sealed class SubFieldMetadata : FieldMetadata
     {
         /// <summary>
         /// The parent field information.
         /// </summary>
-        public BaseFieldInfo ParentFieldInfo { get; }
+        public FieldMetadata ParentFieldInfo { get; }
 
         /// <summary>
         /// Creates a field information for a nested field.
@@ -68,7 +68,7 @@ namespace ObjectEditor
         /// <param name="type">The type of the subfield.</param>
         /// <param name="name">The name of the subfield.</param>
         /// <param name="parentFieldInfo">The parent field information.</param>
-        public SubFieldInfo(Type type, string name, BaseFieldInfo parentFieldInfo)
+        public SubFieldMetadata(Type type, string name, FieldMetadata parentFieldInfo)
             : base(type, name, null, parentFieldInfo.IsReadOnly)
         {
             ParentFieldInfo = parentFieldInfo;
@@ -83,7 +83,7 @@ namespace ObjectEditor
     /// <summary>
     /// Field information for a property.
     /// </summary>
-    public class PropertyFieldInfo : BaseFieldInfo
+    public class PropertyFieldMetadata : FieldMetadata
     {
         public PropertyInfo PropertyInfo { get; }
 
@@ -92,7 +92,7 @@ namespace ObjectEditor
         /// </summary>
         /// <param name="propertyInfo">The property information to create the field information from.</param>
         /// <exception cref="ArgumentNullException">if the property information is null.</exception>
-        public PropertyFieldInfo(PropertyInfo propertyInfo)
+        public PropertyFieldMetadata(PropertyInfo propertyInfo)
             : base(propertyInfo?.PropertyType,
                   propertyInfo?.GetCustomAttribute<InfoAttribute>()?.Name ?? propertyInfo?.Name,
                   propertyInfo?.GetCustomAttribute<InfoAttribute>()?.Description,
@@ -111,7 +111,7 @@ namespace ObjectEditor
     /// <summary>
     /// Field information for an item in an enumerable.
     /// </summary>
-    public class ItemFieldInfo : BaseFieldInfo
+    public class ItemFieldMetadata : FieldMetadata
     {
         /// <summary>
         /// The index of the item in the enumerable.
@@ -136,7 +136,7 @@ namespace ObjectEditor
         /// <param name="description">The description for the item.</param>
         /// <param name="index">The index of the item in the enumerable.</param>
         /// <param name="abilities">The abilities that can be performed on the item.</param>
-        public ItemFieldInfo(Type type, string name, string description, int index, ItemAbility abilities)
+        public ItemFieldMetadata(Type type, string name, string description, int index, ItemAbility abilities)
             : base(type, name, description, !abilities.HasFlag(ItemAbility.Edit)) // if it can't be edited, it's read-only
         {
             Index = index;
