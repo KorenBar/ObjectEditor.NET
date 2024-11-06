@@ -12,7 +12,7 @@ namespace ObjectEditor.Controllers.Fields
     /// <summary>
     /// A controller for a field in an object editor.
     /// </summary>
-    public class ValueFieldController
+    public class ValueFieldController : IDisposable
     {
         /// <summary>
         /// The value copied by the user to paste or link to another field.
@@ -278,5 +278,12 @@ namespace ObjectEditor.Controllers.Fields
             StatusChanged?.Invoke(this, e);
         }
         #endregion
+
+        public virtual void Dispose()
+        {
+            ValueChanged = null;
+            Removing = null;
+            StatusChanged = null;
+        }
     }
 }

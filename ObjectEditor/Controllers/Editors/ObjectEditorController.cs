@@ -13,7 +13,7 @@ namespace ObjectEditor.Controllers.Editors
     /// <summary>
     /// View and edit the properties of an object and its sub-objects recursively, of any type.
     /// </summary>
-    public class ObjectEditorController
+    public class ObjectEditorController : IDisposable
     {
         #region Properties
         private List<ValueFieldController> _fields = new();
@@ -261,5 +261,11 @@ namespace ObjectEditor.Controllers.Editors
             DataSaved?.Invoke(this, e);
         }
         #endregion
+
+        public virtual void Dispose()
+        {
+            try { _fields.ForEachAll(f => f.Dispose()); }
+            finally { _fields.Clear(); }
+        }
     }
 }

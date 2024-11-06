@@ -78,21 +78,29 @@ namespace ObjectEditor.Controllers.Fields
         {
             if (e == null) throw new ArgumentNullException(nameof(e));
 
-            if (e.Sender == this)
-            { // the object value of this field has changed, update the controller before invoking the event
-                if (e.NewValue == null) // TODO: unregister the events
-                    ObjectEditorController = null; // remove the controller
-                else if (ObjectEditorController?.SourceObject != e.NewValue)
+            if (e.Sender == this) // the object value of this field has changed, update the controller before invoking the event
+            {
+                // remove the old controller (disposing it unregisters the events)
+                ObjectEditorController?.Dispose();
+                ObjectEditorController = null;
+
+                if (e.NewValue != null)
                 { // the source object has changed or the controller is null, create a new controller.
                     var editor = ControllerFactory.CreateEditor(e.NewValue);
                     editor.ValueChanged += (s, e) => OnInnerValueChanged(e);
                     editor.ChangesPendingChanged += ObjectEditorController_ChangesPendingChanged;
                     editor.SaveRequiredChanged += ObjectEditorController_SaveRequiredChanged;
-                    ObjectEditorController = editor; // (the garbage collector will free the old controller if was created)
+                    ObjectEditorController = editor;
                 }
             }
 
             base.OnValueChanged(e);
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+            ObjectEditorController?.Dispose();
         }
     }
 }
