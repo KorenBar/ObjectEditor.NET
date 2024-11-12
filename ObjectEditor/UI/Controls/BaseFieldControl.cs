@@ -10,6 +10,9 @@ using System.Windows.Forms;
 using System.Reflection;
 using ObjectEditor.Extensions;
 using ObjectEditor.UI.Forms;
+using ObjectEditor.Controllers.Fields;
+using ObjectEditor.UI.Controls.ValueControls;
+using System.Reflection.Emit;
 
 namespace ObjectEditor.UI.Controls
 {
@@ -18,44 +21,24 @@ namespace ObjectEditor.UI.Controls
     /// </summary>
     public abstract partial class BaseFieldControl : UserControl
     {
-        /// <summary>
-        /// The value copied by the user to paste or link to another field.
-        /// </summary>
-        private static object _copyValue;
-
         #region Properties
-        private object _value;
         /// <summary>
-        /// Gets or sets the field value.
+        /// The controller of the field. Never null.
         /// </summary>
-        public object Value
-        {
-            get => _value;
-            set
-            {
-                SetValue(value, false);
-                Status = FieldStatus.Synced;
-            }
-        }
+        public ValueFieldController Controller { get; }
 
         /// <summary>
-        /// Gets the field information.
+        /// Get the control that displays the value.
         /// </summary>
-        public BaseFieldInfo FieldInfo { get; }
+        protected Control ValueControl { get; }
 
         /// <summary>
-        /// Gets the control that displays the value.
-        /// Created by the inherited class.
-        /// </summary>
-        protected internal Control ValueControl { get; }
-
-        /// <summary>
-        /// Gets the parent form that contains this field.
+        /// Get the parent form that contains this field.
         /// </summary>
         public ObjectEditorForm ParentEditorForm { get; }
 
         /// <summary>
-        /// Gets or sets whether the remove button is visible.
+        /// Get or set whether the remove button is visible.
         /// </summary>
         public bool ShowRemoveButton
         {
@@ -64,62 +47,34 @@ namespace ObjectEditor.UI.Controls
         }
 
         /// <summary>
-        /// Gets or sets whether the name label is visible.
+        /// Get or set whether the name label is visible.
         /// </summary>
         public bool ShowNameLabel
         {
             get => tableLayoutPanel1.ColumnStyles[0].Width > 0;
             protected set => tableLayoutPanel1.ColumnStyles[0].Width = value ? 140F : 0;
         }
-
-        private FieldStatus _status;
-        /// <summary>
-        /// Gets the status of the field.
-        /// </summary>
-        public FieldStatus Status
-        {
-            get => _status;
-            protected set
-            {
-                if (_status == value) return;
-                _status = value;
-                OnStatusChanged(value);
-            }
-        }
-        #endregion
-
-        #region Events
-        /// <summary>
-        /// Occurs after the field value changes.
-        /// </summary>
-        public event EventHandler<FieldValueChangedEventArgs> ValueChanged;
-
-        /// <summary>
-        /// Occurs when the user requires to remove this item from the collection.
-        /// </summary>
-        public event EventHandler<EventArgs> Removing;
         #endregion
 
         #region Constructors
         /// <summary>
         /// Creates a new field control.
         /// </summary>
-        /// <param name="value">Initial field value</param>
-        /// <param name="fieldInfo">Field information</param>
+        /// <param name="controller">The controller of the field.</param>
+        /// <param name="parentForm">The parent form that contains this field.</param>
         /// <exception cref="ArgumentNullException"></exception>
-        public BaseFieldControl(object value, BaseFieldInfo fieldInfo, ObjectEditorForm parentForm)
+        public BaseFieldControl(ValueFieldController controller, ObjectEditorForm parentForm)
         {
-            if (fieldInfo == null)
-                throw new ArgumentNullException(nameof(fieldInfo));
-
-            FieldInfo = fieldInfo;
+            Controller = controller ?? throw new ArgumentNullException(nameof(controller));
             ParentEditorForm = parentForm;
 
             InitializeComponent();
 
-            if (fieldInfo is SubFieldInfo)
+            var fieldInfo = controller.FieldInfo;
+
+            if (fieldInfo is SubFieldMetadata)
                 ShowNameLabel = false; // hide the name label for sub fields
-            else if (fieldInfo is ItemFieldInfo itemFieldInfo)
+            else if (fieldInfo is ItemFieldMetadata itemFieldInfo)
             {
                 ShowRemoveButton = true;
                 btnRemove.Enabled = itemFieldInfo.IsRemovable;
@@ -133,14 +88,10 @@ namespace ObjectEditor.UI.Controls
 
             ValueControl = CreateValueControl(fieldInfo);
             if (ValueControl == null)
-                throw new InvalidOperationException("The value control is not created.");
+                throw new NotImplementedException("The value control is not created.");
 
             ValueControl.Dock = DockStyle.Fill;
             valueControlPanel.Controls.Add(ValueControl);
-
-            Value = value;
-            UpdateName(); // set the name after the value is set
-            UpdateTip();
         }
         #endregion
 
@@ -150,153 +101,102 @@ namespace ObjectEditor.UI.Controls
         /// </summary>
         /// <param name="fieldInfo">Field information.</param>
         /// <returns>The created control to display and edit the value.</returns>
-        protected abstract Control CreateValueControl(BaseFieldInfo fieldInfo);
+        protected abstract Control CreateValueControl(FieldMetadata fieldInfo);
         /// <summary>
         /// Sets the value of the value control, depending on the field type.
         /// </summary>
         /// <param name="value">The value to set, will never be null.</param>
-        protected abstract void UpdateControlValue(object value);
+        protected abstract void UpdateValueControl(object value);
         #endregion
 
         #region Field Actions
         /// <summary>
-        /// Sets the value of the field.
+        /// Updates the control with the current value and name from the controller.
         /// </summary>
-        /// <param name="byUser">Indicates whether the value is set by the user.</param>
-        protected void SetValue(object value, bool byUser)
+        protected virtual void UpdateControl()
         {
-            if (_value == value) return;
+            var value = Controller.Value;
+            nullLabel.Visible = value == null;
+            valueControlPanel.Visible = value != null;
+            UpdateValueControl(value);
 
-            value = value?.ChangeType(FieldInfo.Type); // convert first, may will throw an exception
-
-            if (_value != null && value != null && _value.Equals(value))
-                return; // in some cases the value is the same, but the reference is different, like with strings
-
-            if (byUser && FieldInfo.IsReadOnly) // the user can't change the value of a read-only field, but the program can update it.
-                throw new InvalidOperationException("The field is read-only.");
-
-            if (value == null && !FieldInfo.IsNullable) // it's not a reference or nullable type
-                throw new InvalidOperationException($"Can't set value of type {FieldInfo.Type.Name} to null.");
-
-            _value = value;
-            OnValueChanged(new FieldValueChangedEventArgs(this, value, byUser));
-        }
-
-        /// <summary>
-        /// Applies the changes made.
-        /// </summary>
-        public virtual void Apply()
-        {
-            Status = FieldStatus.Synced;
-        }
-
-        /// <summary>
-        /// Takes the name from the field info or from the display name properties values on the source object itself.
-        /// </summary>
-        protected virtual void UpdateName() => this.Text = FieldInfo.Name ?? this.Value.GetDisplayName()
-            ?? (FieldInfo is ItemFieldInfo info ? $"[{info.Index}]" : null);
-
-        private void UpdateTip()
-        {
+            var name = Controller.Name;
+            Text = name;
+            label1.Text = name;
             toolTip1.RemoveAll();
-            toolTip1.SetToolTip(label1, FieldInfo.Tip ?? this.Text);
+            toolTip1.SetToolTip(label1, Controller.FieldInfo.Tip ?? name);
         }
         #endregion
 
         #region UI Events
         private void BtnRemove_Click(object sender, EventArgs e)
         {
+            // prompt
             if (MessageBox.Show("The value will be removed with no option to be returned. \nDo you want to continue?", $"Removing {this.Text}", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) != DialogResult.Yes)
                 return;
 
-            ((Action)(() => OnRemoving())).InvokeUserAction("Remove");
+            ((Action)Controller.Remove).InvokeUserAction("Remove");
         }
 
-        private void fieldMenu_Opening(object sender, CancelEventArgs e)
+        private void FieldMenu_Opening(object sender, CancelEventArgs e)
         {
-            var fieldType = FieldInfo.Type;
-            copyToolStripMenuItem.Enabled = Value != null;
-            pasteToolStripMenuItem.Enabled = _copyValue != null && !FieldInfo.IsReadOnly && fieldType.IsAssignableFrom(_copyValue.GetType()) && fieldType.IsSimpleType();
-            linkToolStripMenuItem.Enabled = _copyValue != null && !fieldType.IsSimpleType() && _copyValue.GetType().IsAssignableTo(FieldInfo.Type) && !FieldInfo.IsReadOnly;
-            setNullToolStripMenuItem.Enabled = FieldInfo.IsNullable && !FieldInfo.IsReadOnly;
-            createDefaultToolStripMenuItem.Enabled = fieldType.IsValueType || fieldType.Equals(typeof(string)) || fieldType.GetConstructor(Type.EmptyTypes) != null && !FieldInfo.IsReadOnly;
+            copyToolStripMenuItem.Enabled = Controller.CanCopy;
+            pasteToolStripMenuItem.Enabled = Controller.CanPaste;
+            linkToolStripMenuItem.Enabled = Controller.CanLink;
+            setNullToolStripMenuItem.Enabled = Controller.CanSetNull;
+            createDefaultToolStripMenuItem.Enabled = Controller.CanSetDefault;
         }
 
-        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CopyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            _copyValue = Value;
+            ((Action)Controller.CopyValue).InvokeUserAction("Copy Value");
         }
 
-        private void linkToolStripMenuItem_Click(object sender, EventArgs e)
+        private void LinkToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ((Action)(() =>
-            {
-                var value = _copyValue;
-                if (value == null)
-                    throw new InvalidOperationException("The value to link is null.");
-                if (!value.GetType().IsAssignableTo(FieldInfo.Type))
-                    throw new InvalidOperationException($"Can't link value of type {value.GetType().Name} to {FieldInfo.Type.Name}.");
-                SetValue(value, true);
-            }))
-            .InvokeUserAction("Link Value");
+            ((Action)Controller.LinkValue).InvokeUserAction("Link Value");
         }
 
-        private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
+        private void PasteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ((Action)(() =>
-            {
-                if (_copyValue == null)
-                    throw new InvalidOperationException("The value to paste is null.");
-                if (!FieldInfo.Type.IsAssignableFrom(_copyValue.GetType()))
-                    throw new InvalidOperationException($"Can't paste value of type {_copyValue.GetType().Name} to {FieldInfo.Type.Name}.");
-                if (!FieldInfo.Type.IsSimpleType())
-                    throw new InvalidOperationException("Can't paste a class type.");
-                SetValue(_copyValue, true);
-            }))
-            .InvokeUserAction("Paste Value");
+            ((Action)Controller.PasteValue).InvokeUserAction("Paste Value");
         }
 
-        private void setNullToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SetNullToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ((Action)(() =>
-            {
-                if (!FieldInfo.IsNullable)
-                    throw new InvalidOperationException("The field is not nullable.");
-                SetValue(null, true);
-            }))
-            .InvokeUserAction("Set Null");
+            ((Action)Controller.SetNull).InvokeUserAction("Set Null");
         }
 
-        private void createDefaultToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CreateDefaultToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ((Action)(() =>
-            {
-                SetValue(FieldInfo.Type.GetDefaultValue(), true);
-            }))
-            .InvokeUserAction("Create Default");
+            ((Action)Controller.SetDefault).InvokeUserAction("Create Default");
+        }
+        #endregion
+
+        #region Controller Events
+        private void Controller_Removing(object sender, EventArgs e)
+        {
+            if (!IsDisposed && !Disposing)
+                Dispose(); // remove and free the control
+        }
+
+        private void Controller_StatusChanged(object sender, ValueChangedEventArgs<FieldStatus> e)
+        {
+            BackColor = e.NewValue.HasFlag(FieldStatus.ValueChanged) ? Color.Orange
+                : e.NewValue.HasFlag(FieldStatus.InnerValueChanged) ? Color.Yellow
+                : Color.Empty;
+
+            if (e.NewValue == FieldStatus.Synced) // applied or reset
+                UpdateControl();
+        }
+
+        private void Controller_ValueChanged(object sender, ValueChangedEventArgs<object> e)
+        {
+            UpdateControl();
         }
         #endregion
 
         #region Event Handlers
-        protected void OnRemoving() => OnRemoving(new EventArgs());
-        /// <summary>
-        /// Occurs when the user requires to remove this item from the collection.
-        /// </summary>
-        /// <param name="e"></param>
-        protected virtual void OnRemoving(EventArgs e)
-        {
-            var itemInfo = FieldInfo as ItemFieldInfo;
-            if (itemInfo == null)
-                throw new InvalidOperationException("The field is not an item field.");
-            if (!itemInfo.Abilities.HasFlag(ItemAbility.Remove))
-                throw new InvalidOperationException("The item can't be removed, no remove ability.");
-
-            Removing?.Invoke(this, e);
-
-            if (!IsDisposed && !Disposing)
-                Dispose();
-        }
-
         /// <summary>
         /// Occurs when the user changes the value of the field.
         /// The inherited class should call this method when the user changes the value.
@@ -305,59 +205,23 @@ namespace ObjectEditor.UI.Controls
         /// <exception cref="InvalidOperationException">The field is read-only.</exception>
         protected virtual void OnUserChangedValue(object value)
         {
-            Action action = () => SetValue(value, true);
-            if (!action.InvokeUserAction("Value Change")) // failed
-            {
-                var v = Value; // get the current value
-                if (v != null) // revert the value
-                    UpdateControlValue(v);
-            }
+            Action action = () => Controller.SetValue(value, true);
+            if (!action.InvokeUserAction("Value Change"))
+                UpdateControl(); // failed, revert changes
         }
+        #endregion
 
-        /// <summary>
-        /// Occurs when the field value changes.
-        /// </summary>
-        /// <param name="value">The new value of the field.</param>
-        protected virtual void OnValueChanged(FieldValueChangedEventArgs e)
+        #region Overrides
+        protected override void OnLoad(EventArgs e)
         {
-            if (e == null) throw new ArgumentNullException(nameof(e));
+            base.OnLoad(e);
 
-            if (e.ByUser) // the value changed by the user, mark the field as changed
-                Status |= FieldStatus.ValueChanged;
+            // Add events here to prevent rising when showing the form.
+            Controller.Removing += Controller_Removing;
+            Controller.ValueChanged += Controller_ValueChanged;
+            Controller.StatusChanged += Controller_StatusChanged;
 
-            if (e.Value != null)
-                UpdateControlValue(e.Value);
-            nullLabel.Visible = e.Value == null;
-
-            ValueChanged?.Invoke(this, e);
-        }
-
-        /// <summary>
-        /// Occurs when the a child field value changes.
-        /// </summary>
-        /// <param name="e"></param>
-        protected virtual void OnInnerValueChanged(FieldValueChangedEventArgs e)
-        {
-            e.AddParentField(this); // creates a path to the changed field
-            ValueChanged?.Invoke(this, e); // chain the event
-        }
-
-        /// <summary>
-        /// Occurs when the status of the field changes.
-        /// </summary>
-        /// <param name="status"></param>
-        protected virtual void OnStatusChanged(FieldStatus status)
-        {
-            BackColor = _status.HasFlag(FieldStatus.ValueChanged) ? Color.Orange
-                : _status.HasFlag(FieldStatus.InnerValueChanged) ? Color.Yellow
-                : Color.Empty;
-        }
-
-        protected override void OnTextChanged(EventArgs e)
-        {
-            label1.Text = this.Text;
-            UpdateTip();
-            base.OnTextChanged(e);
+            UpdateControl(); // set the initial value
         }
         #endregion
     }

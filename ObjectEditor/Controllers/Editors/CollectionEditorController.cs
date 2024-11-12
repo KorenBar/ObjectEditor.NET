@@ -44,7 +44,7 @@ namespace ObjectEditor.Controllers.Editors
         #region Actions
         /// <summary>
         /// Create a new item and add it to the collection.
-        /// This method will not add a field control for the new item.
+        /// This method will not add a field controller for the new item.
         /// </summary>
         /// <returns>The new item created or null if failed.</returns>
         protected object CreateNewItem()
@@ -56,10 +56,9 @@ namespace ObjectEditor.Controllers.Editors
         }
 
         /// <summary>
-        /// Add a new item to the collection and create a field control for it.
+        /// Add a new item to the collection and create a field controller for it.
         /// </summary>
-        /// <returns></returns>
-        protected void AddNewItem()
+        public void AddNewItem()
         {
             // source object can't be changed after initialization, no need to copy it
             if (SourceCollectionWrapper == null || SourceObject == null)

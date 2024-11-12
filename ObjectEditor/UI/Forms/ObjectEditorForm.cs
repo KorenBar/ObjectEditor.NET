@@ -15,6 +15,9 @@ using ObjectEditor.Extensions;
 using ObjectEditor.UI.Controls;
 using System.Xml;
 using System.Xml.Serialization;
+using ObjectEditor.Controllers.Editors;
+using ObjectEditor.Controllers.Fields;
+using ObjectEditor.Controllers;
 
 namespace ObjectEditor.UI.Forms
 {
@@ -23,6 +26,8 @@ namespace ObjectEditor.UI.Forms
     /// </summary>
     public partial class ObjectEditorForm : Form
     {
+        private readonly Dictionary<ValueFieldController, BaseFieldControl> _fieldControls = new();
+
         #region Form Properties
         public new Form Owner
         { // There is no virtual method for that, so hiding it using the new keyword.
@@ -40,111 +45,25 @@ namespace ObjectEditor.UI.Forms
         /// </summary>
         private ObjectEditorForm ParentEditorForm { get; }
 
-        // Controls
+        /// <summary>
+        /// The content panel that contains the fields controls.
+        /// </summary>
         private Panel ContentPanel => this.flowLayoutPanel1;
-        private Panel ButtonsPanel => this.panel1;
-        protected Panel CustomPanel => this.panel2;
 
         /// <summary>
-        /// Whether to show the custom panel at the bottom of the content panel.
+        /// Whether to show the add button at the bottom of the content panel.
         /// </summary>
-        protected bool ShowCustomPanel
+        protected bool ShowAddButton
         {
             get => this.tableLayoutPanel1.RowStyles[2].Height > 0;
             set => this.tableLayoutPanel1.RowStyles[2].Height = value ? 25 : 0;
         }
-
-        protected IEnumerable<BaseFieldControl> FieldControls => this.ContentPanel.Controls.OfType<BaseFieldControl>();
         #endregion
 
-        #region Flags Properties
-        private bool _saveRequired;
         /// <summary>
-        /// Data has changed and was not saved to file yet.
+        /// The controller of the object editor. Never null.
         /// </summary>
-        public bool SaveRequired
-        {
-            get => _saveRequired;
-            internal set
-            {
-                if (_saveRequired == value) return;
-                _saveRequired = value;
-                OnSaveRequiredChanged(_saveRequired);
-            }
-        }
-
-        private bool _changesPending;
-        /// <summary>
-        /// Data has changed and needs to be set on the source object.
-        /// </summary>
-        public bool ChangesPending
-        {
-            get => _changesPending;
-            private set
-            {
-                if (_changesPending == value) return;
-                _changesPending = value;
-                OnChangesPendingChanged(_changesPending);
-            }
-        }
-
-        private bool _isSaveable;
-        /// <summary>
-        /// Whether the changes on the source object can be saved to file.
-        /// </summary>
-        public bool IsSaveable
-        {
-            get => _isSaveable;
-            private set
-            {
-                if (_isSaveable == value) return;
-                _isSaveable = value;
-                btnSave.Enabled = btnSave.Visible = _isSaveable;
-            }
-        }
-        #endregion
-
-        #region Settings
-        // These properties will be inherited from their parents if was not set
-        private bool? _showReadonlyProperties;
-        public bool ShowReadonlyProperties
-        {
-            get => _showReadonlyProperties ?? ParentEditorForm?.ShowReadonlyProperties ?? true;
-            set => _showReadonlyProperties = value;
-        }
-        private bool? _showReferenceProperties;
-        public bool ShowReferenceProperties
-        {
-            get => _showReferenceProperties ?? ParentEditorForm?.ShowReferenceProperties ?? true;
-            set => _showReferenceProperties = value;
-        }
-        #endregion
-
-        public object SourceObject { get; }
-
-        #region Events
-        /// <summary>
-        /// Occurs when one of the values was changed and there is no form that can save the changes to a file.
-        /// </summary>
-        public event EventHandler<FieldValueChangedEventArgs> ValueChanged;
-        /// <summary>
-        /// The source object was updated (true) or the data was saved (false).
-        /// Will not be arise when the changes are on a form that able to save changes to file by itself.
-        /// </summary>
-        public event EventHandler<SaveRequiredChangedEventArgs> SaveRequiredChanged;
-        /// <summary>
-        /// Changes on this form was applied to the source object.
-        /// </summary>
-        public event EventHandler<ChangesAppliedEventArgs> ChangesApplied;
-        /// <summary>
-        /// Occurs when the changes pending flag was changed.
-        /// </summary>
-        public event EventHandler<ChangesPendingChangedEventArgs> ChangesPendingChanged;
-        /// <summary>
-        /// The data was saved to file.
-        /// </summary>
-        public event EventHandler<EventArgs> DataSaved;
-        #endregion
+        public ObjectEditorController Controller { get; }
 
         #region Constructors
         /// <summary>
@@ -153,26 +72,32 @@ namespace ObjectEditor.UI.Forms
         public ObjectEditorForm() : this(new object()) { }
 
         /// <param name="sourceObject">The object to show its properties in the form.</param>
-        public ObjectEditorForm(object sourceObject) : this(sourceObject, null) { }
+        public ObjectEditorForm(object sourceObject) : this(ControllerFactory.CreateEditor(sourceObject), null) { }
 
-        /// <param name="sourceObject">The object to show its properties in the form.</param>
-        /// <param name="parent">Parent form to inherit settings from (optional).</param>
-        internal ObjectEditorForm(object sourceObject, ObjectEditorForm parent)
+        /// <param name="controller">The controller of the object editor.</param>
+        /// <param name="parent">The owner of this form (optional).</param>
+        internal ObjectEditorForm(ObjectEditorController controller, ObjectEditorForm parent)
         {
-            SourceObject = sourceObject;
+            Controller = controller ?? throw new ArgumentNullException(nameof(controller));
             ParentEditorForm = parent;
 
             InitializeComponent();
 
-            this.Enabled = sourceObject != null;
-            // TODO: reimplement
-            //importToolStripMenuItem.Enabled = sourceObject is IMergable && (exportToolStripMenuItem.Enabled = sourceObject is IXmlSerializable);
+            if (controller is CollectionEditorController collectionController)
+            {
+                this.ShowAddButton = true; // Show the Add button for collections anyway
+                this.btnAdd.Enabled = !collectionController.IsReadOnly; // Enable the Add button if the collection is editable
+            }
 
-            IsSaveable = false; // TODO: Determine if it's possible to save this specific source object.
+            // TODO: do it when value changed
+            this.Enabled = controller.SourceObject != null;
 
             this.Owner = parent;
-            if (parent != null)
-                parent.SaveRequiredChanged += ParentEditorForm_SaveRequiredChanged;
+
+            controller.FieldAdded += Controller_FieldAdded;
+            controller.FieldRemoved += Controller_FieldRemoved;
+            controller.ChangesPendingChanged += Controller_ChangesPendingChanged;
+            controller.SaveRequiredChanged += Controller_SaveRequiredChanged;
         }
         #endregion
 
@@ -181,155 +106,21 @@ namespace ObjectEditor.UI.Forms
         /// Reload the controls of the form from the source object asynchronously while showing a loading animation.
         /// In case of error, a message box will be shown to the user and no exception will be thrown.
         /// </summary>
-        protected async void ReloadControlsAsync()
+        protected async void ReloadAsync()
         {
             try
             {
-                //ContentPanel.SuspendLayout();
                 loadingPictureBox.Visible = true;
                 ContentPanel.Visible = false;
-                await Task.Run(() => ((Action)ReloadControls).InvokeUserAction("Reload"));
+                await Task.Run(() => ((Action)Controller.ReloadFields).InvokeUserAction("Reload"));
             }
             finally
             {
                 ContentPanel.Visible = true;
                 loadingPictureBox.Visible = false;
-                //ContentPanel.ResumeLayout(true);
             }
         }
 
-        /// <summary>
-        /// Reload the controls of the form from the source object.
-        /// </summary>
-        public virtual void ReloadControls()
-        {
-            this.Clear();
-
-            if (SourceObject == null) return;
-
-            SourceObject.GetType().GetPropertiesFiltered().ForEachAll(p => AddField(p));
-        }
-
-        /// <summary>
-        /// Create a field control of a field info.
-        /// </summary>
-        /// <param name="fieldInfo">The field information to create a field control for.</param>
-        /// <returns>The new created field control.</returns>
-        protected virtual BaseFieldControl CreateFieldControl(BaseFieldInfo fieldInfo, object value)
-        {
-            if (fieldInfo == null) return null;
-
-            var isSimple = fieldInfo.Type.IsSimpleType();
-
-            if (isSimple && !ShowReadonlyProperties && fieldInfo.IsReadOnly)
-                return null; // don't show unwritable value fields
-            if (!isSimple && !ShowReferenceProperties)
-                return null; // don't show reference fields
-
-            //var value = fieldInfo.GetValue(SourceObject);
-            return fieldInfo.CreateFieldControl(value, this);
-        }
-
-        /// <summary>
-        /// Add a field for a property.
-        /// </summary>
-        /// <param name="propertyInfo">The property to create a field for.</param>
-        /// <returns></returns>
-        protected bool AddField(PropertyInfo propertyInfo)
-        {
-            if (propertyInfo == null) return false;
-            if (!propertyInfo.CanRead) return false; // unreadable property
-
-            var fieldInfo = new PropertyFieldInfo(propertyInfo);
-            var value = fieldInfo.GetValue(SourceObject);
-            var fieldControl = CreateFieldControl(fieldInfo, value);
-            if (fieldControl == null) return false;
-
-            AddField(fieldControl);
-            return true;
-        }
-
-        /// <summary>
-        /// Add a field control to the form and register its events.
-        /// </summary>
-        /// <param name="fieldControl"></param>
-        protected void AddField(BaseFieldControl fieldControl)
-        {
-            ContentPanel.InvokeUI(() =>
-            {
-                fieldControl.ValueChanged += (s, e) => OnValueChanged(e);
-                ContentPanel.Controls.Add(fieldControl);
-            });
-        }
-
-        /// <summary>
-        /// Clear all fields controls from the form.
-        /// </summary>
-        protected virtual void Clear()
-        {
-            ContentPanel.InvokeUI(() =>
-            {
-                var oldControls = ContentPanel.Controls;
-                ContentPanel.Controls.Clear();
-                foreach (Control c in oldControls) c.Dispose(); // also clearing DataBindings
-            });
-        }
-
-        /// <summary>
-        /// Update the source object from the values of the controls.
-        /// </summary>
-        public void ApplyChanges()
-        {
-            FieldControls.ForEachAll(f => 
-            {
-                ApplyField(f); // may throw an exception
-                if (f.Status != FieldStatus.Synced) // otherwise, canceled changes of closed forms will be saved!
-                    f.Apply();
-            });
-            OnChangesApplied();
-        }
-
-        /// <summary>
-        /// Apply a field value to the source object.
-        /// </summary>
-        /// <param name="fieldControl"></param>
-        protected virtual void ApplyField(BaseFieldControl fieldControl)
-        {
-            if (fieldControl.FieldInfo is PropertyFieldInfo p
-                && fieldControl.Status.HasFlag(FieldStatus.ValueChanged) // otherwise, nullable fields will be set to a value
-                && !p.IsReadOnly)
-                p.PropertyInfo.SetValue(SourceObject, fieldControl.Value?.ChangeType(p.Type));
-        }
-
-        /// <summary>
-        /// Reload values from source,
-        /// will not affect if fields have not yet loaded (before calling the ReloadControls method or first showing, when the form is cleared)
-        /// </summary>
-        public void Reset()
-        {
-            FieldControls.ForEachAll(f => ResetField(f));
-            ChangesPending = false;
-        }
-
-        /// <summary>
-        /// Reset a field to its original value from the source object.
-        /// </summary>
-        /// <param name="fieldControl"></param>
-        protected virtual void ResetField(BaseFieldControl fieldControl)
-        {
-            if (fieldControl.FieldInfo is PropertyFieldInfo p)
-                fieldControl.Value = p.PropertyInfo.GetValue(SourceObject);
-        }
-
-        protected virtual void Save()
-        {
-            ApplyChanges();
-            // TODO: if it's possible to save a specific item to its same place on the source file, do it here.
-            OnDataSaved();
-        }
-        #endregion
-
-        #region UI Actions
         public new void CenterToParent() => base.CenterToParent();
 
         protected void ScrollDown()
@@ -343,10 +134,35 @@ namespace ObjectEditor.UI.Forms
         }
         #endregion
 
-        #region UI Events
-        private void btnOK_Click(object sender, EventArgs e)
+        #region Controller Events
+        private void Controller_FieldAdded(object sender, FieldEventArgs e)
         {
-            bool applied = ((Action)(() => ApplyChanges())).InvokeUserAction("Apply");
+            var control = e.Field.CreateFieldControl(this);
+            _fieldControls[e.Field] = control;
+            ContentPanel.InvokeUI(() => ContentPanel.Controls.Add(control));
+        }
+
+        private void Controller_FieldRemoved(object sender, FieldEventArgs e)
+        {
+            if (_fieldControls.Remove(e.Field, out var control))
+                this.InvokeUI(() => control.Dispose()); // will also remove it from the ContentPanel
+        }
+
+        private void Controller_ChangesPendingChanged(object sender, ChangesPendingChangedEventArgs e)
+        {
+            btnReset.Enabled = btnApply.Enabled = e.ChangesPending;
+        }
+
+        private void Controller_SaveRequiredChanged(object sender, SaveRequiredChangedEventArgs e)
+        {
+            btnSave.BackColor = e.SaveRequired ? Color.Orange : Color.Empty;
+        }
+        #endregion
+
+        #region User Events
+        private void BtnOK_Click(object sender, EventArgs e)
+        {
+            bool applied = ((Action)Controller.ApplyChanges).InvokeUserAction("Apply");
             if (!applied) return;
             Close(); // The closing event will be canceled and the form will be hidden instead.
             // When the closing event is canceled, the dialog result will reset to None,
@@ -354,46 +170,46 @@ namespace ObjectEditor.UI.Forms
             DialogResult = DialogResult.OK;
         }
 
-        private void btnApply_Click(object sender, EventArgs e)
+        private void BtnApply_Click(object sender, EventArgs e)
         {
-            ((Action)(() => ApplyChanges())).InvokeUserAction("Apply");
+            ((Action)Controller.ApplyChanges).InvokeUserAction("Apply");
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
+        private void BtnSave_Click(object sender, EventArgs e)
         {
-            ((Action)(() => Save())).InvokeUserAction("Save");
+            ((Action)Controller.Save).InvokeUserAction("Save");
         }
 
-        private void btnReset_Click(object sender, EventArgs e)
+        private void BtnReset_Click(object sender, EventArgs e)
         {
-            ((Action)(() => Reset())).InvokeUserAction("Reset");
+            ((Action)Controller.Reset).InvokeUserAction("Reset");
         }
 
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
+        private void BtnCancel_Click(object sender, EventArgs e)
+        { // TODO: check where should we call the IgnoreInnerChanges method
             //((Action)(() => Reset())).InvokeUserAction("Cancel");
             Close();
             this.DialogResult = DialogResult.Cancel; // Should be automatically since already was defined as CancelButton
         }
 
-        private void resetToolStripMenuItem_Click(object sender, EventArgs e)
-            => btnReset_Click(sender, e);
+        private void ResetToolStripMenuItem_Click(object sender, EventArgs e)
+            => BtnReset_Click(sender, e);
 
-        private void reloadToolStripMenuItem_Click(object sender, EventArgs e)
-            => ReloadControlsAsync();
+        private void ReloadToolStripMenuItem_Click(object sender, EventArgs e)
+            => ReloadAsync();
 
-        private void exportToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ExportToolStripMenuItem_Click(object sender, EventArgs e)
         {
             saveFileDialog1.FileName = this.Text;
             saveFileDialog1.ShowDialog();
         }
 
-        private void importToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ImportToolStripMenuItem_Click(object sender, EventArgs e)
         {
             openFileDialog1.ShowDialog();
         }
 
-        private async void openFileDialog1_FileOk(object sender, CancelEventArgs e)
+        private async void OpenFileDialog_FileOk(object sender, CancelEventArgs e)
         {
             var filename = openFileDialog1.FileName;
 
@@ -402,7 +218,7 @@ namespace ObjectEditor.UI.Forms
             })).InvokeUserActionAsync("Import");
         }
 
-        private async void saveFileDialog1_FileOk(object sender, CancelEventArgs e)
+        private async void SaveFileDialog_FileOk(object sender, CancelEventArgs e)
         {
             var filename = saveFileDialog1.FileName;
 
@@ -411,62 +227,27 @@ namespace ObjectEditor.UI.Forms
             })).InvokeUserActionAsync("Export");
         }
 
-        private void ParentEditorForm_SaveRequiredChanged(object sender, SaveRequiredChangedEventArgs e)
-        {
-            if (!e.SaveRequired) // not required to save on the parent form, probably was saved,
-                SaveRequired = false; // tell the children.
-        }
-
-        private void menuButton_Click(object sender, EventArgs e)
+        private void MenuButton_Click(object sender, EventArgs e)
         {
             contextMenuStrip1.Show(menuButton, new Point(0, menuButton.Height));
         }
-        #endregion
 
-        #region Event Handlers
-        protected virtual void OnValueChanged(FieldValueChangedEventArgs e)
+        private async void BtnAdd_Click(object sender, EventArgs e)
         {
-            if (e.ByUser) ChangesPending = true;
-            if (!IsSaveable) ValueChanged?.Invoke(this, e);
-        }
-
-        protected void OnChangesApplied() => OnChangesApplied(new ChangesAppliedEventArgs());
-        protected virtual void OnChangesApplied(ChangesAppliedEventArgs e)
-        {
-            if (ChangesPending) SaveRequired = true;
-            ChangesPending = false;
-            ChangesApplied?.Invoke(this, e);
-        }
-
-        protected virtual void OnChangesPendingChanged(bool changesPending) => OnChangesPendingChanged(new ChangesPendingChangedEventArgs(changesPending));
-        protected virtual void OnChangesPendingChanged(ChangesPendingChangedEventArgs e)
-        {
-            btnReset.Enabled = ChangesPending;
-            btnApply.Enabled = ChangesPending;
-            ChangesPendingChanged?.Invoke(this, e);
-        }
-
-        protected void OnSaveRequiredChanged(bool saveRequired) => OnSaveRequiredChanged(new SaveRequiredChangedEventArgs(saveRequired));
-        protected virtual void OnSaveRequiredChanged(SaveRequiredChangedEventArgs e)
-        {
-            this.InvokeUI(() =>
+            if (Controller is not CollectionEditorController collectionController)
             {
-                btnSave.FlatStyle = _saveRequired ? FlatStyle.Flat : FlatStyle.Standard;
+                MessageBox.Show($"It's not a collection editor.", "Can't add an item", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            if (collectionController.IsReadOnly)
+            {   // Can't edit
+                MessageBox.Show($"It's a read only collection.", "Can't add an item", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
-                if (e.SaveRequired) // required to save,
-                    if (!IsSaveable) // if we can't save here,
-                        if (ParentEditorForm != null) // tell the parent form.
-                            ParentEditorForm.SaveRequired = true;
-            });
-
-            SaveRequiredChanged?.Invoke(this, e);
-        }
-
-        protected virtual void OnDataSaved() => OnDataSaved(new EventArgs());
-        protected virtual void OnDataSaved(EventArgs e)
-        {
-            SaveRequired = false;
-            DataSaved?.Invoke(this, e);
+            // The AddNewItem method will rise the FieldAdded event after the item is added.
+            if (await ((Action)collectionController.AddNewItem).InvokeUserActionAsync("New Item"))
+                ScrollDown(); // The new item was added successfully, scroll down to see it.
         }
         #endregion
 
@@ -474,7 +255,7 @@ namespace ObjectEditor.UI.Forms
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            ReloadControlsAsync();
+            ReloadAsync();
         }
 
         protected override void OnVisibleChanged(EventArgs e)

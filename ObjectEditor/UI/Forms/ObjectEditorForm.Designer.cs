@@ -16,7 +16,7 @@
             if (disposing)
             {
                 SuspendLayout();
-                Clear();
+                Controller?.UnloadFields();
                 components?.Dispose();
             }
             base.Dispose(disposing);
@@ -32,7 +32,7 @@
         {
             components = new System.ComponentModel.Container();
             tableLayoutPanel1 = new TableLayoutPanel();
-            panel1 = new Panel();
+            buttonsPanel = new Panel();
             btnOK = new Button();
             btnCancel = new Button();
             btnSave = new Button();
@@ -40,6 +40,7 @@
             btnApply = new Button();
             flowLayoutPanel1 = new FlowLayoutPanel();
             panel2 = new Panel();
+            btnAdd = new Button();
             menuButton = new Button();
             contextMenuStrip1 = new ContextMenuStrip(components);
             resetToolStripMenuItem = new ToolStripMenuItem();
@@ -52,7 +53,8 @@
             saveFileDialog1 = new SaveFileDialog();
             loadingPictureBox = new PictureBox();
             tableLayoutPanel1.SuspendLayout();
-            panel1.SuspendLayout();
+            buttonsPanel.SuspendLayout();
+            panel2.SuspendLayout();
             contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)loadingPictureBox).BeginInit();
             SuspendLayout();
@@ -62,7 +64,7 @@
             tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             tableLayoutPanel1.ColumnCount = 1;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Controls.Add(panel1, 0, 3);
+            tableLayoutPanel1.Controls.Add(buttonsPanel, 0, 3);
             tableLayoutPanel1.Controls.Add(flowLayoutPanel1, 0, 1);
             tableLayoutPanel1.Controls.Add(panel2, 0, 2);
             tableLayoutPanel1.Controls.Add(menuButton, 0, 0);
@@ -80,19 +82,19 @@
             // 
             // panel1
             // 
-            panel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            panel1.BackColor = SystemColors.ControlLight;
-            panel1.Controls.Add(btnOK);
-            panel1.Controls.Add(btnCancel);
-            panel1.Controls.Add(btnSave);
-            panel1.Controls.Add(btnReset);
-            panel1.Controls.Add(btnApply);
-            panel1.Dock = DockStyle.Fill;
-            panel1.Location = new Point(0, 388);
-            panel1.Margin = new Padding(0);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(331, 29);
-            panel1.TabIndex = 1;
+            buttonsPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            buttonsPanel.BackColor = SystemColors.ControlLight;
+            buttonsPanel.Controls.Add(btnOK);
+            buttonsPanel.Controls.Add(btnCancel);
+            buttonsPanel.Controls.Add(btnSave);
+            buttonsPanel.Controls.Add(btnReset);
+            buttonsPanel.Controls.Add(btnApply);
+            buttonsPanel.Dock = DockStyle.Fill;
+            buttonsPanel.Location = new Point(0, 388);
+            buttonsPanel.Margin = new Padding(0);
+            buttonsPanel.Name = "panel1";
+            buttonsPanel.Size = new Size(331, 29);
+            buttonsPanel.TabIndex = 1;
             // 
             // btnOK
             // 
@@ -104,7 +106,7 @@
             btnOK.TabIndex = 1;
             btnOK.Text = "OK";
             btnOK.UseVisualStyleBackColor = true;
-            btnOK.Click += btnOK_Click;
+            btnOK.Click += BtnOK_Click;
             // 
             // btnCancel
             // 
@@ -117,7 +119,7 @@
             btnCancel.TabIndex = 3;
             btnCancel.Text = "Cancel";
             btnCancel.UseVisualStyleBackColor = true;
-            btnCancel.Click += btnCancel_Click;
+            btnCancel.Click += BtnCancel_Click;
             // 
             // btnSave
             // 
@@ -133,7 +135,7 @@
             btnSave.Text = "Save";
             btnSave.UseVisualStyleBackColor = true;
             btnSave.Visible = false;
-            btnSave.Click += btnSave_Click;
+            btnSave.Click += BtnSave_Click;
             // 
             // btnReset
             // 
@@ -147,7 +149,7 @@
             btnReset.Text = "Reset";
             btnReset.UseVisualStyleBackColor = true;
             btnReset.Visible = false;
-            btnReset.Click += btnReset_Click;
+            btnReset.Click += BtnReset_Click;
             // 
             // btnApply
             // 
@@ -161,7 +163,7 @@
             btnApply.TabIndex = 4;
             btnApply.Text = "Apply";
             btnApply.UseVisualStyleBackColor = true;
-            btnApply.Click += btnApply_Click;
+            btnApply.Click += BtnApply_Click;
             // 
             // flowLayoutPanel1
             // 
@@ -178,12 +180,28 @@
             // panel2
             // 
             panel2.BorderStyle = BorderStyle.FixedSingle;
+            panel2.Controls.Add(btnAdd);
             panel2.Dock = DockStyle.Fill;
             panel2.Location = new Point(0, 388);
             panel2.Margin = new Padding(0);
             panel2.Name = "panel2";
             panel2.Size = new Size(331, 1);
             panel2.TabIndex = 2;
+            // 
+            // btnAdd
+            // 
+            btnAdd.BackColor = SystemColors.ControlLight;
+            btnAdd.Dock = DockStyle.Fill;
+            btnAdd.FlatAppearance.BorderSize = 0;
+            btnAdd.FlatStyle = FlatStyle.Flat;
+            btnAdd.Location = new Point(0, 0);
+            btnAdd.Margin = new Padding(0);
+            btnAdd.Name = "btnAdd";
+            btnAdd.Size = new Size(329, 0);
+            btnAdd.TabIndex = 3;
+            btnAdd.Text = "+";
+            btnAdd.UseVisualStyleBackColor = false;
+            btnAdd.Click += BtnAdd_Click;
             // 
             // menuButton
             // 
@@ -198,7 +216,7 @@
             menuButton.Size = new Size(32, 20);
             menuButton.TabIndex = 3;
             menuButton.UseVisualStyleBackColor = true;
-            menuButton.Click += menuButton_Click;
+            menuButton.Click += MenuButton_Click;
             // 
             // contextMenuStrip1
             // 
@@ -212,7 +230,7 @@
             resetToolStripMenuItem.Name = "resetToolStripMenuItem";
             resetToolStripMenuItem.Size = new Size(110, 22);
             resetToolStripMenuItem.Text = "Reset";
-            resetToolStripMenuItem.Click += resetToolStripMenuItem_Click;
+            resetToolStripMenuItem.Click += ResetToolStripMenuItem_Click;
             // 
             // reloadToolStripMenuItem
             // 
@@ -220,7 +238,7 @@
             reloadToolStripMenuItem.Name = "reloadToolStripMenuItem";
             reloadToolStripMenuItem.Size = new Size(110, 22);
             reloadToolStripMenuItem.Text = "Reload";
-            reloadToolStripMenuItem.Click += reloadToolStripMenuItem_Click;
+            reloadToolStripMenuItem.Click += ReloadToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
@@ -233,7 +251,7 @@
             exportToolStripMenuItem.Name = "exportToolStripMenuItem";
             exportToolStripMenuItem.Size = new Size(110, 22);
             exportToolStripMenuItem.Text = "Export";
-            exportToolStripMenuItem.Click += exportToolStripMenuItem_Click;
+            exportToolStripMenuItem.Click += ExportToolStripMenuItem_Click;
             // 
             // importToolStripMenuItem
             // 
@@ -241,7 +259,7 @@
             importToolStripMenuItem.Name = "importToolStripMenuItem";
             importToolStripMenuItem.Size = new Size(110, 22);
             importToolStripMenuItem.Text = "Import";
-            importToolStripMenuItem.Click += importToolStripMenuItem_Click;
+            importToolStripMenuItem.Click += ImportToolStripMenuItem_Click;
             // 
             // toolTip1
             // 
@@ -252,12 +270,12 @@
             // openFileDialog1
             // 
             openFileDialog1.Filter = "XML Files|*.xml;*.config|JSON Files|*.json|All Files|*.*";
-            openFileDialog1.FileOk += openFileDialog1_FileOk;
+            openFileDialog1.FileOk += OpenFileDialog_FileOk;
             // 
             // saveFileDialog1
             // 
             saveFileDialog1.Filter = "XML Files|*.xml;*.config";
-            saveFileDialog1.FileOk += saveFileDialog1_FileOk;
+            saveFileDialog1.FileOk += SaveFileDialog_FileOk;
             // 
             // loadingPictureBox
             // 
@@ -286,7 +304,8 @@
             StartPosition = FormStartPosition.CenterScreen;
             Text = "ObjectEditor";
             tableLayoutPanel1.ResumeLayout(false);
-            panel1.ResumeLayout(false);
+            buttonsPanel.ResumeLayout(false);
+            panel2.ResumeLayout(false);
             contextMenuStrip1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)loadingPictureBox).EndInit();
             ResumeLayout(false);
@@ -296,12 +315,13 @@
 
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel buttonsPanel;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.Button btnReset;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Button btnAdd;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnApply;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;

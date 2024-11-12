@@ -88,6 +88,11 @@ namespace ObjectEditor
         public PropertyInfo PropertyInfo { get; }
 
         /// <summary>
+        /// True if the property has a password attribute.
+        /// </summary>
+        public bool IsPassword => PropertyInfo.GetCustomAttribute<EditorPasswordAttribute>() != null;
+
+        /// <summary>
         /// Creates a field information from a property information.
         /// </summary>
         /// <param name="propertyInfo">The property information to create the field information from.</param>

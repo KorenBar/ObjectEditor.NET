@@ -1,6 +1,6 @@
-using ObjectEditor.UI;
 using ObjectEditor.Demo.Data;
 using System.Diagnostics;
+using ObjectEditor.UI.Forms;
 
 namespace ObjectEditor.Demo
 {
@@ -16,8 +16,8 @@ namespace ObjectEditor.Demo
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
             var data = new MainDataClass();
-            var form = ObjectEditorFactory.CreateForm(data);
-            form.ValueChanged += (s, e) => Debug.WriteLine(e.ToString() + (e.ByUser ? " (User)" : ""));
+            var form = new ObjectEditorForm(data);
+            form.Controller.ValueChanged += (s, e) => Debug.WriteLine(e.ToString() + (e.ByUser ? " (User)" : ""));
             Application.Run(form);
         }
     }

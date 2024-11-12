@@ -12,45 +12,46 @@ using ObjectEditor;
 using ObjectEditor.UI.Forms;
 using ObjectEditor.Data;
 using System.Runtime.InteropServices;
+using ObjectEditor.Controllers.Fields;
 
 namespace ObjectEditor.UI.Controls
 {
     internal class ObjectFieldControl : BaseFieldControl
     {
         private Button SetButton => (Button)ValueControl;
+        private ObjectFieldController ObjectFieldController => (ObjectFieldController)Controller;
 
+        /// <summary>
+        /// Editor form for the value object.
+        /// </summary>
         public ObjectEditorForm ObjectEditorForm { get; private set; }
 
         /// <summary>
         /// Creates a field control for an object.
         /// </summary>
-        /// <param name="value">The object to view and edit.</param>
-        /// <param name="fieldInfo">Field information.</param>
+        /// <param name="controller">The controller of the field.</param>
         /// <param name="parentForm">The parent form which contains this field.</param>
-        public ObjectFieldControl(object value, BaseFieldInfo fieldInfo, ObjectEditorForm parentForm)
-            : base(value, fieldInfo, parentForm) { }
+        public ObjectFieldControl(ObjectFieldController controller, ObjectEditorForm parentForm)
+            : base(controller, parentForm) { }
 
-        protected override Control CreateValueControl(BaseFieldInfo fieldInfo)
+        protected override Control CreateValueControl(FieldMetadata fieldInfo)
         {
-            var btnSet = new Button();
-            btnSet.Text = "Set";
-            btnSet.UseVisualStyleBackColor = true;
-            btnSet.Enabled = false;
+            var btnSet = new Button()
+            {
+                Text = "Set",
+                UseVisualStyleBackColor = true,
+                Enabled = false
+            };
+
             btnSet.Click += BtnSet_Click;
+
             return btnSet;
         }
 
         #region UI Events
-        private void ObjectEditorForm_ChangesApplied(object sender, ChangesAppliedEventArgs e) { }
-
-        private void ObjectEditorForm_ChangesPendingChanged(object sender, ChangesPendingChangedEventArgs e)
-            => Status = e.ChangesPending
-                ? Status | FieldStatus.InnerValueChanged  // add the flag
-                : Status & ~FieldStatus.InnerValueChanged; // remove the flag
-
         private void ObjectEditorForm_Closing(object sender, FormClosingEventArgs e)
         { // if is closing by pressing OK, the changes will be applied before closing.
-            Status &= ~FieldStatus.InnerValueChanged; // remove the flag to prevent applying unnecessary canceled changes.
+            ObjectFieldController.IgnoreInnerChanges(); // prevent applying the changes to the source object.
         }
 
         private void BtnSet_Click(object sender, EventArgs e)
@@ -58,25 +59,28 @@ namespace ObjectEditor.UI.Controls
             Show:
             try
             {
-                object value = Value;
-                if (value == null)
+                var objectEditorController = ObjectFieldController.ObjectEditorController;
+                if (objectEditorController == null)
                     throw new InvalidOperationException("The value is null.");
                 
                 if (ObjectEditorForm == null)
                 { // create a new form
-                    ObjectEditorForm = ObjectEditorFactory.CreateForm(value, ParentEditorForm);
+                    ObjectEditorForm = new ObjectEditorForm(objectEditorController);
                     ObjectEditorForm.Text = this.Text;
-                    ObjectEditorForm.ValueChanged += (s, e) => OnInnerValueChanged(e);
-                    ObjectEditorForm.ChangesApplied += ObjectEditorForm_ChangesApplied;
-                    ObjectEditorForm.ChangesPendingChanged += ObjectEditorForm_ChangesPendingChanged;
                     ObjectEditorForm.FormClosing += ObjectEditorForm_Closing;
+                    objectEditorController.UnloadFields(); // in case it was already loaded before connecting to the form.
                 }
 
                 if (!ObjectEditorForm.Visible) 
                 { // was hidden or not created yet - initialize size, position, and values.
                     if (ParentForm != null) ObjectEditorForm.Size = ParentForm.Size;
                     ObjectEditorForm.CenterToParent();
-                    ObjectEditorForm.Reset(); // if was not loaded yet, the reset will do nothing (effective).
+
+                    if (objectEditorController.HasFields)
+                        objectEditorController.Reset();
+                    else // the fields were not loaded yet
+                        objectEditorController.ReloadFields();
+
                     // TODO: focus to the containing control
                 }
 
@@ -92,7 +96,7 @@ namespace ObjectEditor.UI.Controls
         #endregion
 
         #region Overrides
-        protected override void UpdateControlValue(object value)
+        protected override void UpdateValueControl(object value)
         { // the value has changed, dispose the current form.
             var form = ObjectEditorForm;
             if (form != null && !form.IsDisposed && !form.Disposing)
@@ -102,32 +106,15 @@ namespace ObjectEditor.UI.Controls
             }
             ObjectEditorForm = null;
 
-            UpdateName();
             SetButton.Enabled = value != null; // when pressing the button, the form will be created.
-            //btnSet.Text = ObjectEditorForm is CollectionEditorForm ? "Collection" : "Edit";
+            //SetButton.Text = ObjectEditorForm is CollectionEditorForm ? "Collection" : "Edit";
         }
 
-        public override void Apply()
+        protected override void UpdateControl()
         {
-            // The caller form already set the source object to the parent object property (in case the reference changed)
-            Status &= ~FieldStatus.ValueChanged; // remove that flag first, even if an exception will be thrown.
-            if (Status.HasFlag(FieldStatus.InnerValueChanged))
-                // apply the changes to the source object only if you know about inner changes, to prevent unnecessary changes applied (of a closed form).
-                ObjectEditorForm?.ApplyChanges();
-            base.Apply();
-        }
-
-        protected override void UpdateName()
-        {
-            base.UpdateName();
+            base.UpdateControl();
             if (ObjectEditorForm != null)
                 ObjectEditorForm.Text = this.Text;
-        }
-
-        protected override void OnStatusChanged(FieldStatus status)
-        {
-            base.OnStatusChanged(status);
-            UpdateName(); // the display name may change
         }
 
         protected override void OnParentChanged(EventArgs e)

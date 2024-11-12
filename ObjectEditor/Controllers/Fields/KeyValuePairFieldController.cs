@@ -15,11 +15,8 @@ namespace ObjectEditor.Controllers.Fields
     public class KeyValuePairFieldController : ValueFieldController
     {
         // Sub-field controllers for the key and value of the pair
-        private ValueFieldController _keyFieldController;
-        private ValueFieldController _valueFieldController;
-
-        private Type _keyType;
-        private Type _valueType;
+        public ValueFieldController KeyFieldController { get; }
+        public ValueFieldController ValueFieldController { get; }
 
         /// <summary>
         /// Get the pair currently represented by the controller.
@@ -49,29 +46,29 @@ namespace ObjectEditor.Controllers.Fields
 
             // Initialize the key and value types
             var genericArguments = genericType.GetGenericArguments();
-            _keyType = genericArguments[0];
-            _valueType = genericArguments[1];
+            Type keyType = genericArguments[0];
+            Type valueType = genericArguments[1];
 
             // Create the sub-field controllers for the key and value
-            _keyFieldController = new SubFieldMetadata(_keyType, "Key", fieldInfo).CreateFieldController(KeyValuePair?.Key, parentController);
-            _valueFieldController = new SubFieldMetadata(_valueType, "Value", fieldInfo).CreateFieldController(KeyValuePair?.Value, parentController);
+            KeyFieldController = new SubFieldMetadata(keyType, "Key", fieldInfo).CreateFieldController(KeyValuePair?.Key, parentController);
+            ValueFieldController = new SubFieldMetadata(valueType, "Value", fieldInfo).CreateFieldController(KeyValuePair?.Value, parentController);
 
             // Add events to update the KeyValuePair when the sub-fields change
-            _keyFieldController.ValueChanged += (s, e) =>
+            KeyFieldController.ValueChanged += (s, e) =>
             {
                 if (KeyValuePair.HasValue)
                 {
                     var kvp = KeyValuePair.Value;
-                    kvp = new KeyValuePair<object, object>(_keyFieldController.Value, kvp.Value);
+                    kvp = new KeyValuePair<object, object>(KeyFieldController.Value, kvp.Value);
                     SetValue(kvp, e.ByUser);
                 }
             };
-            _valueFieldController.ValueChanged += (s, e) =>
+            ValueFieldController.ValueChanged += (s, e) =>
             {
                 if (KeyValuePair.HasValue)
                 {
                     var kvp = KeyValuePair.Value;
-                    kvp = new KeyValuePair<object, object>(kvp.Key, _valueFieldController.Value);
+                    kvp = new KeyValuePair<object, object>(kvp.Key, ValueFieldController.Value);
                     SetValue(kvp, e.ByUser);
                 }
             };
@@ -88,11 +85,15 @@ namespace ObjectEditor.Controllers.Fields
         {
             if (e == null) throw new ArgumentNullException(nameof(e));
 
-            if (e.NewValue != null)
+            if (KeyFieldController == null || ValueFieldController == null)
+                return; // not initialized yet (called from the base constructor)
+
+            // TODO: consider that condition, is it necessary?
+            //if (e.NewValue != null)
             { // Update the sub-field controllers when the value changes
-                var kvp = e.NewValue.CastKeyValuePair<object, object>(); // will throw if not a KeyValuePair
-                _keyFieldController.Value = kvp.Key;
-                _valueFieldController.Value = kvp.Value;
+                var kvp = KeyValuePair; // will throw if the value is not a KeyValuePair
+                KeyFieldController.Value = kvp?.Key;
+                ValueFieldController.Value = kvp?.Value;
             } // if the new value is null, the sub-fields will stay with their previous non-null values
 
             base.OnValueChanged(e);

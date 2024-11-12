@@ -33,7 +33,7 @@ namespace ObjectEditor.Controllers.Fields
         #region Parent Events
         private void ParentEditorController_SaveRequiredChanged(object sender, SaveRequiredChangedEventArgs e)
         {
-            if (!e.SaveRequired) // the parent saved the applied data (including its children),
+            if (!e.SaveRequired) // a parent saved the applied data (including its children),
                 if (ObjectEditorController != null) // tell the children.
                     ObjectEditorController.SaveRequired = false;
         }

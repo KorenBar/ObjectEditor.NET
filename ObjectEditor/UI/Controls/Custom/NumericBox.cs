@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace ObjectEditor.UI.Controls
 {
-    public class NumericBox : NumericUpDown
+    internal class NumericBox : NumericUpDown
     { // Fixing the problem with the mouse wheel increment.
         protected override void OnMouseWheel(MouseEventArgs e)
         {

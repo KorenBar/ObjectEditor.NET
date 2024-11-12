@@ -16,8 +16,14 @@ namespace ObjectEditor.Controllers.Editors
     public class ObjectEditorController : IDisposable
     {
         #region Properties
-        private List<ValueFieldController> _fields = new();
+        private readonly List<ValueFieldController> _fields = new();
         protected IEnumerable<ValueFieldController> Fields => _fields.AsReadOnly();
+        
+        /// <summary>
+        /// Whether this controller has any fields.
+        /// </summary>
+        public bool HasFields => _fields.Count > 0;
+
 
         private bool _saveRequired;
         /// <summary>
@@ -81,6 +87,14 @@ namespace ObjectEditor.Controllers.Editors
         /// The data was saved to file.
         /// </summary>
         public event EventHandler<EventArgs> DataSaved;
+        /// <summary>
+        /// Occurs when a field added to this controller.
+        /// </summary>
+        public event EventHandler<FieldEventArgs> FieldAdded;
+        /// <summary>
+        /// Occurs when a field removed from this controller.
+        /// </summary>
+        public event EventHandler<FieldEventArgs> FieldRemoved;
         #endregion
 
         #region Constructors
@@ -104,7 +118,7 @@ namespace ObjectEditor.Controllers.Editors
         /// </summary>
         public virtual void ReloadFields()
         {
-            Clear();
+            UnloadFields();
             if (SourceObject == null) return;
             SourceObject.GetType().GetPropertiesFiltered().ForEachAll(p => AddPropertyField(p));
         }
@@ -148,6 +162,7 @@ namespace ObjectEditor.Controllers.Editors
             if (fieldController == null) return;
             _fields.Add(fieldController);
             fieldController.ValueChanged += (s, e) => OnValueChanged(e);
+            OnFieldAdded(new FieldEventArgs(fieldController));
         }
 
         /// <summary>
@@ -159,14 +174,15 @@ namespace ObjectEditor.Controllers.Editors
             if (fieldController == null) return;
             if (_fields.Remove(fieldController))
                 fieldController.ValueChanged -= (s, e) => OnValueChanged(e);
+            OnFieldRemoved(new FieldEventArgs(fieldController));
         }
 
         /// <summary>
-        /// Clear all fields.
+        /// Clears all fields.
         /// </summary>
-        protected virtual void Clear()
+        public void UnloadFields()
         {
-            _fields.Clear();
+            _fields.ForEachAll(f => RemoveField(f));
         }
 
         /// <summary>
@@ -218,7 +234,7 @@ namespace ObjectEditor.Controllers.Editors
                 fieldController.Value = p.PropertyInfo.GetValue(SourceObject);
         }
 
-        protected virtual void Save()
+        public virtual void Save()
         {
             ApplyChanges();
             // TODO: if it's possible to save a specific item to its same place on the source file, do it here.
@@ -241,7 +257,7 @@ namespace ObjectEditor.Controllers.Editors
             ChangesApplied?.Invoke(this, e);
         }
 
-        protected virtual void OnChangesPendingChanged(bool changesPending) => OnChangesPendingChanged(new ChangesPendingChangedEventArgs(changesPending));
+        protected void OnChangesPendingChanged(bool changesPending) => OnChangesPendingChanged(new ChangesPendingChangedEventArgs(changesPending));
         protected virtual void OnChangesPendingChanged(ChangesPendingChangedEventArgs e)
         {
             ChangesPendingChanged?.Invoke(this, e);
@@ -254,11 +270,21 @@ namespace ObjectEditor.Controllers.Editors
             SaveRequiredChanged?.Invoke(this, e);
         }
 
-        protected virtual void OnDataSaved() => OnDataSaved(new EventArgs());
+        protected void OnDataSaved() => OnDataSaved(new EventArgs());
         protected virtual void OnDataSaved(EventArgs e)
         {
             SaveRequired = false;
             DataSaved?.Invoke(this, e);
+        }
+
+        protected virtual void OnFieldAdded(FieldEventArgs e)
+        {
+            FieldAdded?.Invoke(this, e);
+        }
+
+        protected virtual void OnFieldRemoved(FieldEventArgs e)
+        {
+            FieldRemoved?.Invoke(this, e);
         }
         #endregion
 

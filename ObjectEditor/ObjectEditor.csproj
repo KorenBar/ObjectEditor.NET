@@ -15,6 +15,13 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Update="UI\Controls\KeyValuePairFieldControl.cs" />
+    <Compile Update="UI\Controls\ValueControls\TextValueControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ValueControls\NumericValueControl.cs" />
+    <Compile Update="UI\Controls\ValueControls\EnumValueControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>

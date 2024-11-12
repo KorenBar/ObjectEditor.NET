@@ -36,7 +36,7 @@ namespace ObjectEditor
     public class FieldValueChangedEventArgs : ValueChangedEventArgs<object>
     {
         // A parent field can only be an object, since a value field has no properties
-        private List<ValueFieldController> _fieldPath = new();
+        private readonly List<ValueFieldController> _fieldPath = new();
         internal IEnumerable<ValueFieldController> FieldPath => _fieldPath.AsReadOnly();
         /// <summary>
         /// The first sender who has changed
@@ -47,8 +47,7 @@ namespace ObjectEditor
         internal FieldValueChangedEventArgs(ValueFieldController sender, object oldValue, object newValue, bool byUser = false)
             : base(oldValue, newValue)
         {
-            if (sender == null) throw new ArgumentNullException(nameof(sender));
-            Sender = sender;
+            Sender = sender ?? throw new ArgumentNullException(nameof(sender));
             ByUser = byUser;
         }
 
@@ -84,4 +83,10 @@ namespace ObjectEditor
     }
 
     public class ChangesAppliedEventArgs : EventArgs { }
+
+    public class FieldEventArgs : EventArgs
+    {
+        public ValueFieldController Field { get; }
+        public FieldEventArgs(ValueFieldController field) => Field = field;
+    }
 }

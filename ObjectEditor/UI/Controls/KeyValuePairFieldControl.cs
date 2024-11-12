@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Reflection;
 using ObjectEditor.UI.Forms;
 using ObjectEditor.Extensions;
+using ObjectEditor.Controllers.Fields;
 
 namespace ObjectEditor.UI.Controls
 {
@@ -18,19 +19,7 @@ namespace ObjectEditor.UI.Controls
         private BaseFieldControl _keyFieldControl;
         private BaseFieldControl _valueFieldControl;
 
-        private Type _keyType;
-        private Type _valueType;
-
-        /// <summary>
-        /// Get the pair currently represented by the control.
-        /// </summary>
-        public KeyValuePair<object, object>? KeyValuePair => Value?.CastKeyValuePair<object, object>();
-
-        /// <summary>
-        /// Get the initial pair of the source object.
-        /// </summary>
-        public KeyValuePair<object, object>? SourceKeyValuePair { get; private set; }
-
+        private KeyValuePairFieldController KeyValuePairFieldController => (KeyValuePairFieldController)Controller;
 
         /// <summary>
         /// Creates a new KeyValuePairFieldControl.
@@ -38,27 +27,15 @@ namespace ObjectEditor.UI.Controls
         /// <param name="value">The initial value of the field.</param>
         /// <param name="fieldInfo">The information of the field.</param>
         /// <param name="parentForm">The containing form of the field.</param>
-        public KeyValuePairFieldControl(object value, BaseFieldInfo fieldInfo, ObjectEditorForm parentForm) : base(value, fieldInfo, parentForm)
+        public KeyValuePairFieldControl(KeyValuePairFieldController controller, ObjectEditorForm parentForm) : base(controller, parentForm)
         {
             ShowNameLabel = false;
-            SourceKeyValuePair = value?.CastKeyValuePair<object, object>();
         }
 
-
-        protected override Control CreateValueControl(BaseFieldInfo fieldInfo)
+        protected override Control CreateValueControl(FieldMetadata fieldInfo)
         { // Assume this method is called only once, so we can create the controls here.
-            // Initialize the key and value types
-            var genericType = fieldInfo.Type.GetGenericType(typeof(KeyValuePair<,>));
-            if (genericType == null)
-                throw new ArgumentException("The field type is not a KeyValuePair.");
-
-            var genericArguments = genericType.GetGenericArguments();
-            _keyType = genericArguments[0];
-            _valueType = genericArguments[1];
-
-
             // create a layout panel to hold the key and value controls
-            TableLayoutPanel panel = new TableLayoutPanel()
+            TableLayoutPanel panel = new()
             {
                 Dock = DockStyle.Fill,
                 ColumnCount = 2,
@@ -70,8 +47,8 @@ namespace ObjectEditor.UI.Controls
             panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
 
-            _keyFieldControl = new SubFieldInfo(_keyType, "Key", fieldInfo).CreateFieldControl(Value, ParentEditorForm);
-            _valueFieldControl = new SubFieldInfo(_valueType, "Value", fieldInfo).CreateFieldControl(Value, ParentEditorForm);
+            _keyFieldControl = KeyValuePairFieldController.KeyFieldController.CreateFieldControl(ParentEditorForm);
+            _valueFieldControl = KeyValuePairFieldController.ValueFieldController.CreateFieldControl(ParentEditorForm);
 
             panel.Controls.Add(_keyFieldControl, 0, 0);
             panel.Controls.Add(_valueFieldControl, 1, 0);
@@ -79,43 +56,9 @@ namespace ObjectEditor.UI.Controls
             return panel;
         }
 
-        protected override void UpdateControlValue(object value)
+        protected override void UpdateValueControl(object value)
         {
-            var kvp = value.CastKeyValuePair<object, object>(); // will throw if not a KeyValuePair
-            _keyFieldControl.Value = kvp.Key;
-            _valueFieldControl.Value = kvp.Value;
-        }
-
-        public override void Apply()
-        {
-            // The KeyValuePair was applied to the source object.
-            SourceKeyValuePair = KeyValuePair;
-            base.Apply();
-        }
-
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-
-            // Add events here to prevent rising when showing the form.
-            _keyFieldControl.ValueChanged += (s, e) =>
-            {
-                if (KeyValuePair.HasValue)
-                {
-                    var kvp = KeyValuePair.Value;
-                    kvp = new KeyValuePair<object, object>(_keyFieldControl.Value, kvp.Value);
-                    SetValue(kvp, e.ByUser);
-                }
-            };
-            _valueFieldControl.ValueChanged += (s, e) =>
-            {
-                if (KeyValuePair.HasValue)
-                {
-                    var kvp = KeyValuePair.Value;
-                    kvp = new KeyValuePair<object, object>(kvp.Key, _valueFieldControl.Value);
-                    SetValue(kvp, e.ByUser);
-                }
-            };
+            // already handled by the key and value field controls themselves (they have their own controllers)
         }
     }
 }

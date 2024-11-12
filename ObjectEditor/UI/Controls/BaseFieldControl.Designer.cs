@@ -131,28 +131,28 @@
             fieldMenu.Items.AddRange(new ToolStripItem[] { copyToolStripMenuItem, linkToolStripMenuItem, pasteToolStripMenuItem, toolStripSeparator1, setNullToolStripMenuItem, createDefaultToolStripMenuItem });
             fieldMenu.Name = "fieldMenu";
             fieldMenu.Size = new Size(181, 142);
-            fieldMenu.Opening += fieldMenu_Opening;
+            fieldMenu.Opening += FieldMenu_Opening;
             // 
             // copyToolStripMenuItem
             // 
             copyToolStripMenuItem.Name = "copyToolStripMenuItem";
             copyToolStripMenuItem.Size = new Size(180, 22);
             copyToolStripMenuItem.Text = "Copy";
-            copyToolStripMenuItem.Click += copyToolStripMenuItem_Click;
+            copyToolStripMenuItem.Click += CopyToolStripMenuItem_Click;
             // 
             // linkToolStripMenuItem
             // 
             linkToolStripMenuItem.Name = "linkToolStripMenuItem";
             linkToolStripMenuItem.Size = new Size(180, 22);
             linkToolStripMenuItem.Text = "Link";
-            linkToolStripMenuItem.Click += linkToolStripMenuItem_Click;
+            linkToolStripMenuItem.Click += LinkToolStripMenuItem_Click;
             // 
             // pasteToolStripMenuItem
             // 
             pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
             pasteToolStripMenuItem.Size = new Size(180, 22);
             pasteToolStripMenuItem.Text = "Paste";
-            pasteToolStripMenuItem.Click += pasteToolStripMenuItem_Click;
+            pasteToolStripMenuItem.Click += PasteToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
@@ -164,14 +164,14 @@
             setNullToolStripMenuItem.Name = "setNullToolStripMenuItem";
             setNullToolStripMenuItem.Size = new Size(180, 22);
             setNullToolStripMenuItem.Text = "Set null";
-            setNullToolStripMenuItem.Click += setNullToolStripMenuItem_Click;
+            setNullToolStripMenuItem.Click += SetNullToolStripMenuItem_Click;
             // 
             // createDefaultToolStripMenuItem
             // 
             createDefaultToolStripMenuItem.Name = "createDefaultToolStripMenuItem";
             createDefaultToolStripMenuItem.Size = new Size(180, 22);
             createDefaultToolStripMenuItem.Text = "Create default";
-            createDefaultToolStripMenuItem.Click += createDefaultToolStripMenuItem_Click;
+            createDefaultToolStripMenuItem.Click += CreateDefaultToolStripMenuItem_Click;
             // 
             // BaseFieldControl
             // 

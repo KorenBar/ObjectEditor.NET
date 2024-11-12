@@ -102,11 +102,8 @@ namespace ObjectEditor.Controllers.Fields
         /// <exception cref="ArgumentNullException"></exception>
         internal ValueFieldController(object value, FieldMetadata fieldInfo, ObjectEditorController parentController)
         {
-            if (fieldInfo == null) throw new ArgumentNullException(nameof(fieldInfo));
-            if (parentController == null) throw new ArgumentNullException(nameof(parentController));
-
-            FieldInfo = fieldInfo;
-            ParentEditorController = parentController;
+            FieldInfo = fieldInfo ?? throw new ArgumentNullException(nameof(fieldInfo));
+            ParentEditorController = parentController ?? throw new ArgumentNullException(nameof(parentController));
             Value = value;
         }
         #endregion
@@ -150,15 +147,12 @@ namespace ObjectEditor.Controllers.Fields
         /// <exception cref="InvalidOperationException">if the field is not an item field or doesn't have the remove ability.</exception>
         public virtual void Remove()
         {
-            if (FieldInfo is ItemFieldMetadata itemInfo)
-            {
-                if (!itemInfo.Abilities.HasFlag(ItemAbility.Remove))
-                    throw new InvalidOperationException("The item can't be removed, no remove ability.");
-
-                OnRemoving();
-            }
-            else
+            if (FieldInfo is not ItemFieldMetadata itemInfo)
                 throw new InvalidOperationException("The field is not an item field.");
+            if (!itemInfo.Abilities.HasFlag(ItemAbility.Remove))
+                throw new InvalidOperationException("The item can't be removed, no remove ability.");
+
+            OnRemoving();
         }
 
         /// <summary>
@@ -175,9 +169,7 @@ namespace ObjectEditor.Controllers.Fields
         /// <exception cref="InvalidOperationException">if the copied value is null or the types are not compatible.</exception>
         public void LinkValue()
         {
-            var value = _copyValue;
-            if (value == null)
-                throw new InvalidOperationException("No value is copied.");
+            var value = _copyValue ?? throw new InvalidOperationException("No value is copied.");
             LinkValue(value);
         }
         /// <summary>
@@ -238,12 +230,6 @@ namespace ObjectEditor.Controllers.Fields
         /// <param name="e"></param>
         protected virtual void OnRemoving(EventArgs e)
         {
-            var itemInfo = FieldInfo as ItemFieldMetadata;
-            if (itemInfo == null)
-                throw new InvalidOperationException("The field is not an item field.");
-            if (!itemInfo.Abilities.HasFlag(ItemAbility.Remove))
-                throw new InvalidOperationException("The item can't be removed, no remove ability.");
-
             Removing?.Invoke(this, e);
         }
 

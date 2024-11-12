@@ -224,9 +224,13 @@ namespace ObjectEditor.Extensions
         /// <summary>
         /// Returns an object of the specified type and whose value is equivalent to the specified object.
         /// </summary>
-        /// <param name="value">An object that implements the IConvertible interface.</param>
+        /// <param name="value">The object to convert.</param>
         /// <param name="conversionType">The type of object to return.</param>
         /// <returns>An object whose type is conversionType (or conversionType's underlying type if conversionType is Nullable&lt;&gt;) and whose value is equivalent to value.</returns>
+        /// <exception cref="InvalidCastException">The conversion cannot be performed.</exception>
+        /// <exception cref="FormatException">value is not in an appropriate format.</exception>
+        /// <exception cref="OverflowException">value represents a number that is out of the range of T.</exception>
+        /// <exception cref="ArgumentNullException">conversionType is null.</exception>
         public static object ChangeType(this object value, Type conversionType)
         { // this wrapper method allows to do "value?.ChangeType(toType)" and get null if value is null, even when the toType is a value type.
             if (conversionType == null)
@@ -276,5 +280,17 @@ namespace ObjectEditor.Extensions
 
             return Convert.ChangeType(value, conversionType);
         }
+
+        /// <summary>
+        /// Returns an object of the specified type and whose value is equivalent to the specified object.
+        /// </summary>
+        /// <typeparam name="T">The type of object to return.</typeparam>
+        /// <param name="value">The object to convert.</param>
+        /// <returns>An object whose type is T and whose value is equivalent to value.</returns>
+        /// <exception cref="InvalidCastException">The conversion cannot be performed.</exception>
+        /// <exception cref="FormatException">value is not in an appropriate format.</exception>
+        /// <exception cref="OverflowException">value represents a number that is out of the range of T.</exception>
+        public static T ChangeType<T>(this object value) => (T)ChangeType(value, typeof(T));
+
     }
 }

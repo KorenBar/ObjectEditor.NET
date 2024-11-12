@@ -24,15 +24,12 @@ namespace ObjectEditor.Controllers
             { // switch on type of sourceObject
                 case IEnumerable sourceEnumerable:
                     var wrapper = sourceEnumerable.AsDynamic();
-                    switch (wrapper)
+                    return wrapper switch
                     { // switch on type of wrapper
-                        case DynamicDictionaryWrapper dictionaryWrapper:
-                            return new DictionaryEditorController(sourceEnumerable, dictionaryWrapper);
-                        case DynamicCollectionWrapper collectionWrapper:
-                            return new CollectionEditorController(sourceEnumerable, collectionWrapper);
-                        default: // default for any other enumerable
-                            return new EnumerableEditorController(sourceEnumerable, wrapper);
-                    }
+                        DynamicDictionaryWrapper w => new DictionaryEditorController(sourceEnumerable, w),
+                        DynamicCollectionWrapper w => new CollectionEditorController(sourceEnumerable, w),
+                        _ => new EnumerableEditorController(sourceEnumerable, wrapper) // default for any other enumerable
+                    };
                 default: // default for any other type
                     return new ObjectEditorController(sourceObject);
             }
