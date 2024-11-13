@@ -205,6 +205,9 @@ namespace ObjectEditor.WinForms.Controls
         /// <exception cref="InvalidOperationException">The field is read-only.</exception>
         protected virtual void OnUserChangedValue(object value)
         {
+            if (Disposing || IsDisposed)
+                return; // ignore user events after disposing
+
             Action action = () => Controller.SetValue(value, true);
             if (!action.InvokeUserAction("Value Change"))
                 UpdateControl(); // failed, revert changes
