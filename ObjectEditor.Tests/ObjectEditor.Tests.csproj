@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ObjectEditor\ObjectEditor.WinForms.csproj" />
+    <ProjectReference Include="..\ObjectEditor.WinForms\ObjectEditor.WinForms.csproj" />
   </ItemGroup>
 
   <ItemGroup>
