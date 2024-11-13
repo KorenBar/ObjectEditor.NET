@@ -13,7 +13,7 @@ namespace ObjectEditor.Controllers.Editors
     /// <summary>
     /// Extends the EnumerableEditorController to view and edit a collection of items of any type.
     /// </summary>
-    internal class CollectionEditorController : EnumerableEditorController
+    public class CollectionEditorController : EnumerableEditorController
     {
         /// <summary>
         /// A wrapper for the collection to view and edit (must be set in the constructor).

@@ -9,17 +9,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ObjectEditor\ObjectEditor.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Update="UI\Controls\KeyValuePairFieldControl.cs" />
-    <Compile Update="UI\Controls\ValueControls\TextValueControl.cs">
+    <Compile Update="Controls\KeyValuePairFieldControl.cs" />
+    <Compile Update="Controls\ValueControls\TextValueControl.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Update="UI\Controls\ValueControls\NumericValueControl.cs" />
-    <Compile Update="UI\Controls\ValueControls\EnumValueControl.cs">
+    <Compile Update="Controls\ValueControls\NumericValueControl.cs" />
+    <Compile Update="Controls\ValueControls\EnumValueControl.cs">
       <SubType>Component</SubType>
     </Compile>
   </ItemGroup>

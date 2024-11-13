@@ -113,7 +113,7 @@ namespace ObjectEditor.Controllers.Fields
         /// Sets the value of the field.
         /// </summary>
         /// <param name="byUser">Indicates whether the value is set by the user.</param>
-        internal void SetValue(object value, bool byUser)
+        public void SetValue(object value, bool byUser)
         {
             if (_value == value) return;
 

@@ -13,7 +13,7 @@ namespace ObjectEditor.Controllers.Editors
     /// <summary>
     /// Extends the ObjectEditorController to view and edit an enumerable of any type.
     /// </summary>
-    internal class EnumerableEditorController : ObjectEditorController
+    public class EnumerableEditorController : ObjectEditorController
     {
         /// <summary>
         /// A wrapper for the enumerable to view and edit (must be set in the constructor).

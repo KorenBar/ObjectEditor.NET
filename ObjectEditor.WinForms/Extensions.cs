@@ -5,9 +5,9 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ObjectEditor.WinForms.Extensions
+namespace ObjectEditor.WinForms
 {
-    public static class UIExtensions
+    internal static class Extensions
     {
         /// <summary>
         /// Invoke the user action and handle exceptions, showing a message box with the error message(s) instead of throwing exceptions.

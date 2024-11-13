@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Reflection;
-using ObjectEditor.WinForms.Extensions;
 using ObjectEditor.WinForms.Forms;
 using ObjectEditor.Controllers.Fields;
 using System.Reflection.Emit;

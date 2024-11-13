@@ -12,7 +12,7 @@ namespace ObjectEditor.Controllers.Editors
     /// <summary>
     /// Extends the CollectionEditorController to view and edit a collection of items of any type.
     /// </summary>
-    internal class DictionaryEditorController : CollectionEditorController
+    public class DictionaryEditorController : CollectionEditorController
     {
         /// <summary>
         /// A wrapper for the dictionary to view and edit (must be set in the constructor).

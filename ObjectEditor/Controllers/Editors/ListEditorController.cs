@@ -13,7 +13,7 @@ namespace ObjectEditor.Controllers.Editors
     /// <summary>
     /// Extends the CollectionEditorController to view and edit a list of items of any type.
     /// </summary>
-    internal class ListEditorController : CollectionEditorController
+    public class ListEditorController : CollectionEditorController
     {
         // TODO: after implementing list-specific behavior, override ItemAbilities property to allow editing items if the list is not read-only.
         //public override ItemAbility ItemAbilities
