@@ -27,6 +27,7 @@ namespace ObjectEditor.Controllers
                     return wrapper switch
                     { // switch on type of wrapper
                         DynamicDictionaryWrapper w => new DictionaryEditorController(sourceEnumerable, w),
+                        DynamicListWrapper w => new ListEditorController(sourceEnumerable, w),
                         DynamicCollectionWrapper w => new CollectionEditorController(sourceEnumerable, w),
                         _ => new EnumerableEditorController(sourceEnumerable, wrapper) // default for any other enumerable
                     };

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace ObjectEditor.Controllers.Editors
 {
     /// <summary>
-    /// Extends the ObjectEditorController to view and edit a collection of items of any type.
+    /// Extends the EnumerableEditorController to view and edit a collection of items of any type.
     /// </summary>
     internal class CollectionEditorController : EnumerableEditorController
     {
@@ -105,7 +105,7 @@ namespace ObjectEditor.Controllers.Editors
                 if (fieldController.FieldInfo is not ItemFieldMetadata) // check before
                     throw new InvalidOperationException("The field is not an item field.");
                 RemoveItem(fieldController);
-                SaveRequired = true;
+                SaveRequired = true; // the item was removed from the source collection, the source was modified
             };
             return fieldController;
         }

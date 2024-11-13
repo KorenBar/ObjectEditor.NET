@@ -18,8 +18,8 @@ namespace ObjectEditor.Data
             var type = objects.GetType();
             if (type.GetGenericType(typeof(IDictionary<,>)) != null)
                 return new DynamicDictionaryWrapper(objects);
-            //if (type.GetGenericType(typeof(IList<>)) != null)
-            //    return new DynamicListWrapper(objects);
+            if (type.GetGenericType(typeof(IList<>)) != null)
+                return new DynamicListWrapper(objects);
             if (type.GetGenericType(typeof(ICollection<>)) != null)
                 return new DynamicCollectionWrapper(objects);
             return new DynamicEnumerableWrapper(objects);

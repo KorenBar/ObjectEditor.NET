@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace ObjectEditor.Controllers.Editors
 {
     /// <summary>
-    /// Extends the ObjectEditorController to view and edit a collection of items of any type.
+    /// Extends the CollectionEditorController to view and edit a collection of items of any type.
     /// </summary>
     internal class DictionaryEditorController : CollectionEditorController
     {
