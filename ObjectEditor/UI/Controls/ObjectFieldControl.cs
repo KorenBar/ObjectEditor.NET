@@ -18,7 +18,7 @@ namespace ObjectEditor.UI.Controls
 {
     internal class ObjectFieldControl : BaseFieldControl
     {
-        private Button SetButton => (Button)ValueControl;
+        private Button SetButton => (Button)ViewControl;
         private ObjectFieldController ObjectFieldController => (ObjectFieldController)Controller;
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace ObjectEditor.UI.Controls
         public ObjectFieldControl(ObjectFieldController controller, ObjectEditorForm parentForm)
             : base(controller, parentForm) { }
 
-        protected override Control CreateValueControl(FieldMetadata fieldInfo)
+        protected override Control CreateViewControl(FieldMetadata fieldInfo)
         {
             var btnSet = new Button()
             {
@@ -65,7 +65,7 @@ namespace ObjectEditor.UI.Controls
                 
                 if (ObjectEditorForm == null)
                 { // create a new form
-                    ObjectEditorForm = new ObjectEditorForm(objectEditorController);
+                    ObjectEditorForm = new ObjectEditorForm(objectEditorController, ParentEditorForm);
                     ObjectEditorForm.Text = this.Text;
                     ObjectEditorForm.FormClosing += ObjectEditorForm_Closing;
                     objectEditorController.UnloadFields(); // in case it was already loaded before connecting to the form.
@@ -75,12 +75,7 @@ namespace ObjectEditor.UI.Controls
                 { // was hidden or not created yet - initialize size, position, and values.
                     if (ParentForm != null) ObjectEditorForm.Size = ParentForm.Size;
                     ObjectEditorForm.CenterToParent();
-
-                    if (objectEditorController.HasFields)
-                        objectEditorController.Reset();
-                    else // the fields were not loaded yet
-                        objectEditorController.ReloadFields();
-
+                    objectEditorController.Reset(); // if was not loaded yet, the reset will do nothing
                     // TODO: focus to the containing control
                 }
 
@@ -95,9 +90,11 @@ namespace ObjectEditor.UI.Controls
         }
         #endregion
 
-        #region Overrides
-        protected override void UpdateValueControl(object value)
-        { // the value has changed, dispose the current form.
+        /// <summary>
+        /// Disposes the editor form and sets the reference to null.
+        /// </summary>
+        private void DisposeEditorForm()
+        {
             var form = ObjectEditorForm;
             if (form != null && !form.IsDisposed && !form.Disposing)
             { // dispose the old form
@@ -105,9 +102,16 @@ namespace ObjectEditor.UI.Controls
                 form.Dispose();
             }
             ObjectEditorForm = null;
+        }
 
+        #region Overrides
+        protected override void UpdateValueControl(object value)
+        {
+            if (ObjectFieldController.ObjectEditorController == ObjectEditorForm?.Controller)
+                return; // the value has not changed.
+
+            DisposeEditorForm(); // the value has changed, dispose the current form.
             SetButton.Enabled = value != null; // when pressing the button, the form will be created.
-            //SetButton.Text = ObjectEditorForm is CollectionEditorForm ? "Collection" : "Edit";
         }
 
         protected override void UpdateControl()
@@ -122,6 +126,12 @@ namespace ObjectEditor.UI.Controls
             if (ObjectEditorForm != null)
                 ObjectEditorForm.Owner = this.ParentForm;
             base.OnParentChanged(e);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing) DisposeEditorForm();
+            base.Dispose(disposing);
         }
         #endregion
     }

@@ -32,7 +32,7 @@ namespace ObjectEditor.UI.Controls
             ShowNameLabel = false;
         }
 
-        protected override Control CreateValueControl(FieldMetadata fieldInfo)
+        protected override Control CreateViewControl(FieldMetadata fieldInfo)
         { // Assume this method is called only once, so we can create the controls here.
             // create a layout panel to hold the key and value controls
             TableLayoutPanel panel = new()

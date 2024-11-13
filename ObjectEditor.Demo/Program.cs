@@ -18,6 +18,7 @@ namespace ObjectEditor.Demo
             var data = new MainDataClass();
             var form = new ObjectEditorForm(data);
             form.Controller.ValueChanged += (s, e) => Debug.WriteLine(e.ToString() + (e.ByUser ? " (User)" : ""));
+            form.Controller.SaveRequiredChanged += (s, e) => Debug.WriteLine("Save required: " + e.SaveRequired);
             Application.Run(form);
         }
     }

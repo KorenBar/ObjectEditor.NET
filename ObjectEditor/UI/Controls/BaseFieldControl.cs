@@ -30,7 +30,7 @@ namespace ObjectEditor.UI.Controls
         /// <summary>
         /// Get the control that displays the value.
         /// </summary>
-        protected Control ValueControl { get; }
+        protected Control ViewControl { get; }
 
         /// <summary>
         /// Get the parent form that contains this field.
@@ -86,12 +86,14 @@ namespace ObjectEditor.UI.Controls
             if (fieldInfo.Description != null) // underline described fields
                 label1.Font = new Font(label1.Font, FontStyle.Underline);
 
-            ValueControl = CreateValueControl(fieldInfo);
-            if (ValueControl == null)
+            ViewControl = CreateViewControl(fieldInfo);
+            if (ViewControl == null)
                 throw new NotImplementedException("The value control is not created.");
 
-            ValueControl.Dock = DockStyle.Fill;
-            valueControlPanel.Controls.Add(ValueControl);
+            ViewControl.Dock = DockStyle.Fill;
+            viewControlPanel.Controls.Add(ViewControl);
+
+            // don't update the control here, it will be updated when the form is loaded
         }
         #endregion
 
@@ -101,7 +103,7 @@ namespace ObjectEditor.UI.Controls
         /// </summary>
         /// <param name="fieldInfo">Field information.</param>
         /// <returns>The created control to display and edit the value.</returns>
-        protected abstract Control CreateValueControl(FieldMetadata fieldInfo);
+        protected abstract Control CreateViewControl(FieldMetadata fieldInfo);
         /// <summary>
         /// Sets the value of the value control, depending on the field type.
         /// </summary>
@@ -117,7 +119,7 @@ namespace ObjectEditor.UI.Controls
         {
             var value = Controller.Value;
             nullLabel.Visible = value == null;
-            valueControlPanel.Visible = value != null;
+            viewControlPanel.Visible = value != null;
             UpdateValueControl(value);
 
             var name = Controller.Name;
@@ -216,12 +218,12 @@ namespace ObjectEditor.UI.Controls
         {
             base.OnLoad(e);
 
+            UpdateControl(); // set the initial value before registering events
+
             // Add events here to prevent rising when showing the form.
             Controller.Removing += Controller_Removing;
             Controller.ValueChanged += Controller_ValueChanged;
             Controller.StatusChanged += Controller_StatusChanged;
-
-            UpdateControl(); // set the initial value
         }
         #endregion
     }

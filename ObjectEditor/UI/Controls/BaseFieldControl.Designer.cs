@@ -34,7 +34,7 @@
             btnRemove = new Button();
             panel1 = new Panel();
             nullLabel = new Label();
-            valueControlPanel = new Panel();
+            viewControlPanel = new Panel();
             toolTip1 = new ToolTip(components);
             fieldMenu = new ContextMenuStrip(components);
             copyToolStripMenuItem = new ToolStripMenuItem();
@@ -94,7 +94,7 @@
             // panel1
             // 
             panel1.Controls.Add(nullLabel);
-            panel1.Controls.Add(valueControlPanel);
+            panel1.Controls.Add(viewControlPanel);
             panel1.Dock = DockStyle.Fill;
             panel1.Location = new Point(143, 3);
             panel1.Name = "panel1";
@@ -114,11 +114,11 @@
             // 
             // valueControlPanel
             // 
-            valueControlPanel.Dock = DockStyle.Fill;
-            valueControlPanel.Location = new Point(0, 0);
-            valueControlPanel.Name = "valueControlPanel";
-            valueControlPanel.Size = new Size(146, 29);
-            valueControlPanel.TabIndex = 6;
+            viewControlPanel.Dock = DockStyle.Fill;
+            viewControlPanel.Location = new Point(0, 0);
+            viewControlPanel.Name = "valueControlPanel";
+            viewControlPanel.Size = new Size(146, 29);
+            viewControlPanel.TabIndex = 6;
             // 
             // toolTip1
             // 
@@ -195,7 +195,7 @@
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Button btnRemove;
         private Panel panel1;
-        private Panel valueControlPanel;
+        private Panel viewControlPanel;
         private Label nullLabel;
         private ContextMenuStrip fieldMenu;
         private ToolStripMenuItem copyToolStripMenuItem;

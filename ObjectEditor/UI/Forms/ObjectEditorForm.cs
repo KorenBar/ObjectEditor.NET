@@ -137,9 +137,12 @@ namespace ObjectEditor.UI.Forms
         #region Controller Events
         private void Controller_FieldAdded(object sender, FieldEventArgs e)
         {
-            var control = e.Field.CreateFieldControl(this);
-            _fieldControls[e.Field] = control;
-            ContentPanel.InvokeUI(() => ContentPanel.Controls.Add(control));
+            ContentPanel.InvokeUI(() =>
+            {
+                var control = e.Field.CreateFieldControl(this);
+                _fieldControls[e.Field] = control;
+                ContentPanel.Controls.Add(control);
+            });
         }
 
         private void Controller_FieldRemoved(object sender, FieldEventArgs e)
