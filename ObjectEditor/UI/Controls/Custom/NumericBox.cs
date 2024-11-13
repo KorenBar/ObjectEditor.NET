@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ObjectEditor.UI.Controls
+namespace ObjectEditor.WinForms.Controls
 {
     internal class NumericBox : NumericUpDown
     { // Fixing the problem with the mouse wheel increment.

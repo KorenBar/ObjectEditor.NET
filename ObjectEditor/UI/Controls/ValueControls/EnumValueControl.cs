@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ObjectEditor.UI.Controls.ValueControls
+namespace ObjectEditor.WinForms.Controls.ValueControls
 {
     /// <summary>
     /// Represents a control that is used to display an enumeration value.

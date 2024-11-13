@@ -1,6 +1,6 @@
 using ObjectEditor.Demo.Data;
 using System.Diagnostics;
-using ObjectEditor.UI.Forms;
+using ObjectEditor.WinForms.Forms;
 
 namespace ObjectEditor.Demo
 {

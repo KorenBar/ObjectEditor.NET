@@ -11,15 +11,15 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Reflection;
-using ObjectEditor.Extensions;
-using ObjectEditor.UI.Controls;
+using ObjectEditor.WinForms.Extensions;
+using ObjectEditor.WinForms.Controls;
 using System.Xml;
 using System.Xml.Serialization;
 using ObjectEditor.Controllers.Editors;
 using ObjectEditor.Controllers.Fields;
 using ObjectEditor.Controllers;
 
-namespace ObjectEditor.UI.Forms
+namespace ObjectEditor.WinForms.Forms
 {
     /// <summary>
     /// A form to view and edit the properties of an object and its sub-objects recursively, of any type.

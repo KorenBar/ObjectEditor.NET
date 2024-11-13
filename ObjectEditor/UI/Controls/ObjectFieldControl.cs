@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Reflection;
 using ObjectEditor;
-using ObjectEditor.UI.Forms;
+using ObjectEditor.WinForms.Forms;
 using ObjectEditor.Data;
 using System.Runtime.InteropServices;
 using ObjectEditor.Controllers.Fields;
 
-namespace ObjectEditor.UI.Controls
+namespace ObjectEditor.WinForms.Controls
 {
     internal class ObjectFieldControl : BaseFieldControl
     {

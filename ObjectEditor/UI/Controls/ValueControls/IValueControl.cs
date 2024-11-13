@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ObjectEditor.UI.Controls
+namespace ObjectEditor.WinForms.Controls
 {
     /// <summary>
     /// Represents a control that can be used to display and edit a value.

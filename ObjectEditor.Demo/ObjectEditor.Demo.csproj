@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ObjectEditor\ObjectEditor.csproj" />
+    <ProjectReference Include="..\ObjectEditor\ObjectEditor.WinForms.csproj" />
   </ItemGroup>
 
 </Project>

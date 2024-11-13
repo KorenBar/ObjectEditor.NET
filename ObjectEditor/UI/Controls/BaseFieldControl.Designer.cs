@@ -1,4 +1,4 @@
-﻿namespace ObjectEditor.UI.Controls
+﻿namespace ObjectEditor.WinForms.Controls
 {
     partial class BaseFieldControl
     {

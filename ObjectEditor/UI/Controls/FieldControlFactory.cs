@@ -5,14 +5,14 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using ObjectEditor.UI.Forms;
+using ObjectEditor.WinForms.Forms;
 using ObjectEditor.Extensions;
 using ObjectEditor.Data;
-using ObjectEditor.UI.Controls.ValueControls;
+using ObjectEditor.WinForms.Controls.ValueControls;
 using ObjectEditor.Controllers.Fields;
 using ObjectEditor.Controllers.Editors;
 
-namespace ObjectEditor.UI.Controls
+namespace ObjectEditor.WinForms.Controls
 {
     internal static class FieldControlFactory
     {

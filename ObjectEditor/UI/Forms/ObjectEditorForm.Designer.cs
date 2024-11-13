@@ -1,4 +1,4 @@
-﻿namespace ObjectEditor.UI.Forms
+﻿namespace ObjectEditor.WinForms.Forms
 {
     partial class ObjectEditorForm
     {

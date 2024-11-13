@@ -1,12 +1,12 @@
 ﻿using ObjectEditor.Controllers.Fields;
-using ObjectEditor.UI.Forms;
+using ObjectEditor.WinForms.Forms;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ObjectEditor.UI.Controls
+namespace ObjectEditor.WinForms.Controls
 {
     internal class ValueFieldControl : BaseFieldControl
     {

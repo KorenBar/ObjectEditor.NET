@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ObjectEditor.UI.Controls.ValueControls
+namespace ObjectEditor.WinForms.Controls.ValueControls
 {
     /// <summary>
     /// Represents a control that is used to display a string value.

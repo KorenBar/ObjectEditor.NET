@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ObjectEditor.Extensions
+namespace ObjectEditor.WinForms.Extensions
 {
     public static class UIExtensions
     {

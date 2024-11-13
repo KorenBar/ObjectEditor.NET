@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Reflection;
-using ObjectEditor.UI.Forms;
+using ObjectEditor.WinForms.Forms;
 using ObjectEditor.Extensions;
 using ObjectEditor.Controllers.Fields;
 
-namespace ObjectEditor.UI.Controls
+namespace ObjectEditor.WinForms.Controls
 {
     internal class KeyValuePairFieldControl : BaseFieldControl
     {

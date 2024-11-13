@@ -8,13 +8,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Reflection;
-using ObjectEditor.Extensions;
-using ObjectEditor.UI.Forms;
+using ObjectEditor.WinForms.Extensions;
+using ObjectEditor.WinForms.Forms;
 using ObjectEditor.Controllers.Fields;
-using ObjectEditor.UI.Controls.ValueControls;
 using System.Reflection.Emit;
 
-namespace ObjectEditor.UI.Controls
+namespace ObjectEditor.WinForms.Controls
 {
     /// <summary>
     /// Base class for all types of fields in an object editor.
