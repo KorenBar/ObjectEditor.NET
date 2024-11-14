@@ -253,6 +253,7 @@ namespace ObjectEditor.Controllers.Fields
         protected virtual void OnInnerValueChanged(FieldValueChangedEventArgs e)
         { // located here instead of the ObjectFieldController, since the chained event can be raised from here only.
             e.AddParentField(this); // creates a path to the changed field
+            Status |= FieldStatus.InnerValueChanged; // add the flag
             ValueChanged?.Invoke(this, e); // chain the event
         }
 

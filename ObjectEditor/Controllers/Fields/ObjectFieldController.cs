@@ -50,9 +50,8 @@ namespace ObjectEditor.Controllers.Fields
 
         private void ObjectEditorController_ChangesPendingChanged(object sender, ChangesPendingChangedEventArgs e)
         {
-            Status = e.ChangesPending
-                ? Status | FieldStatus.InnerValueChanged  // add the flag
-                : Status & ~FieldStatus.InnerValueChanged; // remove the flag
+            if (!e.ChangesPending)
+                Status &= ~FieldStatus.InnerValueChanged; // remove the flag
         }
         #endregion
 
