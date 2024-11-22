@@ -31,13 +31,17 @@ namespace ObjectEditor.Controllers.Editors
 
         #region Constructors
         /// <param name="sourceCollection">The collection to view and edit.</param>
-        public CollectionEditorController(IEnumerable sourceCollection) : this(sourceCollection, null) { }
+        /// <param name="collectionWrapper">A wrapper for the collection to view and edit (optional).</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public CollectionEditorController(IEnumerable sourceCollection, DynamicCollectionWrapper collectionWrapper)
+            : this(sourceCollection, collectionWrapper, null) { }
 
         /// <param name="sourceCollection">The collection to view and edit.</param>
         /// <param name="collectionWrapper">A wrapper for the collection to view and edit (optional).</param>
+        /// <param name="settings">The settings for the editor.</param>
         /// <exception cref="ArgumentNullException"></exception>
-        internal CollectionEditorController(IEnumerable sourceCollection, DynamicCollectionWrapper collectionWrapper)
-            : base(sourceCollection, collectionWrapper ?? new DynamicCollectionWrapper(sourceCollection))
+        internal CollectionEditorController(IEnumerable sourceCollection, DynamicCollectionWrapper collectionWrapper, IObjectEditorSettings settings)
+            : base(sourceCollection, collectionWrapper ?? new DynamicCollectionWrapper(sourceCollection), settings)
         { }
         #endregion
 

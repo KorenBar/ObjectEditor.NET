@@ -17,8 +17,9 @@ namespace ObjectEditor.Controllers
         /// Creates an editor controller for a given source object.
         /// </summary>
         /// <param name="sourceObject">The object to create an editor controller for.</param>
+        /// <param name="settings">The settings for the editor.</param>
         /// <returns>The created controller.</returns>
-        public static ObjectEditorController CreateEditor(object sourceObject)
+        public static ObjectEditorController CreateEditor(object sourceObject, IObjectEditorSettings settings)
         {
             switch (sourceObject)
             { // switch on type of sourceObject
@@ -26,13 +27,13 @@ namespace ObjectEditor.Controllers
                     var wrapper = sourceEnumerable.AsDynamic();
                     return wrapper switch
                     { // switch on type of wrapper
-                        DynamicDictionaryWrapper w => new DictionaryEditorController(sourceEnumerable, w),
-                        DynamicListWrapper w => new ListEditorController(sourceEnumerable, w),
-                        DynamicCollectionWrapper w => new CollectionEditorController(sourceEnumerable, w),
-                        _ => new EnumerableEditorController(sourceEnumerable, wrapper) // default for any other enumerable
+                        DynamicDictionaryWrapper w => new DictionaryEditorController(sourceEnumerable, w, settings),
+                        DynamicListWrapper w => new ListEditorController(sourceEnumerable, w, settings),
+                        DynamicCollectionWrapper w => new CollectionEditorController(sourceEnumerable, w, settings),
+                        _ => new EnumerableEditorController(sourceEnumerable, wrapper, settings) // default for any other enumerable
                     };
                 default: // default for any other type
-                    return new ObjectEditorController(sourceObject);
+                    return new ObjectEditorController(sourceObject, settings);
             }
         }
 

@@ -38,6 +38,31 @@ namespace ObjectEditor.Demo.Data
         public long Long { get; set; }
         public TestEnum Enum { get; set; }
 
+        public List<User> Users { get; set; } = new List<User>() {
+            new User() { Id = 1, Name = "UserAllAccessible", Password = "password1",
+                Permissions = null // all fields are accessible
+            },
+            new User() { Id = 2, Name = "UserOnlyUngrouped", Password = "password2",
+                Permissions = new() { } // no permissions
+            },
+            new User() { Id = 3, Name = "ManagerUser", Password = "password3",
+                Permissions = new() {
+                    { "Manager", Permissions.ReadWrite },
+                    { "Admin", Permissions.Read }
+                }
+            },
+            new User() { Id = 3, Name = "ManagerOnlyUser", Password = "password3",
+                Permissions = new() {
+                    { "Manager", Permissions.ReadWrite }
+                }
+            },
+            new User() { Id = 3, Name = "AdminUser", Password = "password3",
+                Permissions = new() {
+                    { "Manager", Permissions.ReadWrite },
+                    { "Admin", Permissions.ReadWrite }
+                }
+            }
+        };
         public List<int> IntList { get; set; } = new List<int>() { 1, 2, 3 };
         public Dictionary<string, int> StringIntDictionary { get; set; } = new Dictionary<string, int>() { { "one", 1 }, { "two", 2 }, { "three", 3 } };
         [Info("A null reference property with description.")]

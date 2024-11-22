@@ -24,13 +24,17 @@ namespace ObjectEditor.Controllers.Editors
 
         #region Constructors
         /// <param name="sourceDictionary">The dictionary to view and edit.</param>
-        public DictionaryEditorController(IEnumerable sourceDictionary) : this(sourceDictionary, null) { }
+        /// <param name="dictionaryWrapper">A wrapper for the dictionary to view and edit (optional).</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public DictionaryEditorController(IEnumerable sourceDictionary, DynamicDictionaryWrapper dictionaryWrapper)
+            : this(sourceDictionary, dictionaryWrapper, null) { }
 
         /// <param name="sourceDictionary">The dictionary to view and edit.</param>
         /// <param name="dictionaryWrapper">A wrapper for the dictionary to view and edit (optional).</param>
+        /// <param name="settings">The settings for the editor.</param>
         /// <exception cref="ArgumentNullException"></exception>
-        internal DictionaryEditorController(IEnumerable sourceDictionary, DynamicDictionaryWrapper dictionaryWrapper)
-            : base(sourceDictionary, dictionaryWrapper ?? new DynamicDictionaryWrapper(sourceDictionary))
+        internal DictionaryEditorController(IEnumerable sourceDictionary, DynamicDictionaryWrapper dictionaryWrapper, IObjectEditorSettings settings)
+            : base(sourceDictionary, dictionaryWrapper ?? new DynamicDictionaryWrapper(sourceDictionary), settings)
         { }
         #endregion
 

@@ -88,6 +88,11 @@ namespace ObjectEditor
         public PropertyInfo PropertyInfo { get; }
 
         /// <summary>
+        /// The permissions defined for the property.
+        /// </summary>
+        public Permissions Permissions { get; }
+
+        /// <summary>
         /// True if the property has a password attribute.
         /// </summary>
         public bool IsPassword => PropertyInfo.GetCustomAttribute<EditorPasswordAttribute>() != null;
@@ -97,16 +102,17 @@ namespace ObjectEditor
         /// </summary>
         /// <param name="propertyInfo">The property information to create the field information from.</param>
         /// <exception cref="ArgumentNullException">if the property information is null.</exception>
-        public PropertyFieldMetadata(PropertyInfo propertyInfo)
+        public PropertyFieldMetadata(PropertyInfo propertyInfo, Permissions permissions = Permissions.All)
             : base(propertyInfo?.PropertyType,
                   propertyInfo?.GetCustomAttribute<InfoAttribute>()?.Name ?? propertyInfo?.Name,
                   propertyInfo?.GetCustomAttribute<InfoAttribute>()?.Description,
-                  !(propertyInfo?.CanWrite ?? false))
+                  !permissions.HasFlag(Permissions.Write) || !(propertyInfo?.CanWrite ?? false))
         {
             if (propertyInfo == null)
                 throw new ArgumentNullException(nameof(propertyInfo));
 
             PropertyInfo = propertyInfo;
+            Permissions = permissions;
         }
 
         public override object GetValue(object sourceObj)

@@ -21,13 +21,17 @@ namespace ObjectEditor.Controllers.Editors
 
         #region Constructors
         /// <param name="sourceList">The collection to view and edit.</param>
-        public ListEditorController(IEnumerable sourceList) : this(sourceList, null) { }
+        /// <param name="listWrapper">A wrapper for the collection to view and edit (optional).</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public ListEditorController(IEnumerable sourceList, DynamicCollectionWrapper listWrapper)
+            : this(sourceList, listWrapper, null) { }
 
         /// <param name="sourceList">The collection to view and edit.</param>
         /// <param name="listWrapper">A wrapper for the collection to view and edit (optional).</param>
+        /// <param name="settings">The settings for the editor.</param>
         /// <exception cref="ArgumentNullException"></exception>
-        internal ListEditorController(IEnumerable sourceList, DynamicCollectionWrapper listWrapper)
-            : base(sourceList, listWrapper ?? new DynamicCollectionWrapper(sourceList))
+        internal ListEditorController(IEnumerable sourceList, DynamicCollectionWrapper listWrapper, IObjectEditorSettings settings)
+            : base(sourceList, listWrapper ?? new DynamicCollectionWrapper(sourceList), settings)
         { }
         #endregion
 

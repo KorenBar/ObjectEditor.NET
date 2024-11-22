@@ -71,7 +71,12 @@ namespace ObjectEditor.WinForms.Forms
         public ObjectEditorForm() : this(new object()) { }
 
         /// <param name="sourceObject">The object to show its properties in the form.</param>
-        public ObjectEditorForm(object sourceObject) : this(ControllerFactory.CreateEditor(sourceObject), null) { }
+        public ObjectEditorForm(object sourceObject) : this(sourceObject, null) { }
+
+        /// <param name="sourceObject">The object to show its properties in the form.</param>
+        /// <param name="settings">The settings for the editor.</param>
+        public ObjectEditorForm(object sourceObject, IObjectEditorSettings settings)
+            : this(ControllerFactory.CreateEditor(sourceObject, settings), null) { }
 
         /// <param name="controller">The controller of the object editor.</param>
         /// <param name="parent">The owner of this form (optional).</param>

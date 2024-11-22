@@ -54,12 +54,60 @@ namespace ObjectEditor
         }
 
         /// <summary>
+        /// Get the permissions for each property based on the permission groups defined in the properties and the permissions defined for each group.
+        /// </summary>
+        /// <param name="properties">The properties to get the permissions of.</param>
+        /// <param name="groupsPermissions">The permissions defined for each group.</param>
+        /// <returns>A dictionary of properties and their permissions.</returns>
+        public static Dictionary<PropertyInfo, Permissions> CheckPermissions(this IEnumerable<PropertyInfo> properties, IDictionary<string, Permissions> groupsPermissions)
+        {
+            var result = new Dictionary<PropertyInfo, Permissions>();
+            foreach (var property in properties)
+                result[property] = property.GetPermissions(groupsPermissions);
+            return result;
+        }
+
+        /// <summary>
+        /// Get the permissions for the property based on the group the property belongs to and the permissions defined for that group.
+        /// </summary>
+        /// <param name="property">The property to get the permissions of.</param>
+        /// <param name="groupsPermissions">The permissions defined for each group.</param>
+        /// <returns>The permissions for the property.</returns>
+        public static Permissions GetPermissions(this PropertyInfo property, IDictionary<string, Permissions> groupsPermissions)
+        {
+            if (property == null)
+                return Permissions.None;
+            if (groupsPermissions == null)
+                return Permissions.All; // no permissions defined, allow all by default
+
+            var permissionGroup = property.GetPermissionGroupName();
+
+            Permissions permissions;
+            if (permissionGroup == null)
+                permissions = Permissions.All; // no permission group defined for that property, allow all by default
+            else if (!groupsPermissions.TryGetValue(permissionGroup, out permissions))
+                permissions = Permissions.None; // the property permission group not found, deny all by default
+            // else: the property permission group was found, use the permissions defined for that group
+
+            return permissions;
+        }
+
+        /// <summary>
         /// Get the last defined permission group attribute of the property or its declaring type.
         /// </summary>
         /// <param name="property">The property to get the permission group attribute of.</param>
         /// <returns>The permission group attribute of the property or its declaring type.</returns>
         public static PermissionGroupAttribute GetPermissionGroupAttribute(this PropertyInfo property)
         {
+            if (property == null)
+                return null;
+
+            // If class A has group attribute "A" and class B has group attribute "B" and B inherits from A, then B's properties will have group "B" and A's properties will have group "A".
+            // If B has no group attribute, then B's properties will have group "A".
+            // This is because the inheritance chain is ordered from the most derived class to the base class.
+            // If a property has a group attribute, it will be used instead of the class group attribute anyway.
+            // Both class and property group attributes are optional.
+
             var attribute = property.GetCustomAttribute<PermissionGroupAttribute>();
             if (attribute != null)
                 return attribute;
@@ -71,6 +119,7 @@ namespace ObjectEditor
                 if (attribute != null)
                     return attribute;
             }
+
             return null;
         }
 

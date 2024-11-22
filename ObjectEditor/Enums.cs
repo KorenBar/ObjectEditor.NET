@@ -58,4 +58,16 @@ namespace ObjectEditor
 
         All = -1
     }
+
+    /// <summary>
+    /// Permissions for a field.
+    /// </summary>
+    public enum Permissions
+    {
+        None = 0,
+        Read = 1 << 0,
+        Write = 1 << 1,
+        ReadWrite = Read | Write,
+        All = -1
+    }
 }

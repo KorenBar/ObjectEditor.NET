@@ -29,14 +29,18 @@ namespace ObjectEditor.Controllers.Editors
 
         #region Constructors
         /// <param name="sourceEnumerable">The enumerable to view and edit.</param>
-        public EnumerableEditorController(IEnumerable sourceEnumerable) : this(sourceEnumerable, null) { }
+        /// <param name="enumerableWrapper">A wrapper for the enumerable to view and edit (optional).</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public EnumerableEditorController(IEnumerable sourceEnumerable, DynamicEnumerableWrapper enumerableWrapper)
+            : this(sourceEnumerable, enumerableWrapper, null) { }
 
         /// <param name="sourceEnumerable">The enumerable to view and edit.</param>
         /// <param name="enumerableWrapper">A wrapper for the enumerable to view and edit (optional).</param>
+        /// <param name="settings">The settings for the editor.</param>
         /// <exception cref="ArgumentNullException"></exception>
-        internal EnumerableEditorController(IEnumerable sourceEnumerable, DynamicEnumerableWrapper enumerableWrapper)
+        internal EnumerableEditorController(IEnumerable sourceEnumerable, DynamicEnumerableWrapper enumerableWrapper, IObjectEditorSettings settings)
             // pass the source object to the base constructor as an object, properties will be extracted from it
-            : base(sourceEnumerable)
+            : base(sourceEnumerable, settings)
         {
             if (sourceEnumerable == null) throw new ArgumentNullException(nameof(sourceEnumerable));
             if (enumerableWrapper != null && enumerableWrapper.Source != sourceEnumerable)

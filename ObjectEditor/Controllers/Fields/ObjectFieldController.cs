@@ -85,7 +85,7 @@ namespace ObjectEditor.Controllers.Fields
 
                 if (e.NewValue != null)
                 { // the source object has changed or the controller is null, create a new controller.
-                    var editor = ControllerFactory.CreateEditor(e.NewValue);
+                    var editor = ControllerFactory.CreateEditor(e.NewValue, ParentEditorController?.Settings);
                     editor.ValueChanged += (s, e) => OnInnerValueChanged(e);
                     editor.ChangesPendingChanged += ObjectEditorController_ChangesPendingChanged;
                     editor.SaveRequiredChanged += ObjectEditorController_SaveRequiredChanged;

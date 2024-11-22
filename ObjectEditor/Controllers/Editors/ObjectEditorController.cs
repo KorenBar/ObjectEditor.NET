@@ -61,7 +61,10 @@ namespace ObjectEditor.Controllers.Editors
         public bool IsSaveable { get; protected set; }
         #endregion
 
-        //public IObjectEditorSettings Settings { get; }
+        /// <summary>
+        /// Settings for the object editor. Never null.
+        /// </summary>
+        public IObjectEditorSettings Settings { get; }
 
         public object SourceObject { get; }
 
@@ -105,8 +108,14 @@ namespace ObjectEditor.Controllers.Editors
 
         /// <param name="sourceObject">The object to view or edit the data of.</param>
         public ObjectEditorController(object sourceObject)
+            : this(sourceObject, null) { }
+
+        /// <param name="sourceObject">The object to view or edit the data of.</param>
+        /// <param name="settings">Settings for the object editor.</param>
+        public ObjectEditorController(object sourceObject, IObjectEditorSettings settings)
         {
             SourceObject = sourceObject;
+            Settings = settings ?? new ObjectEditorSettings();
 
             IsSaveable = false; // TODO: Determine if it's possible to save this specific source object.
         }
@@ -144,7 +153,11 @@ namespace ObjectEditor.Controllers.Editors
             if (propertyInfo == null) return false;
             if (!propertyInfo.CanRead) return false; // unreadable property
 
-            var fieldInfo = new PropertyFieldMetadata(propertyInfo);
+            var permissions = propertyInfo.GetPermissions(Settings.GroupsPermissions);
+            if (!permissions.HasFlag(Permissions.Read))
+                return false; // no permissions to read
+
+            var fieldInfo = new PropertyFieldMetadata(propertyInfo, permissions);
             var value = fieldInfo.GetValue(SourceObject);
             var fieldController = CreateFieldController(fieldInfo, value);
             if (fieldController == null) return false;
