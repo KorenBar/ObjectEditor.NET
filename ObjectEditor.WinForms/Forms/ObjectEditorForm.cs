@@ -93,8 +93,8 @@ namespace ObjectEditor.WinForms.Forms
                 this.btnAdd.Enabled = !collectionController.IsReadOnly; // Enable the Add button if the collection is editable
             }
 
-            // TODO: do it when value changed
             this.Enabled = controller.SourceObject != null;
+            btnSave.Visible = controller.CanSave;
 
             this.Owner = parent;
 

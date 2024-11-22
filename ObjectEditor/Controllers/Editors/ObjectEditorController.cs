@@ -58,7 +58,7 @@ namespace ObjectEditor.Controllers.Editors
         /// <summary>
         /// Whether the changes on the source object can be saved to file.
         /// </summary>
-        public bool IsSaveable { get; protected set; }
+        public bool CanSave { get; } // TODO: => saveCallback != null
         #endregion
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace ObjectEditor.Controllers.Editors
             SourceObject = sourceObject;
             Settings = settings ?? new ObjectEditorSettings();
 
-            IsSaveable = false; // TODO: Determine if it's possible to save this specific source object.
+            // TODO: get a save callback to the main controller only! (CanSave will return true if the callback is set)
         }
         #endregion
 
@@ -247,10 +247,15 @@ namespace ObjectEditor.Controllers.Editors
                 fieldController.Value = p.PropertyInfo.GetValue(SourceObject);
         }
 
+        /// <summary>
+        /// Apply and save the source object to a file.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">if no save callback was set.</exception>
         public virtual void Save()
         {
+            throw new NotImplementedException();
             ApplyChanges();
-            // TODO: if it's possible to save a specific item to its same place on the source file, do it here.
+            // TODO: call the save callback if set or throw an exception if not.
             OnDataSaved();
         }
         #endregion
@@ -259,7 +264,7 @@ namespace ObjectEditor.Controllers.Editors
         protected virtual void OnValueChanged(FieldValueChangedEventArgs e)
         {
             if (e.ByUser) ChangesPending = true;
-            if (!IsSaveable) ValueChanged?.Invoke(this, e);
+            if (!CanSave) ValueChanged?.Invoke(this, e);
         }
 
         protected void OnChangesApplied() => OnChangesApplied(new ChangesAppliedEventArgs());
@@ -279,7 +284,7 @@ namespace ObjectEditor.Controllers.Editors
         protected void OnSaveRequiredChanged(bool saveRequired) => OnSaveRequiredChanged(new SaveRequiredChangedEventArgs(saveRequired));
         protected virtual void OnSaveRequiredChanged(SaveRequiredChangedEventArgs e)
         {
-            e.Saveable |= IsSaveable; // can be saved here or on a child controller.
+            e.Saveable |= CanSave; // can be saved here or on a child controller.
             SaveRequiredChanged?.Invoke(this, e);
         }
 
