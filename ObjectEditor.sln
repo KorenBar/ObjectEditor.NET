@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObjectEditor.WinForms", "Ob
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObjectEditor.Tests", "ObjectEditor.Tests\ObjectEditor.Tests.csproj", "{9147F81D-AA08-4367-AC9E-23FA10985CBF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectEditor", "ObjectEditor\ObjectEditor.csproj", "{DA1B70ED-E6FC-49E8-B0E3-C2A5FB25665B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObjectEditor", "ObjectEditor\ObjectEditor.csproj", "{DA1B70ED-E6FC-49E8-B0E3-C2A5FB25665B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoCommerceDbApp", "DemoCommerceDbApp\DemoCommerceDbApp.csproj", "{6C95E872-09BF-46A3-8D8E-3AEF56748992}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{DA1B70ED-E6FC-49E8-B0E3-C2A5FB25665B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA1B70ED-E6FC-49E8-B0E3-C2A5FB25665B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA1B70ED-E6FC-49E8-B0E3-C2A5FB25665B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C95E872-09BF-46A3-8D8E-3AEF56748992}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C95E872-09BF-46A3-8D8E-3AEF56748992}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C95E872-09BF-46A3-8D8E-3AEF56748992}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C95E872-09BF-46A3-8D8E-3AEF56748992}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
