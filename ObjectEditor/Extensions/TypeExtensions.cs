@@ -273,6 +273,8 @@ namespace ObjectEditor.Extensions
                     return Enum.Parse(conversionType, strValue);
                 if (conversionType.Equals(typeof(TimeSpan)))
                     return TimeSpan.Parse(strValue);
+                if (conversionType.Equals(typeof(Guid)))
+                    return Guid.Parse(strValue);
             }
 
             if (conversionType.GetGenericType(typeof(KeyValuePair<,>)) != null)
