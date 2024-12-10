@@ -72,7 +72,7 @@ namespace ObjectEditor.Controllers.Fields
         public bool CanPaste => _copyValue != null && !FieldInfo.IsReadOnly && FieldInfo.Type.IsAssignableFrom(_copyValue.GetType()) && FieldInfo.Type.IsSimpleType();
         public bool CanLink => _copyValue != null && !FieldInfo.Type.IsSimpleType() && _copyValue.GetType().IsAssignableTo(FieldInfo.Type) && !FieldInfo.IsReadOnly;
         public bool CanSetNull => FieldInfo.IsNullable && !FieldInfo.IsReadOnly;
-        public bool CanSetDefault => FieldInfo.Type.IsValueType || FieldInfo.Type.Equals(typeof(string)) || FieldInfo.Type.GetConstructor(Type.EmptyTypes) != null && !FieldInfo.IsReadOnly;
+        public bool CanSetDefault => (FieldInfo.Type.IsValueType || FieldInfo.Type.Equals(typeof(string)) || FieldInfo.Type.GetConstructor(Type.EmptyTypes) != null) && !FieldInfo.IsReadOnly;
         #endregion
 
         #region Events
