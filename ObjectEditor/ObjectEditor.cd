@@ -1,0 +1,272 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="ObjectEditor.Controllers.Editors.CollectionEditorController">
+    <Position X="41" Y="31" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIEAAAAAAQAQAAAAAAAAAAAAAAAEAAABAAQAAAA=</HashCode>
+      <FileName>Controllers\Editors\CollectionEditorController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ObjectEditor.Controllers.Editors.DictionaryEditorController">
+    <Position X="39.25" Y="34.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAAAAAAAAAEAAAAAAEAAAEAAAAAAA=</HashCode>
+      <FileName>Controllers\Editors\DictionaryEditorController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ObjectEditor.Controllers.Editors.EnumerableEditorController">
+    <Position X="41" Y="27.5" Width="2.5" />
+    <InheritanceLine Type="ObjectEditor.Controllers.Editors.ObjectEditorController" FixedFromPoint="true">
+      <Path>
+        <Point X="42.25" Y="26.67" />
+        <Point X="42.25" Y="27.5" />
+      </Path>
+    </InheritanceLine>
+    <AssociationLine Name="SourceEnumerableWrapper" Type="ObjectEditor.Data.DynamicEnumerableWrapper" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="43.5" Y="28.313" />
+        <Point X="48.385" Y="28.313" />
+        <Point X="48.385" Y="28.312" />
+        <Point X="49.75" Y="28.312" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="ItemAbilities" Type="ObjectEditor.ItemAbility" FixedToPoint="true">
+      <Path>
+        <Point X="41" Y="28.312" />
+        <Point X="39.5" Y="28.312" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>IAAAAAEBAAAAAQAAAAAAAAAAEAAAAARAAAAAAAIIAAA=</HashCode>
+      <FileName>Controllers\Editors\EnumerableEditorController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="SourceEnumerableWrapper" />
+      <Property Name="ItemAbilities" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="ObjectEditor.Controllers.Editors.ListEditorController">
+    <Position X="42.5" Y="34.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAA=</HashCode>
+      <FileName>Controllers\Editors\ListEditorController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ObjectEditor.Controllers.Editors.ObjectEditorController">
+    <Position X="41" Y="18.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>gEgSAoAFACAiBAEkAACAEACCEEEQCAUAgAAEAEAAkAg=</HashCode>
+      <FileName>Controllers\Editors\ObjectEditorController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Settings" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Field Name="_fields" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ObjectEditor.Controllers.Fields.KeyValuePairFieldController">
+    <Position X="28.5" Y="26.75" Width="2.5" />
+    <InheritanceLine Type="ObjectEditor.Controllers.Fields.ValueFieldController" ManuallyRouted="true">
+      <Path>
+        <Point X="31" Y="25.516" />
+        <Point X="31" Y="26.363" />
+        <Point X="29.75" Y="26.363" />
+        <Point X="29.75" Y="26.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAEAAAAAAAAAAAAAAAAIAEAAAAFAAAAAAA=</HashCode>
+      <FileName>Controllers\Fields\KeyValuePairFieldController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ObjectEditor.Controllers.Fields.ObjectFieldController">
+    <Position X="31.75" Y="26.75" Width="2.5" />
+    <InheritanceLine Type="ObjectEditor.Controllers.Fields.ValueFieldController" FixedFromPoint="true">
+      <Path>
+        <Point X="31" Y="25.516" />
+        <Point X="31" Y="26.363" />
+        <Point X="33" Y="26.363" />
+        <Point X="33" Y="26.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAADAAAAAABAAAAAAACAAAAQEAAIAAAAAAAAA=</HashCode>
+      <FileName>Controllers\Fields\ObjectFieldController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ObjectEditor.Controllers.Fields.ValueFieldController">
+    <Position X="29.75" Y="18.25" Width="2.5" />
+    <AssociationLine Name="FieldInfo" Type="ObjectEditor.FieldMetadata" FixedToPoint="true">
+      <Path>
+        <Point X="29.75" Y="19.75" />
+        <Point X="23.75" Y="19.75" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AFAAQKAECDAAAgACAAAgBAUAAEAAAQEAQUAgAAACCGA=</HashCode>
+      <FileName>Controllers\Fields\ValueFieldController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="FieldInfo" />
+      <Property Name="Status" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ObjectEditor.Data.DynamicCollectionWrapper">
+    <Position X="49.75" Y="31.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAABAAAAARAAAABAQAAEAEAAgACAgAAAFQAAA=</HashCode>
+      <FileName>Data\DynamicCollectionWrapper.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ObjectEditor.Data.DynamicDictionaryWrapper">
+    <Position X="48" Y="36.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>CAIIAAgAIAAEABCBCAAABAAAAAAQAIgAAAAiAQAQMAA=</HashCode>
+      <FileName>Data\DynamicDictionaryWrapper.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ObjectEditor.Data.DynamicEnumerableWrapper">
+    <Position X="49.75" Y="28" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAABAAAAAAAAAAAAAAAAAEAAAAAAAQIgA=</HashCode>
+      <FileName>Data\DynamicEnumerableWrapper.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ObjectEditor.Data.DynamicListWrapper">
+    <Position X="51.25" Y="36.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data\DynamicListWrapper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ObjectEditor.Data.DynamicWrapperExtensions">
+    <Position X="53.25" Y="28" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Extensions\DynamicWrapperExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ObjectEditor.ValueChangedEventArgs&lt;T&gt;">
+    <Position X="49.75" Y="18.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>EventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ObjectEditor.FieldValueChangedEventArgs">
+    <Position X="49.75" Y="20.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAgAAAAAEAAAAAAAAAAACAAAEAAAAAAAoAAA=</HashCode>
+      <FileName>EventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ObjectEditor.SaveRequiredChangedEventArgs">
+    <Position X="56.25" Y="18.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAEAAAAAAA=</HashCode>
+      <FileName>EventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ObjectEditor.ChangesPendingChangedEventArgs">
+    <Position X="53" Y="18.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>EventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ObjectEditor.ChangesAppliedEventArgs">
+    <Position X="56.25" Y="20.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>EventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ObjectEditor.FieldEventArgs">
+    <Position X="53" Y="20.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>EventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ObjectEditor.FieldMetadata">
+    <Position X="21.25" Y="19.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAAgAAAUACAAAAQAAAAAAAAAAQAAAAAAIAA=</HashCode>
+      <FileName>FieldInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ObjectEditor.SubFieldMetadata">
+    <Position X="18" Y="23" Width="2.5" />
+    <AssociationLine Name="ParentFieldInfo" Type="ObjectEditor.FieldMetadata" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="18.562" Y="23" />
+        <Point X="18.562" Y="19.75" />
+        <Point X="21.25" Y="19.75" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAA=</HashCode>
+      <FileName>FieldInfo.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ParentFieldInfo" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="ObjectEditor.PropertyFieldMetadata">
+    <Position X="21.25" Y="23" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAABAAAAAAAAAAAAAAAAAAAAEAABAAAAAAA=</HashCode>
+      <FileName>FieldInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ObjectEditor.ItemFieldMetadata">
+    <Position X="24.5" Y="23" Width="2.5" />
+    <InheritanceLine Type="ObjectEditor.FieldMetadata" FixedToPoint="true">
+      <Path>
+        <Point X="22.5" Y="22.151" />
+        <Point X="22.5" Y="22.625" />
+        <Point X="25.75" Y="22.625" />
+        <Point X="25.75" Y="23" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAIAAAAAAEAAAEAAAAAAAAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>FieldInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="ObjectEditor.IObjectEditorSettings">
+    <Position X="37.75" Y="19.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Settings.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="ObjectEditor.FieldStatus">
+    <Position X="27" Y="20.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAIAEAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Enums.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ObjectEditor.Permissions">
+    <Position X="37.75" Y="21" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAAAAgAAAIAAAAEAAAA=</HashCode>
+      <FileName>Enums.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ObjectEditor.ItemAbility">
+    <Position X="37.75" Y="28.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAIAAEAAAAAAAAAAAAAABAAAAAAAAAACAIAIAAAAAAA=</HashCode>
+      <FileName>Enums.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

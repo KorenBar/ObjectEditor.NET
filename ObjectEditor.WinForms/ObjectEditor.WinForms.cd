@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="ObjectEditor.WinForms.Controls.BaseFieldControl">
+    <Position X="16.5" Y="1.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>BAAAGAEBAyRADFMQAACQCCICgAAAAAQgCCAAASQBACE=</HashCode>
+      <FileName>Controls\BaseFieldControl.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ObjectEditor.WinForms.Controls.KeyValuePairFieldControl">
+    <Position X="13.5" Y="11.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>QAAAEAAAAAAAAAAAACAAAAAIAAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>Controls\KeyValuePairFieldControl.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ObjectEditor.WinForms.Controls.ObjectFieldControl">
+    <Position X="16.5" Y="11.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAIACQAAEAAQAAAAAAAAAAAAAAACAAAAEQAoAA=</HashCode>
+      <FileName>Controls\ObjectFieldControl.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ObjectEditor.WinForms.Controls.ValueFieldControl">
+    <Position X="19.5" Y="11.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAAAAAAAAAAACAAAAAAAACAAQAAAAAAA=</HashCode>
+      <FileName>Controls\ValueFieldControl.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ObjectEditor.WinForms.Controls.ValueControls.BooleanValueControl" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="25.75" Y="8.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAQAAAAAAAAAQAEAAAAAAAAAoAAAAAAA=</HashCode>
+      <FileName>Controls\ValueControls\BooleanValueControl.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="ObjectEditor.WinForms.Controls.ValueControls.EnumValueControl" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="28.5" Y="8.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAQAAAAAAAAAAAEEAAAAAAAAoAAAAAAA=</HashCode>
+      <FileName>Controls\ValueControls\EnumValueControl.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="ObjectEditor.WinForms.Controls.ValueControls.NumericValueControl" Collapsed="true">
+    <Position X="23" Y="8.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAACQAAEAAAQAAAAAAAAAEAAAAAAAAEAAA=</HashCode>
+      <FileName>Controls\ValueControls\NumericValueControl.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ObjectEditor.WinForms.Controls.ValueControls.TextValueControl" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="20.25" Y="8.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAQAIAAAAABAAAEAAAAAAAAAgAAAABAA=</HashCode>
+      <FileName>Controls\ValueControls\TextValueControl.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="ObjectEditor.WinForms.Forms.ObjectEditorForm">
+    <Position X="7.5" Y="1.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>BQwQABmBCSAAAJMMAACBQAACUMjCgsAQIgEgg0MAAGA=</HashCode>
+      <FileName>Forms\ObjectEditorForm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ObjectEditor.WinForms.Extensions">
+    <Position X="11" Y="1.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAIAAAAAAAAAAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>Extensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="ObjectEditor.WinForms.Controls.IValueControl">
+    <Position X="24.5" Y="5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAQAAAAAAAAAAAEAAAAAAAAAoAAAAAAA=</HashCode>
+      <FileName>Controls\ValueControls\IValueControl.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
