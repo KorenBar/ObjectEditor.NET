@@ -106,8 +106,8 @@ namespace ObjectEditor.Controllers.Editors
 
         protected override void ResetField(ValueFieldController fieldController)
         {
-            if (fieldController.FieldInfo is ItemFieldMetadata)
-                fieldController.Value = SourceEnumerableWrapper.GetAt(((ItemFieldMetadata)fieldController.FieldInfo).Index);
+            if (fieldController.FieldInfo is ItemFieldMetadata itemMetaData)
+                fieldController.Value = SourceEnumerableWrapper.GetAt(itemMetaData.Index);
             else base.ResetField(fieldController); // fallback to the base method
         }
         #endregion

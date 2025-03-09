@@ -17,8 +17,13 @@ namespace ObjectEditor.Demo
             ApplicationConfiguration.Initialize();
             
             var data = new MainDataClass();
-            var demoUsername = "ManagerUser"; // One of: AdminUser, ManagerUser, ManagerOnlyUser, UserOnlyUngrouped, UserAllAccessible
-            var userPermissions = data.Users.FirstOrDefault(u => u.Name?.Contains(demoUsername) ?? false)?.Permissions;
+
+            var userPermissions = new Dictionary<string, Permissions>()
+            {
+                { "Manager", Permissions.ReadWrite },
+                { "Admin", Permissions.Read | Permissions.Write }
+            };
+
             var settings = new ObjectEditorSettings() { GroupsPermissions = userPermissions };
             
             // Create the form
