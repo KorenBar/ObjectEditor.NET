@@ -40,7 +40,7 @@ namespace ObjectEditor
         /// </summary>
         /// <param name="type">The type to get the properties of.</param>
         /// <returns>A filtered enumerable of properties of the type.</returns>
-        public static IEnumerable<PropertyInfo> GetPropertiesFiltered(this Type type)
+        public static IEnumerable<PropertyInfo> GetPropertiesFiltered(this Type type, Type ignoreInherited = null)
         {
             IEnumerable<PropertyInfo> properties = type.GetProperties();
 
@@ -48,6 +48,9 @@ namespace ObjectEditor
             Type stopAtType = typeInheritance.FirstOrDefault(t => t.GetCustomAttribute<EditorIgnoreInheritedAttribute>(false) != null);
             if (stopAtType != null) // only include properties from the target type up to the first class with IgnoreInheritedPropertiesAttribute defined.
                 properties = properties.Where(p => p.DeclaringType == stopAtType || p.DeclaringType != null && p.DeclaringType.IsSubclassOf(stopAtType));
+
+            if (ignoreInherited != null)
+                properties = properties.Where(p => p.DeclaringType.IsAssignableTo(ignoreInherited));
 
             //properties = properties.OrderBy(p => p.Name); // TODO: let the user choose how to sort
             return properties.Where(p => !p.IsIgnored() && !p.IsObsolete() && !p.IsIndexer()); // exclude ignored, obsolete and indexer properties

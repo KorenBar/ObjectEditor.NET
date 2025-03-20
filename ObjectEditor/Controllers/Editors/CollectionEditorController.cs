@@ -62,18 +62,18 @@ namespace ObjectEditor.Controllers.Editors
         /// <summary>
         /// Add a new item to the collection and create a field controller for it.
         /// </summary>
-        public void AddNewItem()
+        public ValueFieldController AddNewItem()
         {
             // source object can't be changed after initialization, no need to copy it
             if (SourceCollectionWrapper == null || SourceObject == null)
-                return;
+                throw new InvalidOperationException("No source collection to add an item to.");
 
             lock (SourceObject) // lock the source object to prevent concurrent modifications as possible
             {
                 int index = SourceCollectionWrapper.Count;
                 var itemValue = CreateNewItem(); // the item value can be null
                 ItemFieldMetadata fieldInfo = CreateItemFieldInfo(itemValue, index);
-                AddItemField(fieldInfo, itemValue);
+                return AddItemField(fieldInfo, itemValue);
             }
         }
 

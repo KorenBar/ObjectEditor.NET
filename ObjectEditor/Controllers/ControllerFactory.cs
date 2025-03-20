@@ -19,7 +19,7 @@ namespace ObjectEditor.Controllers
         /// <param name="sourceObject">The object to create an editor controller for.</param>
         /// <param name="settings">The settings for the editor.</param>
         /// <returns>The created controller.</returns>
-        public static ObjectEditorController CreateEditor(object sourceObject, IObjectEditorSettings settings)
+        public static ObjectEditorController CreateEditor(object sourceObject, IObjectEditorSettings settings = null)
         {
             switch (sourceObject)
             { // switch on type of sourceObject

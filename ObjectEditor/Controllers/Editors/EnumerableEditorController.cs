@@ -25,7 +25,7 @@ namespace ObjectEditor.Controllers.Editors
         /// </summary>
         public virtual ItemAbility ItemAbilities => ItemAbility.ReadOnly;
 
-        protected IEnumerable<ValueFieldController> ItemFields => Fields.Where(f => f.FieldInfo is ItemFieldMetadata);
+        public IEnumerable<ValueFieldController> ItemFields => Fields.Where(f => f.FieldInfo is ItemFieldMetadata);
 
         #region Constructors
         /// <param name="sourceEnumerable">The enumerable to view and edit.</param>

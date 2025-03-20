@@ -17,7 +17,7 @@ namespace ObjectEditor.Controllers.Editors
     {
         #region Properties
         private readonly List<ValueFieldController> _fields = new();
-        protected IEnumerable<ValueFieldController> Fields => _fields.AsReadOnly();
+        public IEnumerable<ValueFieldController> Fields => _fields.AsReadOnly();
         
         /// <summary>
         /// Whether this controller has any fields.

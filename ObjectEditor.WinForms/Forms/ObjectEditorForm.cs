@@ -253,7 +253,7 @@ namespace ObjectEditor.WinForms.Forms
             }
 
             // The AddNewItem method will rise the FieldAdded event after the item is added.
-            if (await ((Action)collectionController.AddNewItem).InvokeUserActionAsync("New Item"))
+            if (await ((Action)(() => collectionController.AddNewItem())).InvokeUserActionAsync("New Item"))
                 ScrollDown(); // The new item was added successfully, scroll down to see it.
         }
         #endregion
